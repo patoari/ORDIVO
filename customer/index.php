@@ -1145,8 +1145,11 @@ if (isset($_GET['ajax'])) {
         .featuredProductsSwiper .swiper-slide,
         .topChoiceProductsSwiper .swiper-slide {
             width: 280px !important;
+            min-width: 280px;
+            max-width: 280px;
             height: auto;
             margin-right: 3px;
+            flex-shrink: 0;
         }
 
         .featuredProductsSwiper .swiper-button-next,

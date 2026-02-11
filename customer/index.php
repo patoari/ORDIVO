@@ -477,14 +477,22 @@ if (isset($_GET['ajax'])) {
             color: var(--foodpanda-gray);
             font-size: 0.9rem;
             cursor: pointer;
-            padding: 0.75rem 1rem; /* Increased padding for better click area */
+            padding: 0.75rem 1rem;
             border-radius: 8px;
             transition: all 0.3s ease;
-            height: fit-content; /* Ensure proper height */
+            height: fit-content;
+            border: 2px solid #10b981;
+            background: white;
         }
 
         .location-display:hover {
-            background: var(--foodpanda-light-gray);
+            background: #10b981;
+            color: white;
+            border-color: #059669;
+        }
+
+        .location-display:hover i {
+            color: white;
         }
 
         .user-menu {
@@ -496,9 +504,9 @@ if (isset($_GET['ajax'])) {
 
         .btn-user {
             background: white;
-            border: 1px solid var(--foodpanda-border);
+            border: 2px solid #10b981;
             color: var(--foodpanda-dark);
-            padding: 0.75rem 1rem; /* Increased padding for better appearance */
+            padding: 0.75rem 1rem;
             border-radius: 8px;
             text-decoration: none;
             font-size: 0.9rem;
@@ -509,8 +517,13 @@ if (isset($_GET['ajax'])) {
         }
 
         .btn-user:hover {
-            background: var(--foodpanda-light-gray);
-            color: var(--foodpanda-dark);
+            background: #10b981;
+            color: white;
+            border-color: #059669;
+        }
+
+        .btn-user:hover i {
+            color: white;
         }
 
         .dropdown-toggle {

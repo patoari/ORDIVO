@@ -2497,17 +2497,91 @@ if (isset($_GET['ajax'])) {
                 // Load featured products
                 const featuredContainer = document.getElementById('featuredProductsGrid');
                 const featuredCards = featuredProducts.map(product => `
-                    <div class="product-card" onclick="viewProduct(${product.id})">
-                        <div class="product-image" style="background-image: url('${product.image}')" 
-                             onError="this.style.backgroundImage = 'url(../uploads/images/placeholder-food.svg)'">
-                            <div class="product-badge badge-featured">Featured</div>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-name">${product.name}</div>
-                            <div class="product-vendor">
-                                <i class="fas fa-store me-1"></i>${product.vendor_name}
+                    <div class="swiper-slide">
+                        <div class="product-card" onclick="viewProduct(${product.id})">
+                            <div class="product-image" style="background-image: url('${product.image}')" 
+                                 onError="this.style.backgroundImage = 'url(../uploads/images/placeholder-food.svg)'">
+                                <div class="product-badge badge-featured">Featured</div>
                             </div>
-                            <div class="product-price">৳${product.price.toFixed(0)}</div>
+                            <div class="product-info">
+                                <div class="product-name">${product.name}</div>
+                                <div class="product-vendor">
+                                    <i class="fas fa-store me-1"></i>${product.vendor_name}
+                                </div>
+                                <div class="product-price">৳${product.price.toFixed(0)}</div>
+                                <div class="product-rating">
+                                    <i class="fas fa-star"></i>
+                                    <span>${product.rating.toFixed(1)}</span>
+                                </div>
+                                <button class="btn btn-primary btn-sm w-100" onclick="event.stopPropagation(); addToCartFromHomepage(${product.id})">
+                                    <i class="fas fa-plus me-1"></i>Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                featuredContainer.innerHTML = featuredCards || '<div class="swiper-slide"><div class="text-center text-muted">No featured products available</div></div>';
+                
+                // Initialize Featured Products Swiper
+                new Swiper('.featuredProductsSwiper', {
+                    slidesPerView: 'auto',
+                    spaceBetween: 0,
+                    navigation: {
+                        nextEl: '.featuredProductsSwiper .swiper-button-next',
+                        prevEl: '.featuredProductsSwiper .swiper-button-prev',
+                    },
+                    freeMode: true,
+                    grabCursor: true,
+                });
+                
+                // Load top choice products
+                const topChoiceContainer = document.getElementById('topChoiceProductsGrid');
+                const topChoiceCards = topChoiceProducts.map(product => `
+                    <div class="swiper-slide">
+                        <div class="product-card" onclick="viewProduct(${product.id})">
+                            <div class="product-image" style="background-image: url('${product.image}')" 
+                                 onError="this.style.backgroundImage = 'url(../uploads/images/placeholder-food.svg)'">
+                                <div class="product-badge badge-top-choice">Top Choice</div>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-name">${product.name}</div>
+                                <div class="product-vendor">
+                                    <i class="fas fa-store me-1"></i>${product.vendor_name}
+                                </div>
+                                <div class="product-price">৳${product.price.toFixed(0)}</div>
+                                <div class="product-rating">
+                                    <i class="fas fa-star"></i>
+                                    <span>${product.rating.toFixed(1)}</span>
+                                </div>
+                                <button class="btn btn-primary btn-sm w-100" onclick="event.stopPropagation(); addToCartFromHomepage(${product.id})">
+                                    <i class="fas fa-plus me-1"></i>Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                topChoiceContainer.innerHTML = topChoiceCards || '<div class="swiper-slide"><div class="text-center text-muted">No top choice products available</div></div>';
+                
+                // Initialize Top Choice Products Swiper
+                new Swiper('.topChoiceProductsSwiper', {
+                    slidesPerView: 'auto',
+                    spaceBetween: 0,
+                    navigation: {
+                        nextEl: '.topChoiceProductsSwiper .swiper-button-next',
+                        prevEl: '.topChoiceProductsSwiper .swiper-button-prev',
+                    },
+                    freeMode: true,
+                    grabCursor: true,
+                });
+                
+            } catch (error) {
+                console.error('Failed to load featured products:', error);
+                document.getElementById('featuredProductsGrid').innerHTML = '<div class="swiper-slide"><div class="text-center text-danger">Failed to load featured products</div></div>';
+                document.getElementById('topChoiceProductsGrid').innerHTML = '<div class="swiper-slide"><div class="text-center text-danger">Failed to load top choice products</div></div>';
+            }
+        }
                             <div class="product-rating">
                                 <i class="fas fa-star"></i>
                                 <span>${product.rating.toFixed(1)}</span>

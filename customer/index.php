@@ -897,6 +897,7 @@ if (isset($_GET['ajax'])) {
             display: flex;
             gap: 1rem;
             transition: transform 0.3s ease;
+            margin-top: 1.5rem;
         }
 
         .restaurant-card {

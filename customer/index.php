@@ -907,11 +907,13 @@ if (isset($_GET['ajax'])) {
             box-shadow: 0 2px 8px #e5e7eb;
             cursor: pointer;
             transition: all 0.3s ease;
+            border: 2px solid #10b981;
         }
 
         .restaurant-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 25px #e5e7eb;
+            border-color: #f97316;
         }
 
         .restaurant-image {

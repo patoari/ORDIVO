@@ -236,10 +236,18 @@ if (isset($_GET['ajax'])) {
             border-radius: 8px;
             transition: all 0.3s ease;
             height: fit-content;
+            border: 2px solid #10b981;
+            background: white;
         }
 
         .location-display:hover {
-            background: #f8f9fa;
+            background: #10b981;
+            color: white;
+            border-color: #059669;
+        }
+
+        .location-display:hover i {
+            color: white;
         }
 
         .user-menu {
@@ -251,7 +259,7 @@ if (isset($_GET['ajax'])) {
 
         .btn-user {
             background: white;
-            border: 1px solid #e9ecef;
+            border: 2px solid #10b981;
             color: var(--ordivo-dark);
             padding: 0.75rem 1rem;
             border-radius: 8px;
@@ -264,8 +272,13 @@ if (isset($_GET['ajax'])) {
         }
 
         .btn-user:hover {
-            background: #f8f9fa;
-            color: var(--ordivo-dark);
+            background: #10b981;
+            color: white;
+            border-color: #059669;
+        }
+
+        .btn-user:hover i {
+            color: white;
         }
 
         /* Navigation Tabs */

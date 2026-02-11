@@ -489,8 +489,9 @@ $demoCredentials = [
                 
                 <!-- Alerts -->
                 <?php if ($error): ?>
-                    <div class="alert alert-danger" role="alert">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
                         <i class="fas fa-exclamation-triangle me-2"></i><?= htmlspecialchars($error) ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 <?php endif; ?>
 
@@ -558,6 +559,15 @@ $demoCredentials = [
         // Auto-focus email field
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('email').focus();
+            
+            // Auto-dismiss error alert after 5 seconds
+            const errorAlert = document.getElementById('errorAlert');
+            if (errorAlert) {
+                setTimeout(() => {
+                    const bsAlert = new bootstrap.Alert(errorAlert);
+                    bsAlert.close();
+                }, 5000);
+            }
             
             // Hide logout message after 3 seconds
             const logoutMessage = document.getElementById('logoutMessage');

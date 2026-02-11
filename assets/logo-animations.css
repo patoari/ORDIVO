@@ -1,0 +1,227 @@
+/**
+ * ORDIVO - Enhanced Logo Animations
+ * Continuous animations for better brand visibility
+ */
+
+/* Main Logo Animations */
+.logo-img {
+    height: 60px;
+    margin-right: 12px;
+    animation: logoFloat 3s ease-in-out infinite;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(249, 115, 22, 0.3));
+}
+
+.logo-img:hover {
+    transform: scale(1.1) rotate(5deg) !important;
+    filter: brightness(1.1) drop-shadow(0 4px 8px rgba(249, 115, 22, 0.5));
+}
+
+/* Enhanced Float Animation */
+@keyframes logoFloat {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-3px) rotate(1deg);
+    }
+    50% {
+        transform: translateY(-5px) rotate(0deg);
+    }
+    75% {
+        transform: translateY(-3px) rotate(-1deg);
+    }
+}
+
+/* Icon Animation for Fallback */
+.logo-icon {
+    color: var(--ordivo-primary, #f97316);
+    font-size: 2rem !important;
+    animation: logoPulse 2s ease-in-out infinite;
+    filter: drop-shadow(0 2px 4px rgba(249, 115, 22, 0.3));
+}
+
+@keyframes logoPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+/* Brand Text Animation */
+.brand-text {
+    color: var(--ordivo-primary, #f97316);
+    font-size: 1.8rem;
+    font-weight: 700;
+    animation: brandGlow 4s ease-in-out infinite;
+}
+
+@keyframes brandGlow {
+    0%, 100% {
+        text-shadow: 0 0 5px rgba(249, 115, 22, 0.3);
+    }
+    50% {
+        text-shadow: 0 0 15px rgba(249, 115, 22, 0.6), 0 0 25px rgba(249, 115, 22, 0.4);
+    }
+}
+
+/* Large Logo for Auth Pages */
+.logo-large {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: logoGlowWhite 3s ease-in-out infinite;
+}
+
+.logo-large img {
+    height: 70px;
+    margin-right: 15px;
+    animation: logoFloatLarge 3s ease-in-out infinite;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 4px 8px rgba(255, 255, 255, 0.3));
+}
+
+.logo-large img:hover {
+    transform: scale(1.15) rotate(10deg);
+    filter: brightness(1.2) drop-shadow(0 6px 12px rgba(255, 255, 255, 0.5));
+}
+
+.logo-large i {
+    font-size: 2.5rem !important;
+    animation: logoPulseLarge 2s ease-in-out infinite;
+    margin-right: 15px;
+    filter: drop-shadow(0 4px 8px rgba(255, 255, 255, 0.3));
+}
+
+@keyframes logoFloatLarge {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-5px) rotate(2deg);
+    }
+    50% {
+        transform: translateY(-8px) rotate(0deg);
+    }
+    75% {
+        transform: translateY(-5px) rotate(-2deg);
+    }
+}
+
+@keyframes logoPulseLarge {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+@keyframes logoGlowWhite {
+    0%, 100% {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+    50% {
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.6);
+    }
+}
+
+/* Sparkle Effect for Special Occasions */
+.logo-sparkle::before {
+    content: '✨';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 1rem;
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(0.5) rotate(0deg);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1) rotate(180deg);
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .logo-img {
+        height: 50px;
+        margin-right: 10px;
+    }
+    
+    .brand-text {
+        font-size: 1.5rem;
+    }
+    
+    .logo-large {
+        font-size: 2rem;
+    }
+    
+    .logo-large img {
+        height: 60px;
+        margin-right: 12px;
+    }
+    
+    .logo-large i {
+        font-size: 2rem !important;
+        margin-right: 12px;
+    }
+}
+
+/* Performance Optimization */
+@media (prefers-reduced-motion: reduce) {
+    .logo-img,
+    .logo-icon,
+    .brand-text,
+    .logo-large,
+    .logo-large img,
+    .logo-large i {
+        animation: none;
+    }
+}
+
+/* Additional Visual Effects */
+.logo-container {
+    position: relative;
+    display: inline-block;
+}
+
+.logo-container::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.1) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    animation: logoAura 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes logoAura {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.6;
+    }
+}

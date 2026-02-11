@@ -1,0 +1,14 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#f8f9fa"/>
+  
+  <!-- Food icon -->
+  <circle cx="200" cy="120" r="60" fill="#e21b70" opacity="0.1"/>
+  <path d="M170 90C170 85.6 173.6 82 178 82C182.4 82 186 85.6 186 90V110H190V90C190 85.6 193.6 82 198 82C202.4 82 206 85.6 206 90V110H210V90C210 82.3 203.7 76 196 76C194 76 192.1 76.4 190.5 77.1C189 76.4 187.1 76 185.1 76H182.9C181 76 179.1 76.4 177.5 77.1C176 76.4 174.1 76 172.1 76C164.4 76 158.1 82.3 158.1 90V110H162.1V90C162.1 85.6 165.7 82 170.1 82Z" fill="#e21b70"/>
+  <rect x="158" y="115" width="52" height="8" rx="4" fill="#e21b70"/>
+  <path d="M165 125H225C228.3 125 231 127.7 231 131V155C231 158.3 228.3 161 225 161H165C161.7 161 159 158.3 159 155V131C159 127.7 161.7 125 165 125Z" fill="#e21b70"/>
+  
+  <!-- Text -->
+  <text x="200" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#6c757d">Food Image</text>
+  <text x="200" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#adb5bd">Image not available</text>
+</svg>

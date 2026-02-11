@@ -1,0 +1,601 @@
+/**
+ * ORDIVO - Enhanced Responsive Design
+ * Optimized for all screen sizes from mobile to ultra-wide displays
+ */
+
+:root {
+    --ordivo-primary: #f97316;
+    --ordivo-secondary: #fb923c;
+    --ordivo-light: #f0fdf4;
+    --ordivo-dark: #1a1a1a;
+    --ordivo-accent: #f59e0b;
+    
+    /* Responsive spacing variables */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+    --spacing-xxl: 4rem;
+    
+    /* Responsive font sizes */
+    --font-xs: 0.75rem;
+    --font-sm: 0.875rem;
+    --font-base: 1rem;
+    --font-lg: 1.125rem;
+    --font-xl: 1.25rem;
+    --font-2xl: 1.5rem;
+    --font-3xl: 1.875rem;
+    --font-4xl: 2.25rem;
+    --font-5xl: 3rem;
+    --font-6xl: 4rem;
+}
+
+/* ============================================================================
+   ENHANCED MOBILE FIRST DESIGN
+   ============================================================================ */
+
+/* Base Mobile Styles (320px+) */
+.ordivo-container {
+    width: 100%;
+    padding: 0 1rem;
+    margin: 0 auto;
+}
+
+.ordivo-hero {
+    padding: 3rem 0;
+    text-align: center;
+}
+
+.ordivo-hero-title {
+    font-size: var(--font-3xl);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.ordivo-hero-subtitle {
+    font-size: var(--font-lg);
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+.ordivo-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.ordivo-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: var(--font-base);
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.ordivo-btn-primary {
+    background: linear-gradient(135deg, var(--ordivo-primary) 0%, var(--ordivo-secondary) 100%);
+    color: white;
+}
+
+.ordivo-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
+    color: white;
+}
+
+.ordivo-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+}
+
+.ordivo-stats-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+}
+
+/* ============================================================================
+   SMALL DEVICES (576px and up)
+   ============================================================================ */
+
+@media (min-width: 576px) {
+    .ordivo-container {
+        max-width: 540px;
+        padding: 0 1.5rem;
+    }
+    
+    .ordivo-hero {
+        padding: 4rem 0;
+    }
+    
+    .ordivo-hero-title {
+        font-size: var(--font-4xl);
+    }
+    
+    .ordivo-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .ordivo-card {
+        padding: 2rem;
+        border-radius: 15px;
+    }
+    
+    .ordivo-btn {
+        padding: 0.875rem 2rem;
+        font-size: var(--font-lg);
+    }
+}
+
+/* ============================================================================
+   MEDIUM DEVICES (768px and up)
+   ============================================================================ */
+
+@media (min-width: 768px) {
+    .ordivo-container {
+        max-width: 720px;
+    }
+    
+    .ordivo-hero {
+        padding: 5rem 0;
+    }
+    
+    .ordivo-hero-title {
+        font-size: var(--font-5xl);
+    }
+    
+    .ordivo-hero-subtitle {
+        font-size: var(--font-xl);
+    }
+    
+    .ordivo-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+    
+    .ordivo-grid-md-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .ordivo-card {
+        padding: 2.5rem;
+        border-radius: 18px;
+    }
+    
+    .ordivo-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+}
+
+/* ============================================================================
+   LARGE DEVICES (992px and up)
+   ============================================================================ */
+
+@media (min-width: 992px) {
+    .ordivo-container {
+        max-width: 960px;
+    }
+    
+    .ordivo-hero {
+        padding: 6rem 0;
+    }
+    
+    .ordivo-hero-title {
+        font-size: var(--font-6xl);
+    }
+    
+    .ordivo-stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+    }
+    
+    .ordivo-grid-lg-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .ordivo-grid-lg-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .ordivo-card {
+        padding: 3rem;
+        border-radius: 20px;
+    }
+    
+    .ordivo-btn {
+        padding: 1rem 2.5rem;
+        font-size: var(--font-xl);
+        border-radius: 12px;
+    }
+    
+    /* Enhanced hover effects for larger screens */
+    .ordivo-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+    }
+    
+    .ordivo-btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(249, 115, 22, 0.5);
+    }
+}
+
+/* ============================================================================
+   EXTRA LARGE DEVICES (1200px and up)
+   ============================================================================ */
+
+@media (min-width: 1200px) {
+    .ordivo-container {
+        max-width: 1140px;
+    }
+    
+    .ordivo-hero {
+        padding: 8rem 0;
+    }
+    
+    .ordivo-hero-title {
+        font-size: 4.5rem;
+        letter-spacing: -0.02em;
+    }
+    
+    .ordivo-hero-subtitle {
+        font-size: 1.5rem;
+        max-width: 600px;
+        margin: 0 auto 3rem;
+    }
+    
+    .ordivo-stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2.5rem;
+    }
+    
+    .ordivo-grid-xl-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .ordivo-grid-xl-5 {
+        grid-template-columns: repeat(5, 1fr);
+    }
+    
+    .ordivo-card {
+        padding: 3.5rem;
+        border-radius: 25px;
+    }
+    
+    .ordivo-btn {
+        padding: 1.25rem 3rem;
+        font-size: 1.2rem;
+        border-radius: 15px;
+    }
+    
+    /* Premium animations for large screens */
+    .ordivo-card {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .ordivo-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .ordivo-card:hover::before {
+        left: 100%;
+    }
+}
+
+/* ============================================================================
+   ULTRA WIDE DEVICES (1400px and up)
+   ============================================================================ */
+
+@media (min-width: 1400px) {
+    .ordivo-container {
+        max-width: 1320px;
+    }
+    
+    .ordivo-hero {
+        padding: 10rem 0;
+    }
+    
+    .ordivo-hero-title {
+        font-size: 5.5rem;
+    }
+    
+    .ordivo-hero-subtitle {
+        font-size: 1.75rem;
+        max-width: 700px;
+    }
+    
+    .ordivo-stats-grid {
+        gap: 3rem;
+    }
+    
+    .ordivo-card {
+        padding: 4rem;
+        border-radius: 30px;
+    }
+    
+    .ordivo-btn {
+        padding: 1.5rem 3.5rem;
+        font-size: 1.3rem;
+        border-radius: 18px;
+    }
+    
+    /* Ultra-wide specific enhancements */
+    .ordivo-grid-xxl-5 {
+        grid-template-columns: repeat(5, 1fr);
+    }
+    
+    .ordivo-grid-xxl-6 {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+/* ============================================================================
+   SPECIALIZED COMPONENTS
+   ============================================================================ */
+
+/* Enhanced Form Controls */
+.ordivo-form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: var(--font-base);
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.ordivo-form-control:focus {
+    border-color: var(--ordivo-primary);
+    box-shadow: 0 0 0 0.2rem rgba(249, 115, 22, 0.25);
+    outline: none;
+}
+
+@media (min-width: 1200px) {
+    .ordivo-form-control {
+        padding: 1rem 1.5rem;
+        font-size: var(--font-lg);
+        border-radius: 12px;
+    }
+}
+
+/* Enhanced Statistics Cards */
+.ordivo-stat-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border-top: 4px solid var(--ordivo-primary);
+    transition: all 0.3s ease;
+}
+
+.ordivo-stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--ordivo-primary);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.ordivo-stat-label {
+    color: #6c757d;
+    font-weight: 600;
+    font-size: var(--font-base);
+}
+
+@media (min-width: 1200px) {
+    .ordivo-stat-card {
+        padding: 3rem 2.5rem;
+        border-radius: 20px;
+    }
+    
+    .ordivo-stat-number {
+        font-size: 3.5rem;
+    }
+    
+    .ordivo-stat-label {
+        font-size: var(--font-lg);
+    }
+}
+
+/* Enhanced Navigation */
+.ordivo-navbar {
+    background: linear-gradient(135deg, var(--ordivo-primary) 0%, var(--ordivo-secondary) 100%);
+    padding: 1rem 0;
+    box-shadow: 0 4px 20px rgba(249, 115, 22, 0.3);
+}
+
+.ordivo-navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+}
+
+.ordivo-nav-link {
+    color: rgba(255,255,255,0.9);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.ordivo-nav-link:hover {
+    color: white;
+    transform: translateY(-2px);
+}
+
+@media (min-width: 1200px) {
+    .ordivo-navbar {
+        padding: 1.5rem 0;
+    }
+    
+    .ordivo-navbar-brand {
+        font-size: 2rem;
+    }
+    
+    .ordivo-nav-link {
+        padding: 0.75rem 1.5rem;
+        font-size: var(--font-lg);
+    }
+}
+
+/* ============================================================================
+   UTILITY CLASSES
+   ============================================================================ */
+
+/* Responsive spacing utilities */
+.ordivo-p-responsive {
+    padding: var(--spacing-sm);
+}
+
+.ordivo-m-responsive {
+    margin: var(--spacing-sm);
+}
+
+@media (min-width: 768px) {
+    .ordivo-p-responsive {
+        padding: var(--spacing-md);
+    }
+    
+    .ordivo-m-responsive {
+        margin: var(--spacing-md);
+    }
+}
+
+@media (min-width: 1200px) {
+    .ordivo-p-responsive {
+        padding: var(--spacing-lg);
+    }
+    
+    .ordivo-m-responsive {
+        margin: var(--spacing-lg);
+    }
+}
+
+@media (min-width: 1400px) {
+    .ordivo-p-responsive {
+        padding: var(--spacing-xl);
+    }
+    
+    .ordivo-m-responsive {
+        margin: var(--spacing-xl);
+    }
+}
+
+/* Responsive text utilities */
+.ordivo-text-responsive {
+    font-size: var(--font-base);
+}
+
+@media (min-width: 768px) {
+    .ordivo-text-responsive {
+        font-size: var(--font-lg);
+    }
+}
+
+@media (min-width: 1200px) {
+    .ordivo-text-responsive {
+        font-size: var(--font-xl);
+    }
+}
+
+/* Hide/show utilities for different screen sizes */
+.ordivo-hide-mobile {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .ordivo-hide-mobile {
+        display: block;
+    }
+    
+    .ordivo-hide-desktop {
+        display: none;
+    }
+}
+
+/* ============================================================================
+   ACCESSIBILITY ENHANCEMENTS
+   ============================================================================ */
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .ordivo-card,
+    .ordivo-btn,
+    .ordivo-nav-link {
+        transition: none;
+    }
+    
+    .ordivo-card:hover {
+        transform: none;
+    }
+    
+    .ordivo-btn-primary:hover {
+        transform: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .ordivo-card {
+        border: 2px solid var(--ordivo-dark);
+    }
+    
+    .ordivo-btn-primary {
+        border: 2px solid var(--ordivo-dark);
+    }
+}
+
+/* Focus indicators */
+.ordivo-btn:focus,
+.ordivo-form-control:focus,
+.ordivo-nav-link:focus {
+    outline: 2px solid var(--ordivo-primary);
+    outline-offset: 2px;
+}
+
+/* ============================================================================
+   PRINT STYLES
+   ============================================================================ */
+
+@media print {
+    .ordivo-no-print {
+        display: none !important;
+    }
+    
+    .ordivo-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        break-inside: avoid;
+    }
+    
+    .ordivo-btn {
+        border: 1px solid #ddd;
+        background: white !important;
+        color: black !important;
+    }
+    
+    .ordivo-hero {
+        padding: 2rem 0;
+    }
+}

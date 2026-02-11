@@ -201,10 +201,18 @@ $finalTotal = 50;
             border-radius: 8px;
             transition: all 0.3s ease;
             height: fit-content;
+            border: 2px solid #10b981;
+            background: white;
         }
 
         .location-display:hover {
-            background: #f8f9fa;
+            background: #10b981;
+            color: white;
+            border-color: #059669;
+        }
+
+        .location-display:hover i {
+            color: white;
         }
 
         .user-menu {
@@ -216,7 +224,7 @@ $finalTotal = 50;
 
         .btn-user {
             background: white;
-            border: 1px solid #e9ecef;
+            border: 2px solid #10b981;
             color: var(--ordivo-dark);
             padding: 0.75rem 1rem;
             border-radius: 8px;
@@ -229,8 +237,13 @@ $finalTotal = 50;
         }
 
         .btn-user:hover {
-            background: #f8f9fa;
-            color: var(--ordivo-dark);
+            background: #10b981;
+            color: white;
+            border-color: #059669;
+        }
+
+        .btn-user:hover i {
+            color: white;
         }
 
         /* Navigation Tabs */
@@ -259,10 +272,20 @@ $finalTotal = 50;
                 background-size: 100% 100%, 200% 200%;
                 background-position: 0 0, 0 0;
             }
+            25% {
+                background: #10b981;
+                background-size: 100% 100%, 200% 200%;
+                background-position: 0 0, -50% -50%;
+            }
             50% {
                 background: #10b981;
                 background-size: 100% 100%, 200% 200%;
                 background-position: 0 0, -100% -100%;
+            }
+            75% {
+                background: #10b981;
+                background-size: 100% 100%, 200% 200%;
+                background-position: 0 0, -150% -150%;
             }
         }
 
@@ -272,31 +295,35 @@ $finalTotal = 50;
 
         .nav-tabs .nav-link {
             border: none;
-            color: #6c757d;
+            color: #e5e7eb;
             font-weight: 500;
-            padding: 1rem 0;
-            margin-right: 2rem;
-            border-bottom: 3px solid transparent;
+            padding: 0.75rem 1.5rem;
+            margin-right: 1rem;
+            border: 2px solid transparent;
+            border-radius: 8px;
             background: none;
             transition: all 0.3s ease;
             position: relative;
         }
 
         .nav-tabs .nav-link.active {
-            color: var(--ordivo-primary);
-            border-bottom: none;
-            background: none;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            background: #059669;
+            font-weight: 600;
         }
 
         .nav-tabs .nav-link:hover {
-            color: var(--ordivo-primary);
-            border-bottom-color: #f97316;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            background: #059669;
         }
 
         .cart-header {
-            background: #10b981;);
+            background: #10b981;
             color: white;
             padding: 2rem 0;
+            margin-top: 1.5rem;
         }
 
         .cart-item {

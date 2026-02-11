@@ -364,8 +364,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <!-- Header -->
     <header class="header">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <a href="index.php" class="text-decoration-none">
+            <div class="d-flex justify-content-between align-items-center h-100">
+                <a href="index.php" class="text-decoration-none navbar-brand">
                     <div class="d-flex align-items-center">
                         <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
                             <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" class="logo-img">
@@ -376,14 +376,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     </div>
                 </a>
                 
-                <div class="d-flex align-items-center gap-3">
-                    <a href="index.php" class="btn btn-outline-primary">
+                <div class="user-menu">
+                    <a href="index.php" class="btn-user">
                         <i class="fas fa-home me-2"></i>Home
                     </a>
-                    <a href="cart.php" class="btn btn-primary">
+                    <a href="cart.php" class="btn-user">
                         <i class="fas fa-shopping-cart me-2"></i>Cart
                         <?php if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])): ?>
-                            <span class="badge bg-light text-dark"><?= array_sum($_SESSION['cart']) ?></span>
+                            <span class="badge bg-success ms-1"><?= array_sum($_SESSION['cart']) ?></span>
                         <?php endif; ?>
                     </a>
                 </div>

@@ -1409,12 +1409,22 @@ if (isset($_GET['ajax'])) {
 
         .swiper-button-next,
         .swiper-button-prev {
-            color: var(--foodpanda-pink);
+            color: #10b981;
             background: white;
+            border: 2px solid #10b981;
             border-radius: 50%;
             width: 44px;
             height: 44px;
-            box-shadow: 0 2px 8px #e5e7eb;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .swiper-button-next:hover,
+        .swiper-button-prev:hover {
+            background: #10b981;
+            color: white;
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+            transform: scale(1.1);
         }
 
         .swiper-button-next:after,

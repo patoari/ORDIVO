@@ -886,11 +886,12 @@ if (isset($_GET['ajax'])) {
         /* Restaurant Cards */
         .restaurant-carousel {
             margin-bottom: 3rem;
+            padding: 0 30px;
         }
 
         .carousel-container {
             position: relative;
-            overflow: hidden;
+            overflow: visible;
         }
 
         .restaurant-cards {
@@ -1040,11 +1041,11 @@ if (isset($_GET['ajax'])) {
         }
 
         .carousel-nav.prev {
-            left: -20px;
+            left: -10px;
         }
 
         .carousel-nav.next {
-            right: -20px;
+            right: -10px;
         }
 
         /* Cuisines Section */

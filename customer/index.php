@@ -2603,7 +2603,7 @@ if (isset($_GET['ajax'])) {
                 // Initialize Top Choice Products Swiper
                 new Swiper('.topChoiceProductsSwiper', {
                     slidesPerView: 'auto',
-                    spaceBetween: 3,
+                    spaceBetween: 16,
                     navigation: {
                         nextEl: '.topChoiceProductsSwiper .swiper-button-next',
                         prevEl: '.topChoiceProductsSwiper .swiper-button-prev',

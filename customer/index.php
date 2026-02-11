@@ -1176,74 +1176,107 @@ if (isset($_GET['ajax'])) {
             box-shadow: 0 2px 8px #e5e7eb;
             transition: all 0.3s ease;
             cursor: pointer;
-            border: 2px solid var(--foodpanda-pink);
+            border: 2px solid #10b981;
             height: 100%;
             display: flex;
             flex-direction: column;
+            width: 100%;
         }
 
         .product-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 25px #e5e7eb;
-            border-color: var(--foodpanda-secondary);
+            border-color: #f97316;
         }
 
         .product-image {
-            height: 180px;
+            height: 160px;
+            width: 100%;
             background-size: cover;
             background-position: center;
             position: relative;
+            flex-shrink: 0;
         }
 
         .product-badge {
             position: absolute;
             top: 10px;
             left: 10px;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
+            padding: 0.35rem 0.65rem;
+            border-radius: 6px;
             font-size: 0.75rem;
             font-weight: 600;
             color: white;
         }
 
         .badge-featured {
-            background: var(--foodpanda-primary);
+            background: #10b981;
         }
 
         .badge-top-choice {
-            background: #28a745;
+            background: #f97316;
         }
 
         .product-info {
-            padding: 1rem;
+            padding: 0.875rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .product-name {
             font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--foodpanda-dark);
+            font-size: 0.95rem;
+            margin-bottom: 0.4rem;
+            color: #374151;
+            line-height: 1.3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
 
         .product-vendor {
-            font-size: 0.85rem;
-            color: var(--foodpanda-gray);
-            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 0.4rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .product-price {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 700;
-            color: var(--foodpanda-pink);
-            margin-bottom: 0.5rem;
+            color: #10b981;
+            margin-bottom: 0.4rem;
         }
 
         .product-rating {
             display: flex;
             align-items: center;
             gap: 0.25rem;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #ffc107;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-info .btn {
+            margin-top: auto;
+            padding: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 8px;
+            background: #10b981;
+            border: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .product-info .btn:hover {
+            background: #059669;
+            transform: translateY(-1px);
         }
 
         .view-all-btn {

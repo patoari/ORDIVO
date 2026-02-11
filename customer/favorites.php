@@ -365,24 +365,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <header class="header">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center h-100">
-                <a href="index.php" class="text-decoration-none navbar-brand">
-                    <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
-                        <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" class="logo-img">
-                    <?php else: ?>
-                        <i class="fas fa-utensils logo-icon"></i>
-                    <?php endif; ?>
-                </a>
-                
-                <div class="user-menu ms-auto">
-                    <a href="index.php" class="btn-user">
-                        <i class="fas fa-home me-2"></i>Home
-                    </a>
-                    <a href="cart.php" class="btn-user">
-                        <i class="fas fa-shopping-cart me-2"></i>Cart
-                        <?php if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])): ?>
-                            <span class="badge bg-success ms-1"><?= array_sum($_SESSION['cart']) ?></span>
+                <div class="d-flex align-items-center gap-3">
+                    <a href="index.php" class="text-decoration-none navbar-brand">
+                        <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
+                            <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" class="logo-img">
+                        <?php else: ?>
+                            <i class="fas fa-utensils logo-icon"></i>
                         <?php endif; ?>
                     </a>
+                    
+                    <div class="user-menu">
+                        <a href="index.php" class="btn-user">
+                            <i class="fas fa-home me-2"></i>Home
+                        </a>
+                        <a href="cart.php" class="btn-user">
+                            <i class="fas fa-shopping-cart me-2"></i>Cart
+                            <?php if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])): ?>
+                                <span class="badge bg-success ms-1"><?= array_sum($_SESSION['cart']) ?></span>
+                            <?php endif; ?>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

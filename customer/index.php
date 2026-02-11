@@ -2117,23 +2117,31 @@ if (isset($_GET['ajax'])) {
                     </a>
                 </div>
                 
-                <!-- Featured Products Grid -->
+                <!-- Featured Products Swiper -->
                 <div class="mb-4">
                     <h4 class="mb-3">
                         <i class="fas fa-star text-warning me-2"></i>Featured Products
                     </h4>
-                    <div class="products-grid" id="featuredProductsGrid">
-                        <!-- Featured products will be loaded here -->
+                    <div class="swiper featuredProductsSwiper">
+                        <div class="swiper-wrapper" id="featuredProductsGrid">
+                            <!-- Featured products will be loaded here -->
+                        </div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
                     </div>
                 </div>
                 
-                <!-- Top Choice Products Grid -->
+                <!-- Top Choice Products Swiper -->
                 <div class="mb-4">
                     <h4 class="mb-3">
                         <i class="fas fa-trophy text-success me-2"></i>Top Choices
                     </h4>
-                    <div class="products-grid" id="topChoiceProductsGrid">
-                        <!-- Top choice products will be loaded here -->
+                    <div class="swiper topChoiceProductsSwiper">
+                        <div class="swiper-wrapper" id="topChoiceProductsGrid">
+                            <!-- Top choice products will be loaded here -->
+                        </div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
                     </div>
                 </div>
             </div>

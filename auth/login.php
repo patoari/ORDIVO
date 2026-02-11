@@ -188,6 +188,7 @@ $demoCredentials = [
             align-items: center;
             justify-content: center;
             padding: 2rem;
+            overflow-y: auto;
         }
 
         .login-box {
@@ -195,12 +196,13 @@ $demoCredentials = [
             backdrop-filter: blur(15px);
             border-radius: 20px;
             box-shadow: 0 25px 50px #e5e7eb;
-            overflow: hidden;
+            overflow: visible;
             max-width: 400px;
             width: 100%;
             border: 2px solid #ffffff;
             animation: slideInUp 0.6s ease-out;
-            max-height: 80vh;
+            max-height: none;
+            margin: auto;
         }
 
         @keyframes slideInUp {

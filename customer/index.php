@@ -1128,10 +1128,45 @@ if (isset($_GET['ajax'])) {
             margin-bottom: 3rem;
         }
 
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
+        .featuredProductsSwiper,
+        .topChoiceProductsSwiper {
+            position: relative;
+            padding: 10px 50px;
+            overflow: visible;
+        }
+
+        .featuredProductsSwiper .swiper-wrapper,
+        .topChoiceProductsSwiper .swiper-wrapper {
+            display: flex;
+            align-items: stretch;
+            padding: 5px 0;
+        }
+
+        .featuredProductsSwiper .swiper-slide,
+        .topChoiceProductsSwiper .swiper-slide {
+            width: 320px !important;
+            height: auto;
+            margin-right: 1.5rem;
+        }
+
+        .featuredProductsSwiper .swiper-button-next,
+        .featuredProductsSwiper .swiper-button-prev,
+        .topChoiceProductsSwiper .swiper-button-next,
+        .topChoiceProductsSwiper .swiper-button-prev {
+            color: #10b981;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px #e5e7eb;
+        }
+
+        .featuredProductsSwiper .swiper-button-next:after,
+        .featuredProductsSwiper .swiper-button-prev:after,
+        .topChoiceProductsSwiper .swiper-button-next:after,
+        .topChoiceProductsSwiper .swiper-button-prev:after {
+            font-size: 18px;
+            font-weight: bold;
         }
 
         .product-card {
@@ -1142,6 +1177,9 @@ if (isset($_GET['ajax'])) {
             transition: all 0.3s ease;
             cursor: pointer;
             border: 2px solid var(--foodpanda-pink);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .product-card:hover {

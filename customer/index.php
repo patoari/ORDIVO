@@ -2576,6 +2576,11 @@ if (isset($_GET['ajax'])) {
                     grabCursor: true,
                 });
                 
+            } catch (error) {
+                console.error('Failed to load featured products:', error);
+                document.getElementById('featuredProductsGrid').innerHTML = '<div class="swiper-slide"><div class="text-center text-danger">Failed to load featured products</div></div>';
+                document.getElementById('topChoiceProductsGrid').innerHTML = '<div class="swiper-slide"><div class="text-center text-danger">Failed to load top choice products</div></div>';
+            }
         }
 
         // View product function

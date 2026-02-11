@@ -6,6 +6,10 @@
 
 require_once '../config/db_connection.php';
 
+// Check if user is logged in
+$isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'];
+$userId = $_SESSION['user_id'] ?? 0;
+
 // Get site settings
 $siteSettings = fetchRow("SELECT * FROM site_settings WHERE id = 1") ?? [];
 $siteLogo = $siteSettings['logo_url'] ?? '';
@@ -21,52 +25,123 @@ if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️') {
     }
 }
 
-// For demo purposes, get some featured restaurants and products
-try {
-    $favoriteRestaurants = fetchAll("
-        SELECT u.*, 
-               COALESCE(u.business_name, u.name) as restaurant_name,
-               u.rating,
-               u.total_reviews,
-               u.avg_delivery_time
-        FROM users u 
-        WHERE u.role = 'vendor' AND u.status = 'active' 
-        ORDER BY u.featured DESC, u.rating DESC 
-        LIMIT 6
-    ");
+// Handle AJAX requests
+if (isset($_GET['ajax'])) {
+    header('Content-Type: application/json');
     
-    $favoriteProducts = fetchAll("
-        SELECT p.*, 
-               u.business_name as vendor_name,
-               c.name as category_name
-        FROM products p 
-        INNER JOIN users u ON p.vendor_id = u.id AND u.role = 'vendor' AND u.status = 'active'
-        LEFT JOIN categories c ON p.category_id = c.id 
-        WHERE p.is_available = 1 
-        ORDER BY RAND() 
-        LIMIT 8
-    ");
-} catch (Exception $e) {
-    $favoriteRestaurants = [];
-    $favoriteProducts = [];
+    switch ($_GET['ajax']) {
+        case 'toggle_favorite':
+            if (!$isLoggedIn) {
+                echo json_encode(['success' => false, 'message' => 'Please login to add favorites']);
+                exit;
+            }
+            
+            $itemType = sanitizeInput($_POST['type'] ?? '');
+            $itemId = (int)($_POST['id'] ?? 0);
+            
+            if (!in_array($itemType, ['product', 'vendor']) || !$itemId) {
+                echo json_encode(['success' => false, 'message' => 'Invalid request']);
+                exit;
+            }
+            
+            try {
+                // Check if already favorited
+                $existing = fetchRow("SELECT id FROM user_favorites WHERE user_id = ? AND item_type = ? AND item_id = ?", 
+                    [$userId, $itemType, $itemId]);
+                
+                if ($existing) {
+                    // Remove from favorites
+                    executeQuery("DELETE FROM user_favorites WHERE id = ?", [$existing['id']]);
+                    echo json_encode(['success' => true, 'action' => 'removed', 'message' => 'Removed from favorites']);
+                } else {
+                    // Add to favorites
+                    executeQuery("INSERT INTO user_favorites (user_id, item_type, item_id, created_at) VALUES (?, ?, ?, NOW())", 
+                        [$userId, $itemType, $itemId]);
+                    echo json_encode(['success' => true, 'action' => 'added', 'message' => 'Added to favorites']);
+                }
+            } catch (Exception $e) {
+                echo json_encode(['success' => false, 'message' => 'Failed to update favorites']);
+            }
+            exit;
+            
+        case 'get_favorites':
+            if (!$isLoggedIn) {
+                echo json_encode(['vendors' => [], 'products' => []]);
+                exit;
+            }
+            
+            try {
+                // Get favorite vendors
+                $favoriteVendors = fetchAll("
+                    SELECT u.*, 
+                           COALESCE(u.business_name, u.name) as restaurant_name,
+                           v.logo, v.banner_image,
+                           u.rating, u.total_reviews, u.avg_delivery_time,
+                           uf.created_at as favorited_at
+                    FROM user_favorites uf
+                    INNER JOIN users u ON uf.item_id = u.id AND uf.item_type = 'vendor'
+                    LEFT JOIN vendors v ON u.id = v.owner_id
+                    WHERE uf.user_id = ? AND u.role = 'vendor' AND u.status = 'active'
+                    ORDER BY uf.created_at DESC
+                ", [$userId]);
+                
+                // Get favorite products
+                $favoriteProducts = fetchAll("
+                    SELECT p.*, 
+                           u.name as vendor_name,
+                           c.name as category_name,
+                           uf.created_at as favorited_at
+                    FROM user_favorites uf
+                    INNER JOIN products p ON uf.item_id = p.id AND uf.item_type = 'product'
+                    INNER JOIN users u ON p.vendor_id = u.id
+                    LEFT JOIN categories c ON p.category_id = c.id
+                    WHERE uf.user_id = ? AND p.is_available = 1
+                    ORDER BY uf.created_at DESC
+                ", [$userId]);
+                
+                echo json_encode([
+                    'vendors' => $favoriteVendors,
+                    'products' => $favoriteProducts
+                ]);
+            } catch (Exception $e) {
+                echo json_encode(['vendors' => [], 'products' => []]);
+            }
+            exit;
+    }
 }
 
-// Handle add to cart
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_to_cart') {
-    if (!isset($_SESSION['cart'])) {
-        $_SESSION['cart'] = [];
+// Get favorites for initial page load
+$favoriteRestaurants = [];
+$favoriteProducts = [];
+
+if ($isLoggedIn) {
+    try {
+        $favoriteRestaurants = fetchAll("
+            SELECT u.*, 
+                   COALESCE(u.business_name, u.name) as restaurant_name,
+                   v.logo, v.banner_image,
+                   u.rating, u.total_reviews, u.avg_delivery_time
+            FROM user_favorites uf
+            INNER JOIN users u ON uf.item_id = u.id AND uf.item_type = 'vendor'
+            LEFT JOIN vendors v ON u.id = v.owner_id
+            WHERE uf.user_id = ? AND u.role = 'vendor' AND u.status = 'active'
+            ORDER BY uf.created_at DESC
+        ", [$userId]);
+        
+        $favoriteProducts = fetchAll("
+            SELECT p.*, 
+                   u.name as vendor_name,
+                   c.name as category_name
+            FROM user_favorites uf
+            INNER JOIN products p ON uf.item_id = p.id AND uf.item_type = 'product'
+            INNER JOIN users u ON p.vendor_id = u.id
+            LEFT JOIN categories c ON p.category_id = c.id
+            WHERE uf.user_id = ? AND p.is_available = 1
+            ORDER BY uf.created_at DESC
+        ", [$userId]);
+    } catch (Exception $e) {
+        // Tables might not exist yet, will be empty
     }
-    
-    $productId = (int)$_POST['product_id'];
-    $quantity = (int)$_POST['quantity'];
-    
-    if (isset($_SESSION['cart'][$productId])) {
-        $_SESSION['cart'][$productId] += $quantity;
-    } else {
-        $_SESSION['cart'][$productId] = $quantity;
-    }
-    
-    $success = 'Product added to cart!';
 }
 ?>
 <!DOCTYPE html>

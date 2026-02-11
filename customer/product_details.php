@@ -19,6 +19,16 @@ try {
     $siteSettings = fetchRow("SELECT * FROM site_settings WHERE id = 1") ?? [];
     $siteLogo = $siteSettings['logo_url'] ?? '';
     $siteName = $siteSettings['site_name'] ?? 'ORDIVO';
+    
+    // Fix logo path for customer directory
+    if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️') {
+        if (strpos($siteLogo, 'uploads/') === 0) {
+            $siteLogo = '../' . $siteLogo;
+        }
+        elseif (!preg_match('/^(https?:\/\/|\.\.\/|\/)/i', $siteLogo)) {
+            $siteLogo = '../' . $siteLogo;
+        }
+    }
 } catch (Exception $e) {
     $siteLogo = '';
     $siteName = 'ORDIVO';
@@ -479,7 +489,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <a href="index.php" class="navbar-brand">
-                    <img src="../assets/images/ordivo-logo.svg" alt="ORDIVO" height="40" style="max-width: 120px;">
+                    <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
+                        <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" height="40" style="max-width: 120px;">
+                    <?php else: ?>
+                        <i class="fas fa-utensils" style="font-size: 2rem; color: #10b981;"></i>
+                    <?php endif; ?>
                 </a>
                 
                 <div class="d-flex align-items-center gap-3">

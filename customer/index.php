@@ -1083,17 +1083,27 @@ if (isset($_GET['ajax'])) {
 
         .cuisinesSwiper .swiper-button-next,
         .cuisinesSwiper .swiper-button-prev {
-            color: var(--foodpanda-primary);
-            width: 35px;
-            height: 35px;
+            color: #10b981;
+            width: 44px;
+            height: 44px;
             background: white;
+            border: 2px solid #10b981;
             border-radius: 50%;
-            box-shadow: 0 2px 8px #e5e7eb;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .cuisinesSwiper .swiper-button-next:hover,
+        .cuisinesSwiper .swiper-button-prev:hover {
+            background: #10b981;
+            color: white;
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+            transform: scale(1.1);
         }
 
         .cuisinesSwiper .swiper-button-next:after,
         .cuisinesSwiper .swiper-button-prev:after {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
         }
 
@@ -1167,11 +1177,23 @@ if (isset($_GET['ajax'])) {
         .topChoiceProductsSwiper .swiper-button-next,
         .topChoiceProductsSwiper .swiper-button-prev {
             color: #10b981;
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             background: white;
+            border: 2px solid #10b981;
             border-radius: 50%;
-            box-shadow: 0 2px 8px #e5e7eb;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .featuredProductsSwiper .swiper-button-next:hover,
+        .featuredProductsSwiper .swiper-button-prev:hover,
+        .topChoiceProductsSwiper .swiper-button-next:hover,
+        .topChoiceProductsSwiper .swiper-button-prev:hover {
+            background: #10b981;
+            color: white;
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+            transform: scale(1.1);
         }
 
         .featuredProductsSwiper .swiper-button-next:after,

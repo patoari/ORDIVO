@@ -1176,7 +1176,7 @@ if (isset($_GET['ajax'])) {
             box-shadow: 0 2px 8px #e5e7eb;
             transition: all 0.3s ease;
             cursor: pointer;
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--foodpanda-pink);
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -1184,8 +1184,8 @@ if (isset($_GET['ajax'])) {
 
         .product-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 4px 12px #d1d5db;
-            border-color: #10b981;
+            box-shadow: 0 8px 25px #e5e7eb;
+            border-color: var(--foodpanda-secondary);
         }
 
         .product-image {
@@ -1207,11 +1207,11 @@ if (isset($_GET['ajax'])) {
         }
 
         .badge-featured {
-            background: #10b981;
+            background: var(--foodpanda-primary);
         }
 
         .badge-top-choice {
-            background: #f97316;
+            background: #28a745;
         }
 
         .product-info {
@@ -1221,20 +1221,19 @@ if (isset($_GET['ajax'])) {
         .product-name {
             font-weight: 600;
             margin-bottom: 0.5rem;
-            color: #374151;
-            font-size: 1rem;
+            color: var(--foodpanda-dark);
         }
 
         .product-vendor {
             font-size: 0.85rem;
-            color: #6b7280;
+            color: var(--foodpanda-gray);
             margin-bottom: 0.5rem;
         }
 
         .product-price {
             font-size: 1.1rem;
             font-weight: 700;
-            color: #10b981;
+            color: var(--foodpanda-pink);
             margin-bottom: 0.5rem;
         }
 

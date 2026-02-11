@@ -1017,20 +1017,26 @@ if (isset($_GET['ajax'])) {
             top: 50%;
             transform: translateY(-50%);
             background: white;
-            border: 1px solid var(--foodpanda-border);
+            border: 2px solid #10b981;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 2px 8px #e5e7eb;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
             z-index: 10;
+            color: #10b981;
+            font-size: 18px;
+            transition: all 0.3s ease;
         }
 
         .carousel-nav:hover {
-            background: var(--foodpanda-light-gray);
+            background: #10b981;
+            color: white;
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+            transform: translateY(-50%) scale(1.1);
         }
 
         .carousel-nav.prev {

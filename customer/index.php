@@ -1148,7 +1148,7 @@ if (isset($_GET['ajax'])) {
             min-width: 280px;
             max-width: 280px;
             height: auto;
-            margin-right: 3px;
+            margin-right: 16px;
             flex-shrink: 0;
         }
 
@@ -2562,7 +2562,7 @@ if (isset($_GET['ajax'])) {
                 // Initialize Featured Products Swiper
                 new Swiper('.featuredProductsSwiper', {
                     slidesPerView: 'auto',
-                    spaceBetween: 3,
+                    spaceBetween: 16,
                     navigation: {
                         nextEl: '.featuredProductsSwiper .swiper-button-next',
                         prevEl: '.featuredProductsSwiper .swiper-button-prev',

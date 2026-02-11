@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 10, 2026 at 08:43 AM
+-- Generation Time: Feb 11, 2026 at 10:54 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -2418,6 +2418,20 @@ CREATE TABLE `user_blocks` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `user_favorites`
+--
+
+CREATE TABLE `user_favorites` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `item_type` enum('product','vendor') NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user_role_changes`
 --
 
@@ -3503,6 +3517,15 @@ ALTER TABLE `user_blocks`
   ADD KEY `fk_blocks_unblocker` (`unblocked_by`);
 
 --
+-- Indexes for table `user_favorites`
+--
+ALTER TABLE `user_favorites`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_favorite` (`user_id`,`item_type`,`item_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `item_type_id` (`item_type`,`item_id`);
+
+--
 -- Indexes for table `user_role_changes`
 --
 ALTER TABLE `user_role_changes`
@@ -4058,6 +4081,12 @@ ALTER TABLE `user_approval_requests`
 -- AUTO_INCREMENT for table `user_blocks`
 --
 ALTER TABLE `user_blocks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user_favorites`
+--
+ALTER TABLE `user_favorites`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

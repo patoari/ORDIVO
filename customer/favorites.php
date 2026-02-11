@@ -95,11 +95,102 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         .header {
             background: white;
-            padding: 1rem 0;
+            padding: 0;
             box-shadow: 0 2px 4px #e5e7eb;
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
             z-index: 1000;
+            height: 100px;
+        }
+
+        .header .navbar {
+            height: 100px;
+            padding: 0 1rem;
+        }
+
+        .header .container {
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--ordivo-primary) !important;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            height: fit-content;
+            margin-right: 2rem;
+        }
+
+        .location-display {
+            display: flex;
+            align-items: center;
+            color: #6c757d;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            height: fit-content;
+            border: 2px solid #10b981;
+            background: white;
+        }
+
+        .location-display:hover {
+            background: #10b981;
+            color: white;
+            border-color: #059669;
+        }
+
+        .location-display:hover i {
+            color: white;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            height: fit-content;
+        }
+
+        .btn-user {
+            background: white;
+            border: 2px solid #10b981;
+            color: var(--ordivo-dark);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            height: fit-content;
+        }
+
+        .btn-user:hover {
+            background: #10b981;
+            color: white;
+            border-color: #059669;
+        }
+
+        .btn-user:hover i {
+            color: white;
+        }
+
+        body {
+            padding-top: 100px;
+        }
+
+        .favorites-header {
+            background: #10b981;
+            color: white;
+            padding: 2rem 0;
+            margin-top: 1.5rem;
         }
 
         /* Logo Animations */

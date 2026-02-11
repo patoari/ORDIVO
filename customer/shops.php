@@ -166,10 +166,18 @@ try {
             border-radius: 8px;
             transition: all 0.3s ease;
             height: fit-content;
+            border: 2px solid #10b981;
+            background: white;
         }
 
         .location-display:hover {
-            background: var(--foodpanda-light-gray);
+            background: #10b981;
+            color: white;
+            border-color: #059669;
+        }
+
+        .location-display:hover i {
+            color: white;
         }
 
         .user-menu {
@@ -181,7 +189,7 @@ try {
 
         .btn-user {
             background: white;
-            border: 1px solid var(--foodpanda-border);
+            border: 2px solid #10b981;
             color: var(--foodpanda-dark);
             padding: 0.75rem 1rem;
             border-radius: 8px;
@@ -194,8 +202,13 @@ try {
         }
 
         .btn-user:hover {
-            background: var(--foodpanda-light-gray);
-            color: var(--foodpanda-dark);
+            background: #10b981;
+            color: white;
+            border-color: #059669;
+        }
+
+        .btn-user:hover i {
+            color: white;
         }
 
         /* Navigation Tabs */

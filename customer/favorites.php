@@ -617,22 +617,72 @@ if ($isLoggedIn) {
                 // Show notification
                 showNotification(`Removed from favorites`, 'info');
                 
-                // Remove the card after animation
-                setTimeout(() => {
-                    btn.closest('.restaurant-card, .product-card').style.opacity = '0.5';
-                }, 100);
+                // Remove from favorites via AJAX
+                toggleFavoriteAjax(type, id, btn);
                 
             } else {
-                // Add to favorites
-                btn.classList.add('active');
-                icon.classList.remove('far');
-                icon.classList.add('fas');
-                
-                // In a real app, this would make an AJAX call to add to favorites
-                console.log(`Added ${type} ${id} to favorites`);
-                
-                // Show notification
-                showNotification(`Added to favorites`, 'success');
+                // Add to favorites via AJAX
+                toggleFavoriteAjax(type, id, btn);
+            }
+        }
+        
+        function toggleFavoriteAjax(type, id, btn) {
+            const icon = btn.querySelector('i');
+            const isActive = btn.classList.contains('active');
+            
+            fetch('?ajax=toggle_favorite', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `type=${type}&id=${id}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.action === 'removed') {
+                        btn.classList.remove('active');
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        
+                        // Fade out and remove the card
+                        const card = btn.closest('.restaurant-card, .product-card').parentElement;
+                        card.style.transition = 'opacity 0.3s ease';
+                        card.style.opacity = '0';
+                        setTimeout(() => {
+                            card.remove();
+                            checkIfEmpty();
+                        }, 300);
+                    } else {
+                        btn.classList.add('active');
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                    }
+                    showNotification(data.message, 'success');
+                } else {
+                    showNotification(data.message, 'danger');
+                    if (data.message.includes('login')) {
+                        setTimeout(() => {
+                            window.location.href = '../auth/login.php';
+                        }, 1500);
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('Failed to update favorites', 'danger');
+            });
+        }
+        
+        function checkIfEmpty() {
+            const restaurantSection = document.querySelector('.restaurant-section');
+            const productSection = document.querySelector('.product-section');
+            
+            const hasRestaurants = restaurantSection && restaurantSection.querySelectorAll('.restaurant-card').length > 0;
+            const hasProducts = productSection && productSection.querySelectorAll('.product-card').length > 0;
+            
+            if (!hasRestaurants && !hasProducts) {
+                location.reload();
             }
         }
         
@@ -640,9 +690,9 @@ if ($isLoggedIn) {
             // Create notification element
             const notification = document.createElement('div');
             notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-            notification.style.cssText = 'top: 100px; right: 20px; z-index: 9999; min-width: 250px;';
+            notification.style.cssText = 'top: 120px; right: 20px; z-index: 9999; min-width: 250px;';
             notification.innerHTML = `
-                <i class="fas fa-heart me-2"></i>${message}
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>${message}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             `;
             
@@ -656,9 +706,22 @@ if ($isLoggedIn) {
             }, 3000);
         }
         
-        // Initialize favorite states (in a real app, this would come from the database)
+        // Check if user is logged in
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Favorites page loaded');
+            <?php if (!$isLoggedIn): ?>
+                // Show login prompt if not logged in
+                const emptyDiv = document.querySelector('.empty-favorites');
+                if (emptyDiv) {
+                    emptyDiv.innerHTML = `
+                        <i class="fas fa-heart fa-4x text-muted mb-4"></i>
+                        <h3 class="text-muted mb-3">Please login to view favorites</h3>
+                        <p class="text-muted mb-4">Sign in to save your favorite restaurants and dishes!</p>
+                        <a href="../auth/login.php" class="btn btn-primary btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                        </a>
+                    `;
+                }
+            <?php endif; ?>
         });
     </script>
 </body>

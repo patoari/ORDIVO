@@ -1144,9 +1144,9 @@ if (isset($_GET['ajax'])) {
 
         .featuredProductsSwiper .swiper-slide,
         .topChoiceProductsSwiper .swiper-slide {
-            width: 320px !important;
+            width: 280px !important;
             height: auto;
-            margin-right: 1.5rem;
+            margin-right: 3px;
         }
 
         .featuredProductsSwiper .swiper-button-next,
@@ -2526,7 +2526,7 @@ if (isset($_GET['ajax'])) {
                 // Initialize Featured Products Swiper
                 new Swiper('.featuredProductsSwiper', {
                     slidesPerView: 'auto',
-                    spaceBetween: 0,
+                    spaceBetween: 3,
                     navigation: {
                         nextEl: '.featuredProductsSwiper .swiper-button-next',
                         prevEl: '.featuredProductsSwiper .swiper-button-prev',
@@ -2567,7 +2567,7 @@ if (isset($_GET['ajax'])) {
                 // Initialize Top Choice Products Swiper
                 new Swiper('.topChoiceProductsSwiper', {
                     slidesPerView: 'auto',
-                    spaceBetween: 0,
+                    spaceBetween: 3,
                     navigation: {
                         nextEl: '.topChoiceProductsSwiper .swiper-button-next',
                         prevEl: '.topChoiceProductsSwiper .swiper-button-prev',

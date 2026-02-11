@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![ORDIVO Logo](assets/images/ordivo-logo.svg)
+![ORDIVO Logo](uploads/settings/logo_1770475038_69874e1e48045.png)
 
 **A comprehensive multi-vendor food and grocery delivery platform designed for the Bangladeshi market**
 

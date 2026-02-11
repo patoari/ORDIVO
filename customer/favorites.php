@@ -366,17 +366,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <div class="container">
             <div class="d-flex justify-content-between align-items-center h-100">
                 <a href="index.php" class="text-decoration-none navbar-brand">
-                    <div class="d-flex align-items-center">
-                        <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
-                            <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" class="logo-img">
-                        <?php else: ?>
-                            <i class="fas fa-utensils me-2 logo-icon"></i>
-                        <?php endif; ?>
-                        <span class="brand-text"><?= htmlspecialchars($siteName) ?></span>
-                    </div>
+                    <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
+                        <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" class="logo-img">
+                    <?php else: ?>
+                        <i class="fas fa-utensils logo-icon"></i>
+                    <?php endif; ?>
                 </a>
                 
-                <div class="user-menu">
+                <div class="user-menu ms-auto">
                     <a href="index.php" class="btn-user">
                         <i class="fas fa-home me-2"></i>Home
                     </a>

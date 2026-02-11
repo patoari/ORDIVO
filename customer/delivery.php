@@ -154,6 +154,11 @@ if (isset($_GET['ajax'])) {
             right: 0;
             z-index: 1000;
             height: 100px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .header.header-hidden {
+            transform: translateY(-100%);
         }
 
         .header .navbar {
@@ -299,6 +304,11 @@ if (isset($_GET['ajax'])) {
             background-origin: border-box;
             background-clip: padding-box, border-box;
             animation: navbarBorderPulse 3s ease-in-out infinite;
+            transition: top 0.3s ease-in-out;
+        }
+
+        .nav-tabs-container.nav-fixed-top {
+            top: 0;
         }
 
         @keyframes navbarBorderPulse {
@@ -1113,5 +1123,8 @@ if (isset($_GET['ajax'])) {
             }
         });
     </script>
+    
+    <!-- Scroll Header Behavior -->
+    <script src="../assets/js/scroll-header.js"></script>
 </body>
 </html>

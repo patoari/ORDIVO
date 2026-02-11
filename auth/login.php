@@ -121,8 +121,9 @@ $demoCredentials = [
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
             position: relative;
         }
 
@@ -219,6 +220,7 @@ $demoCredentials = [
         .login-content {
             padding: 2rem 2.5rem;
             text-align: center;
+            overflow: visible;
         }
 
         .logo {

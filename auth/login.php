@@ -127,7 +127,7 @@ $demoCredentials = [
             position: relative;
         }
 
-        /* Homepage Background - Full Homepage Content */
+        /* Homepage Background - Simulated Homepage */
         .homepage-background {
             position: fixed;
             top: 0;
@@ -136,39 +136,122 @@ $demoCredentials = [
             height: 100%;
             z-index: 1;
             overflow: hidden;
+            background: #ffffff;
         }
 
-        .homepage-background iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            transform: scale(1.1);
-            filter: blur(2px) brightness(0.7);
-        }
-
-        /* Fallback gradient background */
-        .homepage-background::before {
-            content: '';
+        /* Simulated homepage elements */
+        .homepage-elements {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-            z-index: -1;
+            z-index: 3;
+            opacity: 0.6;
+            filter: blur(4px) brightness(0.9);
         }
 
-        .homepage-background::after {
+        .fake-header {
+            background: white;
+            height: 100px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            justify-content: space-between;
+            border-bottom: 2px solid #10b981;
+        }
+
+        .fake-header::before {
+            content: 'ORDIVO';
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .fake-header::after {
+            content: '🍔 🛒 ❤️';
+            font-size: 1.5rem;
+        }
+
+        .fake-nav {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            gap: 1rem;
+        }
+
+        .fake-nav::before {
+            content: 'Delivery';
+            background: white;
+            color: #10b981;
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .fake-nav::after {
+            content: 'Pickup • Shops • Groceries';
+            color: white;
+            font-weight: 500;
+        }
+
+        .fake-content {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+            background: #f9fafb;
+        }
+
+        .fake-card {
+            background: white;
+            border-radius: 12px;
+            height: 220px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            animation: cardFloat 3s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+
+        .fake-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background: #e5e7eb;
-            z-index: 2;
+            height: 140px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .fake-card::after {
+            content: 'Restaurant Name';
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .fake-card:nth-child(2)::before { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+        .fake-card:nth-child(3)::before { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+        .fake-card:nth-child(4)::before { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); }
+        .fake-card:nth-child(5)::before { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
+        .fake-card:nth-child(6)::before { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+
+        .fake-card:nth-child(2) { animation-delay: 0.5s; }
+        .fake-card:nth-child(3) { animation-delay: 1s; }
+        .fake-card:nth-child(4) { animation-delay: 1.5s; }
+        .fake-card:nth-child(5) { animation-delay: 2s; }
+        .fake-card:nth-child(6) { animation-delay: 2.5s; }
+
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
         }
 
         @keyframes gradientShift {
@@ -453,7 +536,18 @@ $demoCredentials = [
 <body>
     <!-- Homepage Background -->
     <div class="homepage-background">
-        <iframe src="../customer/index.php" scrolling="no"></iframe>
+        <div class="homepage-elements">
+            <div class="fake-header"></div>
+            <div class="fake-nav"></div>
+            <div class="fake-content">
+                <div class="fake-card"></div>
+                <div class="fake-card"></div>
+                <div class="fake-card"></div>
+                <div class="fake-card"></div>
+                <div class="fake-card"></div>
+                <div class="fake-card"></div>
+            </div>
+        </div>
     </div>
 
     <!-- Logout Message -->
@@ -604,13 +698,7 @@ $demoCredentials = [
             }
         });
 
-        // Prevent iframe interaction
-        document.addEventListener('DOMContentLoaded', function() {
-            const iframe = document.querySelector('iframe');
-            if (iframe) {
-                iframe.style.pointerEvents = 'none';
-            }
-        });
+
     </script>
 </body>
 </html>

@@ -163,7 +163,7 @@ require_once 'components/load_vendor_images.php';
         }
 
         .sidebar {
-            background: #10b981; 100%);
+            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
             min-height: 100vh;
             width: 250px;
             position: fixed;
@@ -181,11 +181,20 @@ require_once 'components/load_vendor_images.php';
             transition: all 0.3s ease;
         }
 
-        .sidebar .nav-link:hover,
+        .sidebar .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
         .sidebar .nav-link.active {
             background: #ffffff;
-            color: white;
+            color: #10b981;
+            font-weight: 600;
             transform: translateX(5px);
+        }
+
+        .sidebar .nav-link.active i {
+            color: #10b981;
         }
 
         .main-content {
@@ -196,7 +205,7 @@ require_once 'components/load_vendor_images.php';
 
         .welcome-card {
             position: relative;
-            background: #10b981; 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             border-radius: 15px;
             padding: 0;
@@ -213,7 +222,18 @@ require_once 'components/load_vendor_images.php';
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.3;
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.85) 0%, rgba(5, 150, 105, 0.85) 100%);
             z-index: 0;
         }
 

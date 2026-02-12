@@ -363,19 +363,14 @@ if (isset($_GET['ajax'])) {
         /* Header */
         .header {
             background: white;
-            padding: 0;
+            padding: 0; /* Remove padding to control height precisely */
             box-shadow: 0 2px 4px #e5e7eb;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            height: 100px;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .header.header-hidden {
-            transform: translateY(-100%);
+            height: 100px; /* Fixed header height */
         }
 
         .header .navbar {
@@ -546,24 +541,18 @@ if (isset($_GET['ajax'])) {
             background: white;
             border-bottom: 1px solid var(--foodpanda-border);
             padding: 0 1rem;
-            height: 60px;
+            height: 60px; /* Fixed nav tabs height */
             position: fixed;
-            top: 100px;
+            top: 100px; /* Below header with proper spacing */
             left: 0;
             right: 0;
             z-index: 999;
-            box-shadow: 0 2px 4px #e5e7eb;
+            box-shadow: 0 2px 4px #e5e7eb; /* Add subtle shadow for separation */
             border-top: 2px solid transparent;
             border-bottom: 2px solid transparent;
             background: #10b981;
             background-origin: border-box;
             background-clip: padding-box, border-box;
-            transition: top 0.3s ease-in-out;
-        }
-
-        .nav-tabs-container.nav-fixed-top {
-            top: 0;
-        }
             animation: navbarBorderPulse 3s ease-in-out infinite;
         }
 
@@ -2568,9 +2557,6 @@ if (isset($_GET['ajax'])) {
             // Initialize filters only
             initializeFilters();
             
-            // Initialize scroll behavior for header
-            initScrollBehavior();
-            
             // Debug logo loading
             const logoImg = document.querySelector('.navbar-brand img');
             if (logoImg) {
@@ -2581,38 +2567,7 @@ if (isset($_GET['ajax'])) {
                 logoImg.addEventListener('error', function() {
                     console.error('✗ Logo failed to load:', this.src);
                 });
-            }
-        });
-
-        // Scroll behavior for hiding header and fixing navigation
-        function initScrollBehavior() {
-            let lastScrollTop = 0;
-            const header = document.querySelector('.header');
-            const navTabs = document.querySelector('.nav-tabs-container');
-            const scrollThreshold = 100;
-
-            window.addEventListener('scroll', function() {
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-                if (scrollTop > scrollThreshold) {
-                    if (scrollTop > lastScrollTop) {
-                        // Scrolling down
-                        header.classList.add('header-hidden');
-                        navTabs.classList.add('nav-fixed-top');
-                    } else {
-                        // Scrolling up
-                        header.classList.remove('header-hidden');
-                        navTabs.classList.remove('nav-fixed-top');
-                    }
-                } else {
-                    // At top of page
-                    header.classList.remove('header-hidden');
-                    navTabs.classList.remove('nav-fixed-top');
-                }
-
-                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-            }, false);
-        } else {
+            } else {
                 console.log('No logo image element found in navbar');
             }
             

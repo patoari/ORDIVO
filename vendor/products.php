@@ -151,6 +151,81 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error = 'Error: ' . $e->getMessage();
             }
             break;
+            
+        case 'edit_product':
+            try {
+                global $pdo;
+                
+                $productId = (int)$_POST['product_id'];
+                
+                // Verify product belongs to this vendor
+                $existingProduct = fetchRow("SELECT * FROM products WHERE id = ? AND vendor_id = ?", [$productId, $vendorId]);
+                if (!$existingProduct) {
+                    throw new Exception('Product not found or access denied');
+                }
+                
+                // Validate required fields
+                if (empty($_POST['name']) || empty($_POST['price'])) {
+                    throw new Exception('Product name and price are required');
+                }
+                
+                // Handle image upload
+                $imagePath = $existingProduct['image']; // Keep existing image by default
+                if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
+                    // Delete old image if exists
+                    if ($existingProduct['image'] && file_exists('../uploads/images/' . $existingProduct['image'])) {
+                        unlink('../uploads/images/' . $existingProduct['image']);
+                    }
+                    $imagePath = handleImageUpload($_FILES['product_image']);
+                }
+                
+                // Prepare data
+                $name = trim($_POST['name']);
+                $description = trim($_POST['description'] ?? '');
+                $price = (float)$_POST['price'];
+                $categoryId = !empty($_POST['category_id']) ? (int)$_POST['category_id'] : null;
+                $sku = trim($_POST['sku'] ?? '');
+                $isAvailable = isset($_POST['is_available']) ? 1 : 0;
+                $isFeatured = isset($_POST['is_featured']) ? 1 : 0;
+                
+                // Update product
+                $stmt = $pdo->prepare("
+                    UPDATE products SET 
+                        name = ?,
+                        description = ?,
+                        price = ?,
+                        category_id = ?,
+                        sku = ?,
+                        image = ?,
+                        is_available = ?,
+                        is_featured = ?,
+                        updated_at = NOW()
+                    WHERE id = ? AND vendor_id = ?
+                ");
+                
+                $result = $stmt->execute([
+                    $name,
+                    $description,
+                    $price,
+                    $categoryId,
+                    $sku,
+                    $imagePath,
+                    $isAvailable,
+                    $isFeatured,
+                    $productId,
+                    $vendorId
+                ]);
+                
+                if ($result) {
+                    $success = 'Product updated successfully!';
+                } else {
+                    throw new Exception('Failed to update product');
+                }
+                
+            } catch (Exception $e) {
+                $error = 'Error: ' . $e->getMessage();
+            }
+            break;
     }
 }
 
@@ -558,7 +633,10 @@ $stats = [
                                             <small class="text-muted"><?= date('M j, Y', strtotime($product['created_at'])) ?></small>
                                         </td>
                                         <td>
-                                            <button class="btn btn-outline-danger btn-sm" onclick="deleteProduct(<?= $product['id'] ?>, '<?= htmlspecialchars($product['name']) ?>')">
+                                            <button class="btn btn-outline-primary btn-sm me-1" onclick="editProduct(<?= $product['id'] ?>)" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-outline-danger btn-sm" onclick="deleteProduct(<?= $product['id'] ?>, '<?= htmlspecialchars($product['name']) ?>')" title="Delete">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </td>
@@ -634,10 +712,127 @@ $stats = [
         </div>
     </div>
 
+    <!-- Edit Product Modal -->
+    <div class="modal fade" id="editProductModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-edit me-2"></i>Edit Product
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST" enctype="multipart/form-data" id="editProductForm">
+                    <input type="hidden" name="action" value="edit_product">
+                    <input type="hidden" name="product_id" id="edit_product_id">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="edit_name" class="form-label">Product Name *</label>
+                                <input type="text" class="form-control" id="edit_name" name="name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="edit_sku" class="form-label">SKU</label>
+                                <input type="text" class="form-control" id="edit_sku" name="sku">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="edit_description" class="form-label">Description</label>
+                            <textarea class="form-control" id="edit_description" name="description" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="edit_category_id" class="form-label">Category</label>
+                                <select class="form-select" id="edit_category_id" name="category_id">
+                                    <option value="">Select Category</option>
+                                    <?php foreach ($categories as $category): ?>
+                                        <option value="<?= $category['id'] ?>"><?= htmlspecialchars($category['name']) ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="edit_price" class="form-label">Price (৳) *</label>
+                                <input type="number" class="form-control" id="edit_price" name="price" step="0.01" min="0" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Current Image</label>
+                            <div id="current_image_preview" class="mb-2"></div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="edit_product_image" class="form-label">Change Product Image</label>
+                            <input type="file" class="form-control" id="edit_product_image" name="product_image" accept="image/*">
+                            <small class="text-muted">Leave empty to keep current image. Max 5MB. JPEG, PNG, GIF, WebP allowed.</small>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="edit_is_available" name="is_available" value="1">
+                                    <label class="form-check-label" for="edit_is_available">
+                                        Available for Sale
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="edit_is_featured" name="is_featured" value="1">
+                                    <label class="form-check-label" for="edit_is_featured">
+                                        Featured Product
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Update Product
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // Product data for editing
+        const productsData = <?= json_encode($products) ?>;
+        
+        function editProduct(productId) {
+            const product = productsData.find(p => p.id == productId);
+            if (!product) return;
+            
+            // Fill form fields
+            document.getElementById('edit_product_id').value = product.id;
+            document.getElementById('edit_name').value = product.name;
+            document.getElementById('edit_sku').value = product.sku || '';
+            document.getElementById('edit_description').value = product.description || '';
+            document.getElementById('edit_category_id').value = product.category_id || '';
+            document.getElementById('edit_price').value = product.price;
+            document.getElementById('edit_is_available').checked = product.is_available == 1;
+            document.getElementById('edit_is_featured').checked = product.is_featured == 1;
+            
+            // Show current image
+            const imagePreview = document.getElementById('current_image_preview');
+            if (product.image) {
+                imagePreview.innerHTML = `<img src="../uploads/images/${product.image}" alt="Current Image" style="max-width: 200px; max-height: 200px;" class="img-thumbnail">`;
+            } else {
+                imagePreview.innerHTML = '<p class="text-muted">No image uploaded</p>';
+            }
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('editProductModal'));
+            modal.show();
+        }
+        
         function deleteProduct(productId, productName) {
             if (confirm(`Are you sure you want to delete "${productName}"? This action cannot be undone.`)) {
                 const form = document.createElement('form');

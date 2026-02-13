@@ -180,14 +180,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Get categories
+// Get categories with pagination
 try {
+    // Pagination settings
+    $itemsPerPage = 10;
+    $currentPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+    $offset = ($currentPage - 1) * $itemsPerPage;
+    
     // Check if categories table exists and what columns it has
     $categoriesTableExists = fetchValue("SHOW TABLES LIKE 'categories'");
     
     if ($categoriesTableExists) {
         // Check if status column exists
         $statusColumnExists = fetchValue("SHOW COLUMNS FROM categories LIKE 'status'");
+        
+        // Get total count for pagination
+        $totalCategories = fetchValue("SELECT COUNT(*) FROM categories");
+        $totalPages = ceil($totalCategories / $itemsPerPage);
         
         if ($statusColumnExists) {
             $categories = fetchAll("
@@ -197,7 +206,8 @@ try {
                 LEFT JOIN products p ON c.id = p.category_id
                 GROUP BY c.id
                 ORDER BY c.created_at DESC
-            ");
+                LIMIT ? OFFSET ?
+            ", [$itemsPerPage, $offset]);
         } else {
             // Fallback query without status column
             $categories = fetchAll("
@@ -208,23 +218,29 @@ try {
                 LEFT JOIN products p ON c.id = p.category_id
                 GROUP BY c.id
                 ORDER BY c.created_at DESC
-            ");
+                LIMIT ? OFFSET ?
+            ", [$itemsPerPage, $offset]);
         }
         
-        // Get statistics with safe array access
+        // Get statistics with safe array access (for all categories, not just current page)
+        $allCategoriesForStats = fetchAll("SELECT * FROM categories");
         $stats = [
-            'total' => count($categories),
-            'active' => count(array_filter($categories, fn($c) => ($c['status'] ?? 'active') === 'active')),
-            'inactive' => count(array_filter($categories, fn($c) => ($c['status'] ?? 'active') === 'inactive')),
-            'total_products' => array_sum(array_column($categories, 'product_count'))
+            'total' => $totalCategories,
+            'active' => count(array_filter($allCategoriesForStats, fn($c) => ($c['status'] ?? 'active') === 'active')),
+            'inactive' => count(array_filter($allCategoriesForStats, fn($c) => ($c['status'] ?? 'active') === 'inactive')),
+            'total_products' => fetchValue("SELECT COUNT(*) FROM products") ?: 0
         ];
     } else {
         $categories = [];
         $stats = ['total' => 0, 'active' => 0, 'inactive' => 0, 'total_products' => 0];
+        $totalPages = 0;
+        $currentPage = 1;
     }
 } catch (Exception $e) {
     $categories = [];
     $stats = ['total' => 0, 'active' => 0, 'inactive' => 0, 'total_products' => 0];
+    $totalPages = 0;
+    $currentPage = 1;
     $error = 'Failed to load categories: ' . $e->getMessage();
 }
 
@@ -276,18 +292,45 @@ $iconOptions = [
             padding: 0;
         }
 
-        /* Static Sidebar */
+        /* Mobile First - Sidebar hidden by default on mobile */
         .sidebar {
             position: fixed;
             top: 0;
-            left: 0;
+            left: -280px;
             height: 100vh;
             width: var(--sidebar-width);
             background: linear-gradient(180deg, #10b981 0%, #059669 100%);
             color: white;
             z-index: 1000;
             overflow-y: auto;
+            transition: left 0.3s ease;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar.show {
+            left: 0;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .sidebar-toggle {
+            display: none;
         }
 
         .sidebar-header {
@@ -339,20 +382,66 @@ $iconOptions = [
             margin-right: 0.75rem;
         }
 
-        /* Main Content */
+        /* Main Content - Mobile First */
         .main-content {
-            margin-left: var(--sidebar-width);
+            margin-left: 0;
             min-height: 100vh;
-            padding: 2rem;
+            padding: 0.625rem 1rem 1rem;
         }
 
         .page-header {
             background: white;
             border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             border-top: 4px solid #10b981;
+            display: flex;
+            flex-direction: row;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .sidebar-toggle-inline {
+            display: block;
+            width: 40px;
+            height: 40px;
+            background: #10b981;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle-inline:hover {
+            background: #059669;
+            transform: scale(1.05);
+        }
+
+        .page-header-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .page-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--ordivo-dark);
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .page-subtitle {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin: 0;
+            display: none;
         }
 
         .page-title {
@@ -482,11 +571,55 @@ $iconOptions = [
             background: var(--ordivo-light);
             color: var(--ordivo-primary);
         }
+
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .sidebar-toggle-inline {
+                display: none;
+            }
+
+            .sidebar {
+                left: 0;
+            }
+
+            .sidebar-overlay {
+                display: none !important;
+            }
+
+            .main-content {
+                margin-left: var(--sidebar-width);
+                padding: 1.5rem;
+            }
+
+            .page-header {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+                white-space: normal;
+            }
+
+            .page-subtitle {
+                display: block;
+                font-size: 1rem;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .main-content {
+                padding: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-brand">
                 <?php 
@@ -566,17 +699,18 @@ $iconOptions = [
     <div class="main-content">
         <!-- Page Header -->
         <div class="page-header">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h1 class="page-title">
-                        <i class="fas fa-tags me-3"></i>Categories Management
-                    </h1>
-                    <p class="mb-0 text-muted">Organize products with categories and subcategories</p>
-                </div>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
-                    <i class="fas fa-plus me-2"></i>Add Category
-                </button>
+            <button class="sidebar-toggle-inline" id="sidebarToggleInline">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="page-header-content">
+                <h1 class="page-title">
+                    <i class="fas fa-tags me-2"></i>Categories Management
+                </h1>
+                <p class="page-subtitle">Organize products with categories and subcategories</p>
             </div>
+            <button class="btn btn-primary btn-sm d-none d-md-block" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
+                <i class="fas fa-plus me-2"></i>Add Category
+            </button>
         </div>
 
         <!-- Alerts -->
@@ -596,19 +730,25 @@ $iconOptions = [
 
         <!-- Statistics Cards -->
         <div class="row mb-4">
-            <div class="col-md-3">
+            <div class="col-6 col-md-4">
                 <div class="stat-card">
                     <div class="stat-value text-primary"><?= number_format($stats['total']) ?></div>
                     <div class="stat-label">Total Categories</div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-6 col-md-4">
+                <div class="stat-card">
+                    <div class="stat-value text-success"><?= number_format($stats['active']) ?></div>
+                    <div class="stat-label">Active</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4">
                 <div class="stat-card">
                     <div class="stat-value text-secondary"><?= number_format($stats['inactive']) ?></div>
                     <div class="stat-label">Inactive</div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-6 col-md-4">
                 <div class="stat-card">
                     <div class="stat-value text-info"><?= number_format($stats['total_products']) ?></div>
                     <div class="stat-label">Total Products</div>
@@ -633,7 +773,7 @@ $iconOptions = [
                 </div>
             <?php else: ?>
                 <?php foreach ($categories as $category): ?>
-                    <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="col-6 col-md-6 col-lg-4 mb-4">
                         <div class="category-card">
                             <?php if (!empty($category['image'])): ?>
                                 <?php 
@@ -696,6 +836,52 @@ $iconOptions = [
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
+
+        <!-- Pagination -->
+        <?php if ($totalPages > 1): ?>
+            <nav aria-label="Categories pagination" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <!-- Previous Button -->
+                    <li class="page-item <?= $currentPage <= 1 ? 'disabled' : '' ?>">
+                        <a class="page-link" href="?page=<?= $currentPage - 1 ?>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    <!-- Page Numbers -->
+                    <?php
+                    $startPage = max(1, $currentPage - 2);
+                    $endPage = min($totalPages, $currentPage + 2);
+                    
+                    if ($startPage > 1): ?>
+                        <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+                        <?php if ($startPage > 2): ?>
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        <?php endif; ?>
+                    <?php endif; ?>
+
+                    <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
+                        <li class="page-item <?= $i == $currentPage ? 'active' : '' ?>">
+                            <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <?php if ($endPage < $totalPages): ?>
+                        <?php if ($endPage < $totalPages - 1): ?>
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        <?php endif; ?>
+                        <li class="page-item"><a class="page-link" href="?page=<?= $totalPages ?>"><?= $totalPages ?></a></li>
+                    <?php endif; ?>
+
+                    <!-- Next Button -->
+                    <li class="page-item <?= $currentPage >= $totalPages ? 'disabled' : '' ?>">
+                        <a class="page-link" href="?page=<?= $currentPage + 1 ?>" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        <?php endif; ?>
     </div>
 
     <!-- Create Category Modal -->
@@ -825,6 +1011,34 @@ $iconOptions = [
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // Mobile menu toggle
+        const sidebarToggleInline = document.getElementById('sidebarToggleInline');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        if (sidebarToggleInline) {
+            sidebarToggleInline.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+                sidebarOverlay.classList.toggle('show');
+            });
+        }
+
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('show');
+                sidebarOverlay.classList.remove('show');
+            });
+        }
+
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 768) {
+                    sidebar.classList.remove('show');
+                    sidebarOverlay.classList.remove('show');
+                }
+            });
+        });
+
         function selectIcon(element, iconClass) {
             // Remove selected class from all icons
             document.querySelectorAll('.icon-option').forEach(el => el.classList.remove('selected'));

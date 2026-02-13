@@ -62,6 +62,11 @@ $vendorFilter = (int)($_GET['vendor'] ?? 0);
 $categoryFilter = (int)($_GET['category'] ?? 0);
 $featuredFilter = sanitizeInput($_GET['featured'] ?? '');
 
+// Pagination settings
+$itemsPerPage = 20;
+$currentPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$offset = ($currentPage - 1) * $itemsPerPage;
+
 // Build query
 $whereConditions = ["1=1"];
 $params = [];
@@ -89,6 +94,13 @@ if ($featuredFilter !== '') {
 $whereClause = 'WHERE ' . implode(' AND ', $whereConditions);
 
 try {
+    // Get total count for pagination
+    $totalProducts = fetchValue("SELECT COUNT(*) FROM products p $whereClause", $params);
+    $totalPages = ceil($totalProducts / $itemsPerPage);
+    
+    // Add pagination parameters
+    $paginationParams = array_merge($params, [$itemsPerPage, $offset]);
+    
     $products = fetchAll("
         SELECT 
             p.*,
@@ -101,8 +113,8 @@ try {
         LEFT JOIN users u ON v.owner_id = u.id
         $whereClause
         ORDER BY p.is_featured DESC, p.created_at DESC
-        LIMIT 100
-    ", $params);
+        LIMIT ? OFFSET ?
+    ", $paginationParams);
     
     // Get statistics
     $stats = [
@@ -124,6 +136,8 @@ try {
     $stats = ['total' => 0, 'featured' => 0, 'available' => 0, 'trending' => 0];
     $vendors = [];
     $categories = [];
+    $totalPages = 0;
+    $currentPage = 1;
 }
 ?>
 <!DOCTYPE html>
@@ -343,6 +357,23 @@ try {
             border-radius: 15px;
             box-shadow: 0 5px 15px #e5e7eb;
         }
+
+        .card-header {
+            padding: 0.75rem;
+            flex-wrap: nowrap !important;
+        }
+
+        .card-header h5 {
+            font-size: 0.85rem;
+            white-space: nowrap;
+            margin-right: 0.5rem;
+        }
+
+        .card-header .btn {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.4rem;
+            white-space: nowrap;
+        }
         
         .product-image {
             width: 60px;
@@ -363,6 +394,19 @@ try {
 
         /* Tablet and up */
         @media (min-width: 768px) {
+            .card-header {
+                padding: 1rem;
+            }
+
+            .card-header h5 {
+                font-size: 1.25rem;
+            }
+
+            .card-header .btn {
+                font-size: 0.875rem;
+                padding: 0.375rem 0.75rem;
+            }
+
             .sidebar-toggle-inline {
                 display: none;
             }
@@ -716,6 +760,55 @@ try {
                 </form>
             </div>
         </div>
+
+        <!-- Pagination -->
+        <?php if ($totalPages > 1): ?>
+            <nav aria-label="Products pagination" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <!-- Previous Button -->
+                    <li class="page-item <?= $currentPage <= 1 ? 'disabled' : '' ?>">
+                        <a class="page-link" href="?page=<?= $currentPage - 1 ?><?= $search ? '&search=' . urlencode($search) : '' ?><?= $vendorFilter ? '&vendor=' . $vendorFilter : '' ?><?= $categoryFilter ? '&category=' . $categoryFilter : '' ?><?= $featuredFilter !== '' ? '&featured=' . $featuredFilter : '' ?>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    <!-- Page Numbers -->
+                    <?php
+                    $startPage = max(1, $currentPage - 2);
+                    $endPage = min($totalPages, $currentPage + 2);
+                    
+                    if ($startPage > 1): ?>
+                        <li class="page-item"><a class="page-link" href="?page=1<?= $search ? '&search=' . urlencode($search) : '' ?><?= $vendorFilter ? '&vendor=' . $vendorFilter : '' ?><?= $categoryFilter ? '&category=' . $categoryFilter : '' ?><?= $featuredFilter !== '' ? '&featured=' . $featuredFilter : '' ?>">1</a></li>
+                        <?php if ($startPage > 2): ?>
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        <?php endif; ?>
+                    <?php endif; ?>
+
+                    <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
+                        <li class="page-item <?= $i == $currentPage ? 'active' : '' ?>">
+                            <a class="page-link" href="?page=<?= $i ?><?= $search ? '&search=' . urlencode($search) : '' ?><?= $vendorFilter ? '&vendor=' . $vendorFilter : '' ?><?= $categoryFilter ? '&category=' . $categoryFilter : '' ?><?= $featuredFilter !== '' ? '&featured=' . $featuredFilter : '' ?>"><?= $i ?></a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <?php if ($endPage < $totalPages): ?>
+                        <?php if ($endPage < $totalPages - 1): ?>
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        <?php endif; ?>
+                        <li class="page-item"><a class="page-link" href="?page=<?= $totalPages ?><?= $search ? '&search=' . urlencode($search) : '' ?><?= $vendorFilter ? '&vendor=' . $vendorFilter : '' ?><?= $categoryFilter ? '&category=' . $categoryFilter : '' ?><?= $featuredFilter !== '' ? '&featured=' . $featuredFilter : '' ?>"><?= $totalPages ?></a></li>
+                    <?php endif; ?>
+
+                    <!-- Next Button -->
+                    <li class="page-item <?= $currentPage >= $totalPages ? 'disabled' : '' ?>">
+                        <a class="page-link" href="?page=<?= $currentPage + 1 ?><?= $search ? '&search=' . urlencode($search) : '' ?><?= $vendorFilter ? '&vendor=' . $vendorFilter : '' ?><?= $categoryFilter ? '&category=' . $categoryFilter : '' ?><?= $featuredFilter !== '' ? '&featured=' . $featuredFilter : '' ?>" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="text-center text-muted mt-2">
+                    <small>Showing <?= count($products) ?> of <?= $totalProducts ?> products (Page <?= $currentPage ?> of <?= $totalPages ?>)</small>
+                </div>
+            </nav>
+        <?php endif; ?>
     </div>
 
     <!-- Bootstrap 5 JS -->

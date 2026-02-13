@@ -429,32 +429,34 @@ $kitchenStaff = fetchAll("
             display: block;
         }
 
-        .user-dropdown .dropdown-toggle {
-            background: rgba(255, 255, 255, 0.3);
-            border: 2px solid white;
-            border-radius: 8px;
-            color: white;
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
+        .user-dropdown .btn-light {
+            background: white;
+            border: none;
+            color: #10b981;
+            font-weight: 600;
         }
 
-        .user-dropdown .dropdown-toggle:hover {
-            background: rgba(255, 255, 255, 0.5);
+        .user-dropdown .btn-light:hover {
+            background: rgba(255, 255, 255, 0.9);
         }
 
         @media (max-width: 576px) {
             .header-card-content {
-                flex-direction: row;
-                align-items: center;
+                flex-direction: column;
+                align-items: stretch;
             }
 
-            .header-info h1 {
-                font-size: 1.1rem;
+            .sidebar-toggle-inline {
+                width: 100%;
             }
 
-            .header-info p {
-                font-size: 0.8rem;
+            .header-info {
+                width: 100%;
+                text-align: center;
+            }
+
+            .header-card-content .btn {
+                width: 100%;
             }
         }
 
@@ -467,7 +469,6 @@ $kitchenStaff = fetchAll("
             border: none;
             transition: all 0.3s ease;
             height: 100%;
-            margin-bottom: 1rem;
         }
 
         .dashboard-card:hover {
@@ -640,7 +641,6 @@ $kitchenStaff = fetchAll("
 
             .dashboard-card {
                 padding: 1.5rem;
-                margin-bottom: 0;
             }
             
             .stat-number {
@@ -667,183 +667,6 @@ $kitchenStaff = fetchAll("
                 padding: 20px;
             }
 
-            .dashboard-card {
-                padding: 1.5rem;
-            }
-        }
-    </style>
-            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            margin: 0.5rem 0;
-        }
-
-        .stat-label {
-            color: #6c757d;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .stat-icon {
-            font-size: 2rem;
-            opacity: 0.1;
-            position: absolute;
-            top: 50%;
-            right: 0.5rem;
-            transform: translateY(-50%);
-        }
-
-        /* Order Status Colors */
-        .status-pending { color: var(--ordivo-warning); }
-        .status-preparing { color: var(--ordivo-info); }
-        .status-ready { color: var(--ordivo-success); }
-        .status-delivered { color: #28a745; }
-        .status-cancelled { color: var(--ordivo-danger); }
-
-        .priority-urgent { border-left: 4px solid var(--ordivo-danger); }
-        .priority-high { border-left: 4px solid var(--ordivo-warning); }
-        .priority-normal { border-left: 4px solid var(--ordivo-info); }
-        .priority-low { border-left: 4px solid #6c757d; }
-
-        /* Kitchen Stations */
-        .station-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-left: 4px solid var(--ordivo-primary);
-            transition: all 0.3s ease;
-        }
-
-        .station-card:hover {
-            box-shadow: 0 5px 15px #e5e7eb;
-        }
-
-        .station-active {
-            border-left-color: var(--ordivo-success);
-        }
-
-        .station-busy {
-            border-left-color: var(--ordivo-warning);
-        }
-
-        .station-overloaded {
-            border-left-color: var(--ordivo-danger);
-        }
-
-        /* Workflow Cards */
-        .workflow-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 8px #e5e7eb;
-            transition: all 0.3s ease;
-        }
-
-        .workflow-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px #e5e7eb;
-        }
-
-        /* Action Buttons */
-        .btn-action {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.85rem;
-            border-radius: 6px;
-            border: none;
-            transition: all 0.3s ease;
-        }
-
-        .btn-action:hover {
-            transform: translateY(-2px);
-        }
-
-        .btn-primary {
-            background: var(--ordivo-primary);
-            border-color: var(--ordivo-primary);
-        }
-
-        .btn-primary:hover {
-            background: var(--ordivo-secondary);
-            border-color: var(--ordivo-secondary);
-        }
-
-        /* Loading States */
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: #6c757d;
-        }
-
-        .loading i {
-            font-size: 2rem;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Responsive - Tablet and up */
-        @media (min-width: 768px) {
-            .header {
-                padding: 1rem 0;
-            }
-
-            .header .navbar-brand {
-                font-size: 1.5rem;
-            }
-
-            .header .navbar-brand img {
-                height: 90px;
-            }
-
-            .header .navbar-brand i {
-                font-size: 1.8rem;
-                margin-right: 10px;
-            }
-
-            .user-info {
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-            }
-
-            .mobile-menu-toggle {
-                display: none;
-            }
-
-            .dashboard-card {
-                padding: 1.5rem;
-                margin-bottom: 0;
-            }
-            
-            .stat-number {
-                font-size: 2.5rem;
-            }
-
-            .stat-label {
-                font-size: 0.9rem;
-            }
-
-            .stat-icon {
-                font-size: 3rem;
-                right: 1rem;
-            }
-            
-            .workflow-card {
-                padding: 1rem;
-            }
-        }
-
-        /* Desktop */
-        @media (min-width: 1200px) {
             .dashboard-card {
                 padding: 1.5rem;
             }
@@ -940,8 +763,8 @@ $kitchenStaff = fetchAll("
                 
                 <!-- User Dropdown -->
                 <div class="dropdown user-dropdown">
-                    <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user me-2"></i><?= htmlspecialchars($_SESSION['user_name']) ?>
+                    <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user me-2"></i><span class="d-none d-md-inline"><?= htmlspecialchars($_SESSION['user_name']) ?></span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="inventory.php"><i class="fas fa-boxes me-2"></i>Kitchen Inventory</a></li>

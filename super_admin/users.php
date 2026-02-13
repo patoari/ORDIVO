@@ -626,5 +626,6 @@ try {
             form.submit();
         }
     </script>
+    </div><!-- End Main Content -->
 </body>
 </html>

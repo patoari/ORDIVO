@@ -265,49 +265,130 @@ $iconOptions = [
             --ordivo-secondary: #059669;
             --ordivo-accent: #f97316;
             --ordivo-light: #f0fdf4;
-            --ordivo-dark: #1a1a1a;
+            --ordivo-dark: #374151;
+            --sidebar-width: 280px;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f8f9fa;
+            margin: 0;
+            padding: 0;
         }
 
-        .header {
-            background: #10b981; 100%);
+        /* Static Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
             color: white;
-            padding: 2rem 0;
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            text-align: center;
+        }
+
+        .sidebar-brand {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: white;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            margin: 0.25rem 1rem;
+        }
+
+        .nav-link {
+            color: #ffffff;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            transform: translateX(5px);
+        }
+
+        .nav-link i {
+            width: 20px;
+            margin-right: 0.75rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .page-header {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
             margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--ordivo-dark);
+            margin: 0;
         }
 
         .btn-primary {
-            background: #10b981; 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             border: none;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px #f97316;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
         }
 
         .card {
             border: none;
             border-radius: 12px;
-            box-shadow: 0 2px 10px #e5e7eb;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
         .stat-card {
             background: white;
             border-radius: 12px;
             padding: 1.5rem;
-            box-shadow: 0 2px 10px #e5e7eb;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             transition: all 0.3s ease;
             text-align: center;
         }
 
         .stat-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px #e5e7eb;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
 
         .stat-value {
@@ -328,14 +409,14 @@ $iconOptions = [
             background: white;
             border-radius: 12px;
             padding: 1.5rem;
-            box-shadow: 0 2px 10px #e5e7eb;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             transition: all 0.3s ease;
             height: 100%;
         }
 
         .category-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px #e5e7eb;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
 
         .category-icon {
@@ -403,29 +484,81 @@ $iconOptions = [
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h1 class="mb-1">
-                        <i class="fas fa-tags me-3"></i>Categories Management
-                    </h1>
-                    <p class="mb-0 opacity-75">Organize products with categories and subcategories</p>
-                </div>
-                <div>
-                    <button class="btn btn-light me-2" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
-                        <i class="fas fa-plus me-2"></i>Add Category
-                    </button>
-                    <a href="dashboard.php" class="btn btn-outline-light">
-                        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
-                    </a>
-                </div>
-            </div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <a href="dashboard.php" class="sidebar-brand">
+                <i class="fas fa-utensils me-2"></i>ORDIVO
+            </a>
+            <div class="sidebar-subtitle">Super Admin Panel</div>
         </div>
+        
+        <nav class="sidebar-nav">
+            <div class="nav-item">
+                <a href="dashboard.php" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>Dashboard
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="users.php" class="nav-link">
+                    <i class="fas fa-users"></i>User Management
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="vendors.php" class="nav-link">
+                    <i class="fas fa-store"></i>Vendor Management
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="products_featured.php" class="nav-link">
+                    <i class="fas fa-star"></i>Featured Products
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="categories.php" class="nav-link active">
+                    <i class="fas fa-tags"></i>Categories
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="orders.php" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>Orders
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="analytics.php" class="nav-link">
+                    <i class="fas fa-chart-bar"></i>Analytics
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="settings.php" class="nav-link">
+                    <i class="fas fa-cog"></i>Settings
+                </a>
+            </div>
+            <div class="nav-item mt-4">
+                <a href="../auth/logout.php" class="nav-link">
+                    <i class="fas fa-sign-out-alt"></i>Logout
+                </a>
+            </div>
+        </nav>
     </div>
 
-    <div class="container">
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="page-title">
+                        <i class="fas fa-tags me-3"></i>Categories Management
+                    </h1>
+                    <p class="mb-0 text-muted">Organize products with categories and subcategories</p>
+                </div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
+                    <i class="fas fa-plus me-2"></i>Add Category
+                </button>
+            </div>
+        </div>
+
         <!-- Alerts -->
         <?php if ($success): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -440,13 +573,6 @@ $iconOptions = [
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
-
-        <!-- Statistics -->
-        <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="stat-card">
-                    <div class="stat-value text-primary"><?= number_format($stats['total']) ?></div>
-                    <div class="stat-label">Total Categories</div>
                 </div>
             </div>
             <div class="col-md-3">
@@ -734,5 +860,6 @@ $iconOptions = [
             }
         }
     </script>
+    </div><!-- End Main Content -->
 </body>
 </html>

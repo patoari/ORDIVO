@@ -702,23 +702,8 @@ $kitchenStaff = fetchAll("
         
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link active" href="dashboard.php">
-                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="inventory.php">
-                    <i class="fas fa-boxes me-2"></i>Kitchen Inventory
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="staff.php">
-                    <i class="fas fa-users me-2"></i>Kitchen Staff
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="../vendor/dashboard.php">
-                    <i class="fas fa-store me-2"></i>Vendor Dashboard
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
                 </a>
             </li>
             <li class="nav-item">
@@ -732,8 +717,23 @@ $kitchenStaff = fetchAll("
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../customer/profile.php">
-                    <i class="fas fa-user me-2"></i>Profile
+                <a class="nav-link" href="../vendor/categories.php">
+                    <i class="fas fa-tags me-2"></i>Categories
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="dashboard.php">
+                    <i class="fas fa-utensils me-2"></i>Kitchen
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../vendor/staff.php">
+                    <i class="fas fa-users me-2"></i>Staff
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../vendor/settings.php">
+                    <i class="fas fa-cog me-2"></i>Settings
                 </a>
             </li>
             <li class="nav-item mt-4">

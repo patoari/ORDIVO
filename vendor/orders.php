@@ -149,15 +149,40 @@ try {
             background: #f8f9fa;
         }
 
+        /* Mobile First - Sidebar hidden by default on mobile */
         .sidebar {
-            background: #10b981; 100%);
+            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
             min-height: 100vh;
             width: 250px;
             position: fixed;
-            left: 0;
+            left: -250px; /* Hidden by default on mobile */
             top: 0;
             z-index: 1000;
-            transition: all 0.3s ease;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .sidebar.show {
+            left: 0;
+        }
+
+        /* Overlay for mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
         }
 
         .sidebar .nav-link {

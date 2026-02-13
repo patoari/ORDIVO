@@ -1000,9 +1000,6 @@ $stats = [
                 form.submit();
             }
         }
-
-        // Mobile sidebar toggle
-        }
     </script>
 </body>
 </html>

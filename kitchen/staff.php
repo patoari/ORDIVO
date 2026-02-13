@@ -570,6 +570,11 @@ if (isset($_GET['ajax'])) {
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="../vendor/inventory.php">
+                    <i class="fas fa-boxes me-2"></i>Inventory
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="../vendor/categories.php">
                     <i class="fas fa-tags me-2"></i>Categories
                 </a>

@@ -453,6 +453,11 @@ try {
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="inventory.php">
+                    <i class="fas fa-boxes me-2"></i>Inventory
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="categories.php">
                     <i class="fas fa-tags me-2"></i>Categories
                 </a>

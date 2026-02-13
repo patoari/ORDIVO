@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * ORDIVO - Super Admin Dashboard
  * Multi-vendor Food & Grocery Delivery Platform
@@ -561,24 +561,22 @@ try {
             <div class="sidebar-brand">
                 <?php 
                 $sidebarLogoUrl = $settings['logo_url'] ?? '';
-                $sidebarSiteName = $settings['site_name'] ?? 'ORDIVO';
                 
                 // Fix path for super_admin directory
-                if (!empty($sidebarLogoUrl) && $sidebarLogoUrl !== 'ðŸ”' && $sidebarLogoUrl !== 'ðŸ½ï¸') {
+                if (!empty($sidebarLogoUrl)) {
                     if (strpos($sidebarLogoUrl, 'uploads/') === 0) {
                         $sidebarLogoUrl = '../' . $sidebarLogoUrl;
                     }
                 }
                 ?>
                 
-                <?php if (!empty($sidebarLogoUrl) && $sidebarLogoUrl !== 'ðŸ”' && $sidebarLogoUrl !== 'ðŸ½ï¸'): ?>
-                    <img src="<?= htmlspecialchars($sidebarLogoUrl) ?>" alt="<?= htmlspecialchars($sidebarSiteName) ?>" 
-                         style="height: 32px; width: auto; margin-right: 8px; vertical-align: middle;"
+                <?php if (!empty($sidebarLogoUrl)): ?>
+                    <img src="<?= htmlspecialchars($sidebarLogoUrl) ?>" alt="ORDIVO" 
+                         style="height: 50px; width: auto; vertical-align: middle;"
                          onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                    <i class="fas fa-utensils me-2" style="display: none;"></i>
-                    <?= htmlspecialchars($sidebarSiteName) ?>
+                    <i class="fas fa-utensils" style="display: none; font-size: 2rem;"></i>
                 <?php else: ?>
-                    <i class="fas fa-utensils me-2"></i><?= htmlspecialchars($sidebarSiteName) ?>
+                    <i class="fas fa-utensils" style="font-size: 2rem;"></i>
                 <?php endif; ?>
             </div>
             <div class="sidebar-subtitle">Super Admin Panel</div>

@@ -292,34 +292,135 @@ if (isset($_GET['ajax'])) {
             background: #f5f6fa;
         }
 
-        /* Header */
-        .header {
-            background: #10b981;);
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px #e5e7eb;
-            position: sticky;
+        /* Mobile First - Sidebar hidden by default on mobile */
+        .sidebar {
+            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+            min-height: 100vh;
+            width: 250px;
+            position: fixed;
+            left: -250px; /* Hidden by default on mobile */
             top: 0;
             z-index: 1000;
+            transition: left 0.3s ease;
+            overflow-y: auto;
         }
 
-        .header .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: white !important;
-            text-decoration: none;
+        .sidebar.show {
+            left: 0;
+        }
+
+        /* Overlay for mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.9);
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 2px 10px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .main-content {
+            margin-left: 0; /* No margin on mobile */
+            padding: 0.625rem 1rem 1rem; /* 10px top, 1rem sides and bottom */
+            transition: all 0.3s ease;
+        }
+
+        .header-card {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-top: 4px solid #10b981;
+        }
+
+        .header-card-content {
             display: flex;
+            justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .header .navbar-brand img {
+        /* Inline hamburger button for mobile - positioned in header card */
+        .sidebar-toggle-inline {
+            display: block;
+            width: 40px;
             height: 40px;
-            margin-right: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
         }
 
-        .header .navbar-brand i {
-            font-size: 1.8rem;
-            margin-right: 10px;
+        .sidebar-toggle-inline:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        .header-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .header-info h1 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-info p {
+            font-size: 0.875rem;
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 576px) {
+            .header-card-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .sidebar-toggle-inline {
+                width: 100%;
+            }
+
+            .header-info {
+                width: 100%;
+                text-align: center;
+            }
+
+            .header-card-content .btn {
+                width: 100%;
+            }
         }
 
         /* Navigation */
@@ -341,7 +442,7 @@ if (isset($_GET['ajax'])) {
             background: white;
             border-radius: 15px;
             padding: 1.5rem;
-            box-shadow: 0 5px 15px #e5e7eb;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             border: none;
             transition: all 0.3s ease;
             height: 100%;
@@ -349,7 +450,7 @@ if (isset($_GET['ajax'])) {
 
         .dashboard-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px #e5e7eb;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
         .stat-card {
@@ -365,7 +466,7 @@ if (isset($_GET['ajax'])) {
             left: 0;
             right: 0;
             height: 4px;
-            background: #10b981;);
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
         }
 
         .stat-number {
@@ -414,7 +515,7 @@ if (isset($_GET['ajax'])) {
             padding: 1rem;
             margin-bottom: 0.5rem;
             border-left: 4px solid var(--ordivo-warning);
-            box-shadow: 0 2px 8px #e5e7eb;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .alert-item.danger {
@@ -437,44 +538,149 @@ if (isset($_GET['ajax'])) {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .sidebar-toggle-inline {
+                display: none; /* Hide inline hamburger on tablet+ */
+            }
+
+            .sidebar {
+                left: 0; /* Always visible on tablet+ */
+            }
+
+            .sidebar-overlay {
+                display: none !important;
+            }
+
+            .main-content {
+                margin-left: 250px;
+                padding: 1.5rem;
+            }
+
+            .header-card {
+                padding: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .header-info h1 {
+                font-size: 1.8rem;
+            }
+
+            .header-info p {
+                font-size: 1rem;
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 1200px) {
+            .main-content {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container-fluid">
-            <div class="d-flex justify-content-between align-items-center">
-                <a class="navbar-brand" href="dashboard.php">
-                    <?php if (!empty($vendorLogo)): ?>
-                        <img src="<?= htmlspecialchars($vendorLogo) ?>" alt="<?= htmlspecialchars($vendorBusinessName) ?>" 
-                             style="height: 50px; width: 50px; object-fit: cover; border-radius: 8px; margin-right: 12px; background: white; padding: 3px;">
-                    <?php else: ?>
-                        <i class="fas fa-boxes"></i>
-                    <?php endif; ?>
-                    Inventory Management - <?= htmlspecialchars($vendorName) ?>
-                </a>
-                
-                <div class="d-flex align-items-center gap-3">
-                    <span class="badge bg-light text-dark">
-                        <?= ucfirst(str_replace('_', ' ', $_SESSION['user_role'])) ?>
-                    </span>
-                    <div class="dropdown">
-                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user me-1"></i><?= htmlspecialchars($_SESSION['user_name']) ?>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="dashboard.php"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="../auth/logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
-                        </ul>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="p-4">
+            <div class="d-flex align-items-center mb-4">
+                <?php if (!empty($vendorLogo)): ?>
+                    <img src="<?= htmlspecialchars($vendorLogo) ?>" alt="<?= htmlspecialchars($vendorBusinessName) ?>" 
+                         style="height: 60px; width: 60px; object-fit: cover; border-radius: 10px; margin-right: 12px; background: white; padding: 5px;"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div style="display: none; width: 60px; height: 60px; background: #ffffff; border-radius: 10px; align-items: center; justify-content: center; margin-right: 12px;">
+                        <i class="fas fa-store fa-2x text-white"></i>
                     </div>
+                <?php else: ?>
+                    <div style="display: flex; width: 60px; height: 60px; background: #ffffff; border-radius: 10px; align-items: center; justify-content: center; margin-right: 12px;">
+                        <i class="fas fa-store fa-2x text-white"></i>
+                    </div>
+                <?php endif; ?>
+                <div>
+                    <h5 class="text-white mb-0" style="font-size: 1.1rem; font-weight: 600;"><?= htmlspecialchars($vendorBusinessName) ?></h5>
+                    <small class="text-white-50">Vendor Portal</small>
                 </div>
             </div>
         </div>
-    </header>
+        
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="dashboard.php">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="products.php">
+                    <i class="fas fa-box me-2"></i>Products
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="orders.php">
+                    <i class="fas fa-shopping-cart me-2"></i>Orders
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="inventory.php">
+                    <i class="fas fa-boxes me-2"></i>Inventory
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="categories.php">
+                    <i class="fas fa-tags me-2"></i>Categories
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../kitchen/dashboard.php">
+                    <i class="fas fa-utensils me-2"></i>Kitchen
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="staff.php">
+                    <i class="fas fa-users me-2"></i>Staff
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="settings.php">
+                    <i class="fas fa-cog me-2"></i>Settings
+                </a>
+            </li>
+            <li class="nav-item mt-4">
+                <a class="nav-link" href="../auth/logout.php">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+            </li>
+        </ul>
+    </nav>
 
     <!-- Main Content -->
-    <div class="container-fluid py-4">
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header-card">
+            <div class="header-card-content">
+                <!-- Mobile Hamburger Button -->
+                <button class="sidebar-toggle-inline" id="sidebarToggleInline">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="header-info">
+                    <h1>
+                        <i class="fas fa-boxes me-2"></i>Inventory Management
+                    </h1>
+                    <p class="opacity-75">Track and manage your stock levels</p>
+                </div>
+                
+                <?php if ($canManage): ?>
+                <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addItemModal">
+                    <i class="fas fa-plus me-2"></i>Add Item
+                </button>
+                <?php endif; ?>
+            </div>
+        </div>
+
         <!-- Stats Cards -->
         <div class="row mb-4" id="statsCards">
             <div class="col-12">
@@ -743,6 +949,34 @@ if (isset($_GET['ajax'])) {
         
         // Load data on page load
         document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const sidebarToggleInline = document.getElementById('sidebarToggleInline');
+
+            function toggleSidebar() {
+                if (sidebar && sidebarOverlay) {
+                    sidebar.classList.toggle('show');
+                    sidebarOverlay.classList.toggle('show');
+                }
+            }
+
+            if (sidebarToggleInline) {
+                sidebarToggleInline.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+
             loadInventoryData();
             
             // Perishable checkbox handler

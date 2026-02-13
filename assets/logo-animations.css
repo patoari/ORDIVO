@@ -5,7 +5,7 @@
 
 /* Main Logo Animations */
 .logo-img {
-    height: 60px;
+    height: 90px;
     margin-right: 12px;
     animation: logoFloat 3s ease-in-out infinite;
     transition: all 0.3s ease;
@@ -81,7 +81,7 @@
 }
 
 .logo-large img {
-    height: 70px;
+    height: 100px;
     margin-right: 15px;
     animation: logoFloatLarge 3s ease-in-out infinite;
     transition: all 0.3s ease;
@@ -159,7 +159,7 @@
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     .logo-img {
-        height: 50px;
+        height: 70px;
         margin-right: 10px;
     }
     
@@ -172,7 +172,7 @@
     }
     
     .logo-large img {
-        height: 60px;
+        height: 80px;
         margin-right: 12px;
     }
     

@@ -586,12 +586,12 @@ try {
         
         <nav class="sidebar-nav">
             <div class="nav-item">
-                <a href="#dashboard" class="nav-link active" data-section="dashboard">
+                <a href="dashboard.php" class="nav-link active">
                     <i class="fas fa-tachometer-alt"></i>Dashboard
                 </a>
             </div>
             <div class="nav-item">
-                <a href="#users" class="nav-link" data-section="users">
+                <a href="users.php" class="nav-link">
                     <i class="fas fa-users"></i>User Management
                 </a>
             </div>
@@ -606,22 +606,22 @@ try {
                 </a>
             </div>
             <div class="nav-item">
-                <a href="#categories" class="nav-link" data-section="categories">
+                <a href="categories.php" class="nav-link">
                     <i class="fas fa-tags"></i>Categories
                 </a>
             </div>
             <div class="nav-item">
-                <a href="#orders" class="nav-link" data-section="orders">
+                <a href="orders.php" class="nav-link">
                     <i class="fas fa-shopping-cart"></i>Orders
                 </a>
             </div>
             <div class="nav-item">
-                <a href="#analytics" class="nav-link" data-section="analytics">
+                <a href="analytics.php" class="nav-link">
                     <i class="fas fa-chart-bar"></i>Analytics
                 </a>
             </div>
             <div class="nav-item">
-                <a href="#settings" class="nav-link" data-section="settings">
+                <a href="settings.php" class="nav-link">
                     <i class="fas fa-cog"></i>Settings
                 </a>
             </div>
@@ -903,41 +903,6 @@ try {
             <div id="categoriesContent">
                 <p class="text-muted">Category management features will be loaded here.</p>
             </div>
-        </div>
-
-        <!-- Settings Section -->
-        <div id="section-settings" class="content-section" style="display: none;">
-            <div class="section-header">
-                <h3 class="section-title">Site Settings</h3>
-            </div>
-            
-            <form method="POST" class="row g-3">
-                <input type="hidden" name="action" value="update_settings">
-                
-                <div class="col-md-6">
-                    <label for="site_name" class="form-label">Site Name</label>
-                    <input type="text" class="form-control" id="site_name" name="site_name" 
-                           value="<?= htmlspecialchars($settings['site_name']) ?>" required>
-                </div>
-                
-                <div class="col-md-6">
-                    <label for="contact_email" class="form-label">Contact Email</label>
-                    <input type="email" class="form-control" id="contact_email" name="contact_email" 
-                           value="<?= htmlspecialchars($settings['contact_email']) ?>">
-                </div>
-                
-                <div class="col-md-6">
-                    <label for="contact_phone" class="form-label">Contact Phone</label>
-                    <input type="tel" class="form-control" id="contact_phone" name="contact_phone" 
-                           value="<?= htmlspecialchars($settings['contact_phone']) ?>">
-                </div>
-                
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i>Save Settings
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 

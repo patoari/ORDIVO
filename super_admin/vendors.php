@@ -218,8 +218,14 @@ try {
     
     <style>
         :root {
-            --primary: #e21b70;
-            --secondary: #d91a65;
+            --ordivo-primary: #10b981;
+            --ordivo-secondary: #059669;
+            --ordivo-light: #f0fdf4;
+            --ordivo-dark: #374151;
+            --ordivo-accent: #f97316;
+            --sidebar-width: 280px;
+            --primary: #10b981;
+            --secondary: #059669;
             --success: #28a745;
             --warning: #ffc107;
             --danger: #dc3545;
@@ -228,11 +234,93 @@ try {
         body {
             background: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Static Sidebar - Always Visible */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+            color: white;
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            text-align: center;
+        }
+
+        .sidebar-brand {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: white;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            margin: 0.25rem 1rem;
+        }
+
+        .nav-link {
+            color: #ffffff;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-link i {
+            width: 20px;
+            margin-right: 0.75rem;
+        }
+
+        /* Main Content - Adjusted for sidebar */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            padding: 2rem;
         }
         
-        .navbar {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            box-shadow: 0 2px 10px #e5e7eb;
+        .page-header {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--ordivo-dark);
+            margin: 0;
         }
         
         .stat-card {
@@ -316,26 +404,79 @@ try {
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="dashboard.php">
-                <i class="fas fa-shield-alt me-2"></i>
-                ORDIVO Super Admin
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <a href="dashboard.php" class="sidebar-brand">
+                <i class="fas fa-utensils me-2"></i>ORDIVO
             </a>
-            <div class="d-flex align-items-center">
-                <span class="text-white me-3">
-                    <i class="fas fa-user-shield me-2"></i>
-                    <?= htmlspecialchars($_SESSION['user_name'] ?? 'Admin') ?>
-                </span>
-                <a href="../auth/logout.php" class="btn btn-outline-light btn-sm">
-                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+            <div class="sidebar-subtitle">Super Admin Panel</div>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <div class="nav-item">
+                <a href="dashboard.php" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>Dashboard
                 </a>
             </div>
-        </div>
-    </nav>
+            <div class="nav-item">
+                <a href="users.php" class="nav-link">
+                    <i class="fas fa-users"></i>User Management
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="vendors.php" class="nav-link active">
+                    <i class="fas fa-store"></i>Vendor Management
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="products_featured.php" class="nav-link">
+                    <i class="fas fa-star"></i>Featured Products
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="categories.php" class="nav-link">
+                    <i class="fas fa-tags"></i>Categories
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="orders.php" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>Orders
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="analytics.php" class="nav-link">
+                    <i class="fas fa-chart-bar"></i>Analytics
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="settings.php" class="nav-link">
+                    <i class="fas fa-cog"></i>Settings
+                </a>
+            </div>
+            <div class="nav-item mt-4">
+                <a href="../auth/logout.php" class="nav-link">
+                    <i class="fas fa-sign-out-alt"></i>Logout
+                </a>
+            </div>
+        </nav>
+    </div>
 
-    <div class="container-fluid py-4">
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="page-title"><i class="fas fa-store me-2"></i>Vendor Management</h1>
+                    <p class="text-muted mb-0">Manage restaurants, set featured vendors, and control access</p>
+                </div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addVendorModal">
+                    <i class="fas fa-plus me-2"></i>Add New Vendor
+                </button>
+            </div>
+        </div>
+
         <!-- Alerts -->
         <?php if ($success): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -350,16 +491,6 @@ try {
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
-
-        <!-- Page Header -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h1 class="mb-0"><i class="fas fa-store me-2"></i>Vendor Management</h1>
-                <p class="text-muted mb-0">Manage restaurants, set featured vendors, and control access</p>
-            </div>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addVendorModal">
-                <i class="fas fa-plus me-2"></i>Add New Vendor
-            </button>
         </div>
 
         <!-- Statistics Cards -->
@@ -650,6 +781,7 @@ try {
             </div>
         </div>
     </div>
+    </div><!-- End Main Content -->
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

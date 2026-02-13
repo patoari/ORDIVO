@@ -766,7 +766,7 @@ try {
 
             <!-- Recent Activity -->
             <div class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-9">
                     <div class="content-section">
                         <div class="section-header">
                             <h3 class="section-title">Recent Users</h3>
@@ -798,7 +798,7 @@ try {
                     </div>
                 </div>
                 
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                     <div class="content-section">
                         <div class="section-header">
                             <h3 class="section-title">Quick Actions</h3>

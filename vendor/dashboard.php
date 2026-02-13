@@ -162,15 +162,40 @@ require_once 'components/load_vendor_images.php';
             background: #f8f9fa;
         }
 
+        /* Mobile First - Sidebar hidden by default on mobile */
         .sidebar {
             background: linear-gradient(180deg, #10b981 0%, #059669 100%);
             min-height: 100vh;
             width: 250px;
             position: fixed;
-            left: 0;
+            left: -250px; /* Hidden by default on mobile */
             top: 0;
             z-index: 1000;
-            transition: all 0.3s ease;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .sidebar.show {
+            left: 0;
+        }
+
+        /* Overlay for mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
         }
 
         .sidebar .nav-link {
@@ -198,8 +223,8 @@ require_once 'components/load_vendor_images.php';
         }
 
         .main-content {
-            margin-left: 250px;
-            padding: 20px;
+            margin-left: 0; /* No margin on mobile */
+            padding: 0.625rem 1rem 1rem; /* 10px top, 1rem sides and bottom */
             transition: all 0.3s ease;
         }
 
@@ -244,6 +269,29 @@ require_once 'components/load_vendor_images.php';
             display: flex;
             align-items: center;
             gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        /* Inline hamburger button for mobile - positioned in welcome card */
+        .sidebar-toggle-inline {
+            display: block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            order: -1; /* Place it first */
+        }
+
+        .sidebar-toggle-inline:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
         }
 
         .welcome-card-avatar {
@@ -282,12 +330,63 @@ require_once 'components/load_vendor_images.php';
 
         @media (max-width: 768px) {
             .welcome-card-content {
-                flex-direction: column;
-                text-align: center;
+                flex-direction: row;
+                flex-wrap: wrap;
+                text-align: left;
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .sidebar-toggle-inline {
+                width: 100%;
+                order: -1;
+            }
+            
+            .welcome-card-info {
+                width: 100%;
+                order: 2;
+            }
+
+            .welcome-card-info h1 {
+                font-size: 1.25rem;
+            }
+
+            .welcome-card-info p {
+                font-size: 0.875rem;
             }
             
             .welcome-card-time {
-                text-align: center;
+                text-align: left;
+                width: 100%;
+                order: 3;
+            }
+
+            .welcome-card-time .h5 {
+                font-size: 1rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .stat-label {
+                font-size: 0.75rem;
+            }
+
+            .quick-action-card h6 {
+                font-size: 0.9rem;
+            }
+
+            .quick-action-card p {
+                font-size: 0.75rem;
+            }
+
+            .quick-action-icon {
+                font-size: 2rem;
             }
         }
 
@@ -367,24 +466,40 @@ require_once 'components/load_vendor_images.php';
             margin-bottom: 1rem;
         }
 
-        @media (max-width: 768px) {
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .sidebar-toggle-inline {
+                display: none; /* Hide inline hamburger on tablet+ */
+            }
+
             .sidebar {
-                transform: translateX(-100%);
+                left: 0; /* Always visible on tablet+ */
             }
-            
-            .sidebar.show {
-                transform: translateX(0);
+
+            .sidebar-overlay {
+                display: none !important;
             }
-            
+
             .main-content {
-                margin-left: 0;
+                margin-left: 250px;
+                padding: 1.5rem;
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 1200px) {
+            .main-content {
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <!-- Sidebar -->
-    <nav class="sidebar">
+    <nav class="sidebar" id="sidebar">
         <div class="p-4">
             <div class="d-flex align-items-center mb-4">
                 <?php if (!empty($vendorLogo)): ?>
@@ -464,6 +579,11 @@ require_once 'components/load_vendor_images.php';
             <?php endif; ?>
             
             <div class="welcome-card-content">
+                <!-- Mobile Hamburger Button -->
+                <button class="sidebar-toggle-inline" id="sidebarToggleInline">
+                    <i class="fas fa-bars"></i>
+                </button>
+
                 <!-- Profile Picture -->
                 <div>
                     <?php if (!empty($userAvatar)): ?>
@@ -498,25 +618,25 @@ require_once 'components/load_vendor_images.php';
 
         <!-- Statistics Cards -->
         <div class="row mb-4">
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="col-6 col-lg-3 col-md-6 mb-3">
                 <div class="stat-card">
                     <div class="stat-value text-primary"><?= number_format($stats['total_products']) ?></div>
                     <div class="stat-label">Total Products</div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="col-6 col-lg-3 col-md-6 mb-3">
                 <div class="stat-card">
                     <div class="stat-value text-success"><?= number_format($stats['active_products']) ?></div>
                     <div class="stat-label">Active Products</div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="col-6 col-lg-3 col-md-6 mb-3">
                 <div class="stat-card">
                     <div class="stat-value text-info"><?= number_format($stats['total_orders']) ?></div>
                     <div class="stat-label">Total Orders</div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="col-6 col-lg-3 col-md-6 mb-3">
                 <div class="stat-card">
                     <div class="stat-value text-warning"><?= number_format($stats['pending_orders']) ?></div>
                     <div class="stat-label">Pending Orders</div>
@@ -526,13 +646,13 @@ require_once 'components/load_vendor_images.php';
 
         <!-- Revenue Cards -->
         <div class="row mb-4">
-            <div class="col-md-6 mb-3">
+            <div class="col-6 col-md-6 mb-3">
                 <div class="stat-card">
                     <div class="stat-value text-success">৳<?= number_format($stats['total_revenue'], 0) ?></div>
                     <div class="stat-label">Total Revenue</div>
                 </div>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-6 col-md-6 mb-3">
                 <div class="stat-card">
                     <div class="stat-value text-info">৳<?= number_format($stats['monthly_revenue'], 0) ?></div>
                     <div class="stat-label">This Month</div>
@@ -545,7 +665,7 @@ require_once 'components/load_vendor_images.php';
             <div class="col-12">
                 <h4 class="mb-3">Quick Actions</h4>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="col-6 col-lg-3 col-md-6 mb-3">
                 <div class="quick-action-card" onclick="location.href='products.php'">
                     <div class="quick-action-icon">
                         <i class="fas fa-plus-circle"></i>
@@ -554,7 +674,7 @@ require_once 'components/load_vendor_images.php';
                     <p class="text-muted mb-0">Add new products to your inventory</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="col-6 col-lg-3 col-md-6 mb-3">
                 <div class="quick-action-card" onclick="location.href='orders.php'">
                     <div class="quick-action-icon">
                         <i class="fas fa-shopping-cart"></i>
@@ -563,7 +683,7 @@ require_once 'components/load_vendor_images.php';
                     <p class="text-muted mb-0">Manage your customer orders</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="col-6 col-lg-3 col-md-6 mb-3">
                 <div class="quick-action-card" onclick="location.href='../kitchen/dashboard.php'">
                     <div class="quick-action-icon">
                         <i class="fas fa-utensils"></i>
@@ -572,7 +692,7 @@ require_once 'components/load_vendor_images.php';
                     <p class="text-muted mb-0">Manage ingredients and recipes</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="col-6 col-lg-3 col-md-6 mb-3">
                 <div class="quick-action-card" onclick="location.href='staff.php'">
                     <div class="quick-action-icon">
                         <i class="fas fa-users"></i>
@@ -638,20 +758,34 @@ require_once 'components/load_vendor_images.php';
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Mobile sidebar toggle
-        function toggleSidebar() {
-            document.querySelector('.sidebar').classList.toggle('show');
-        }
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const sidebarToggleInline = document.getElementById('sidebarToggleInline');
 
-        // Add mobile menu button for small screens
-        if (window.innerWidth <= 768) {
-            const mobileMenuBtn = document.createElement('button');
-            mobileMenuBtn.className = 'btn btn-primary position-fixed';
-            mobileMenuBtn.style.cssText = 'top: 20px; left: 20px; z-index: 1001;';
-            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            mobileMenuBtn.onclick = toggleSidebar;
-            document.body.appendChild(mobileMenuBtn);
-        }
+            function toggleSidebar() {
+                if (sidebar && sidebarOverlay) {
+                    sidebar.classList.toggle('show');
+                    sidebarOverlay.classList.toggle('show');
+                }
+            }
+
+            if (sidebarToggleInline) {
+                sidebarToggleInline.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleSidebar();
+                });
+            }
+
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleSidebar();
+                });
+            }
+        });
     </script>
 </body>
 </html>

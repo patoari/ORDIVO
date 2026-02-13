@@ -380,14 +380,11 @@ if (isset($_GET['ajax'])) {
         .order-card {
             background: white;
             border-radius: 15px;
-            padding: 1rem;
-            margin-bottom: 0;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             border-left: 4px solid var(--ordivo-primary);
             transition: all 0.3s ease;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
         }
 
         .order-card:hover {
@@ -414,36 +411,30 @@ if (isset($_GET['ajax'])) {
         .order-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.75rem;
+            align-items: center;
+            margin-bottom: 1rem;
         }
 
         .order-number {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: var(--ordivo-primary);
         }
 
         .order-time {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: #6c757d;
         }
 
         .order-items {
             background: #f8f9fa;
-            padding: 0.75rem;
+            padding: 1rem;
             border-radius: 8px;
-            margin: 0.75rem 0;
-            flex: 1;
-        }
-
-        .order-items h6 {
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
+            margin: 1rem 0;
         }
 
         .btn-action {
-            padding: 0.4rem 0.8rem;
+            padding: 0.5rem 1rem;
             border-radius: 8px;
             border: none;
             font-weight: 600;
@@ -513,27 +504,6 @@ if (isset($_GET['ajax'])) {
             .header-info p {
                 font-size: 1rem;
             }
-
-            .order-card {
-                padding: 1.5rem;
-            }
-
-            .order-number {
-                font-size: 1.2rem;
-            }
-
-            .order-time {
-                font-size: 0.9rem;
-            }
-
-            .order-items {
-                padding: 1rem;
-                margin: 1rem 0;
-            }
-
-            .order-items h6 {
-                font-size: 1rem;
-            }
         }
 
         /* Desktop */
@@ -543,7 +513,11 @@ if (isset($_GET['ajax'])) {
             }
         }
 
-        @media (max-width: 767px) {
+        @media (max-width: 768px) {
+            .order-card {
+                padding: 1rem;
+            }
+            
             .order-header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -660,22 +634,20 @@ if (isset($_GET['ajax'])) {
 
         <div class="row">
             <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="mb-0">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="mb-0">
                         <i class="fas fa-fire text-danger me-2"></i>
                         My Orders
-                    </h5>
-                    <button class="btn btn-primary btn-sm" onclick="loadMyOrders()">
-                        <i class="fas fa-sync-alt"></i> <span class="d-none d-md-inline">Refresh</span>
+                    </h4>
+                    <button class="btn btn-primary" onclick="loadMyOrders()">
+                        <i class="fas fa-sync-alt me-2"></i><span class="d-none d-md-inline">Refresh</span>
                     </button>
                 </div>
                 
-                <div class="row" id="ordersContainer">
-                    <div class="col-12">
-                        <div class="loading">
-                            <i class="fas fa-spinner"></i>
-                            <p class="mt-2">Loading your orders...</p>
-                        </div>
+                <div id="ordersContainer">
+                    <div class="loading">
+                        <i class="fas fa-spinner"></i>
+                        <p class="mt-2">Loading your orders...</p>
                     </div>
                 </div>
             </div>
@@ -745,12 +717,10 @@ if (isset($_GET['ajax'])) {
             
             if (!orders || orders.length === 0) {
                 container.innerHTML = `
-                    <div class="col-12">
-                        <div class="empty-state">
-                            <i class="fas fa-clipboard-check"></i>
-                            <h5>No orders assigned</h5>
-                            <p>You don't have any orders to prepare at the moment.</p>
-                        </div>
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-check"></i>
+                        <h5>No orders assigned</h5>
+                        <p>You don't have any orders to prepare at the moment.</p>
                     </div>
                 `;
                 return;
@@ -765,61 +735,60 @@ if (isset($_GET['ajax'])) {
                 let actionButtons = '';
                 if (order.status === 'confirmed' && !isAssignedToMe) {
                     actionButtons = `
-                        <button class="btn btn-success btn-action btn-sm" onclick="startOrder(${order.id})">
-                            <i class="fas fa-play me-1"></i>Start
+                        <button class="btn btn-success btn-action" onclick="startOrder(${order.id})">
+                            <i class="fas fa-play me-2"></i>Start Cooking
                         </button>
                     `;
                 } else if (order.status === 'preparing' && isAssignedToMe) {
                     actionButtons = `
-                        <button class="btn btn-primary btn-action btn-sm" onclick="completeOrder(${order.id})">
-                            <i class="fas fa-check me-1"></i>Ready
+                        <button class="btn btn-primary btn-action" onclick="completeOrder(${order.id})">
+                            <i class="fas fa-check me-2"></i>Mark Ready
                         </button>
                     `;
                 } else if (order.status === 'ready') {
                     actionButtons = `
-                        <span class="badge bg-success">
-                            <i class="fas fa-check-circle me-1"></i>Ready
+                        <span class="badge bg-success fs-6">
+                            <i class="fas fa-check-circle me-1"></i>Ready for Delivery
                         </span>
                     `;
                 }
                 
                 return `
-                    <div class="col-12 col-md-6 mb-3">
-                        <div class="order-card ${priorityClass} ${statusClass}">
-                            <div class="order-header">
-                                <div>
-                                    <div class="order-number">Order #${order.order_number}</div>
-                                    <div class="order-time">
-                                        <i class="fas fa-clock me-1"></i>${elapsedTime} min ago
-                                    </div>
-                                </div>
-                                <div class="text-end">
-                                    <div class="mb-1">
-                                        <span class="badge bg-${priorityClass === 'urgent' ? 'danger' : priorityClass === 'high' ? 'warning' : 'info'}">
-                                            ${(priorityClass || 'normal').toUpperCase()}
-                                        </span>
-                                    </div>
-                                    <div class="fw-bold text-success">৳${parseFloat(order.total_amount).toFixed(2)}</div>
+                    <div class="order-card ${priorityClass} ${statusClass}">
+                        <div class="order-header">
+                            <div>
+                                <div class="order-number">Order #${order.order_number}</div>
+                                <div class="order-time">
+                                    <i class="fas fa-clock me-1"></i>${elapsedTime} minutes ago
+                                    • <i class="fas fa-user me-1"></i>${order.customer_name}
                                 </div>
                             </div>
-                            
-                            <div class="order-items">
-                                <h6 class="mb-2">
-                                    <i class="fas fa-utensils me-2"></i>Items:
-                                </h6>
-                                <p class="mb-0 small">${order.items}</p>
-                            </div>
-                            
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <span class="badge bg-${statusClass === 'confirmed' ? 'warning' : statusClass === 'preparing' ? 'info' : 'success'}">
-                                        ${statusClass.replace('_', ' ').toUpperCase()}
+                            <div class="text-end">
+                                <div class="mb-2">
+                                    <span class="badge bg-${priorityClass === 'urgent' ? 'danger' : priorityClass === 'high' ? 'warning' : 'info'}">
+                                        ${(priorityClass || 'normal').toUpperCase()}
                                     </span>
-                                    ${isAssignedToMe ? '<small class="text-muted ms-1 d-none d-md-inline"><i class="fas fa-user-check me-1"></i>You</small>' : ''}
                                 </div>
-                                <div>
-                                    ${actionButtons}
-                                </div>
+                                <div class="fw-bold text-success">৳${parseFloat(order.total_amount).toFixed(2)}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="order-items">
+                            <h6 class="mb-2">
+                                <i class="fas fa-utensils me-2"></i>Items to Prepare:
+                            </h6>
+                            <p class="mb-0">${order.items}</p>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge bg-${statusClass === 'confirmed' ? 'warning' : statusClass === 'preparing' ? 'info' : 'success'}">
+                                    ${statusClass.replace('_', ' ').toUpperCase()}
+                                </span>
+                                ${isAssignedToMe ? '<small class="text-muted ms-2"><i class="fas fa-user-check me-1"></i>Assigned to you</small>' : ''}
+                            </div>
+                            <div>
+                                ${actionButtons}
                             </div>
                         </div>
                     </div>

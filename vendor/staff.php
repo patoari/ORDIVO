@@ -248,19 +248,44 @@ try {
             background: #f8f9fa;
         }
 
+        /* Mobile First - Sidebar hidden by default on mobile */
         .sidebar {
-            background: #10b981; 100%);
+            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
             min-height: 100vh;
             width: 250px;
             position: fixed;
-            left: 0;
+            left: -250px; /* Hidden by default on mobile */
             top: 0;
             z-index: 1000;
-            transition: all 0.3s ease;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .sidebar.show {
+            left: 0;
+        }
+
+        /* Overlay for mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
         }
 
         .sidebar .nav-link {
-            color: #ffffff;
+            color: rgba(255, 255, 255, 0.9);
             padding: 12px 20px;
             border-radius: 8px;
             margin: 2px 10px;
@@ -269,31 +294,96 @@ try {
 
         .sidebar .nav-link:hover,
         .sidebar .nav-link.active {
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.2);
             color: white;
             transform: translateX(5px);
         }
 
         .main-content {
-            margin-left: 250px;
-            padding: 20px;
+            margin-left: 0; /* No margin on mobile */
+            padding: 0.625rem 1rem 1rem; /* 10px top, 1rem sides and bottom */
             transition: all 0.3s ease;
         }
 
         .header-card {
-            background: #10b981; 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             border-radius: 15px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 8px #e5e7eb;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-top: 4px solid #10b981;
+        }
+
+        .header-card-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* Inline hamburger button for mobile - positioned in header card */
+        .sidebar-toggle-inline {
+            display: block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .sidebar-toggle-inline:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        .header-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .header-info h1 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-info p {
+            font-size: 0.875rem;
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 576px) {
+            .header-card-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .sidebar-toggle-inline {
+                width: 100%;
+            }
+
+            .header-info {
+                width: 100%;
+                text-align: center;
+            }
+
+            .header-card-content .btn {
+                width: 100%;
+            }
         }
 
         .stat-card {
             background: white;
             border-radius: 15px;
             padding: 1.5rem;
-            box-shadow: 0 5px 15px #e5e7eb;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             transition: all 0.3s ease;
             border: none;
             text-align: center;
@@ -301,7 +391,7 @@ try {
 
         .stat-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 35px #e5e7eb;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
 
         .stat-value {
@@ -321,16 +411,16 @@ try {
         .card {
             border: none;
             border-radius: 15px;
-            box-shadow: 0 5px 15px #e5e7eb;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             transition: all 0.3s ease;
         }
 
         .card:hover {
-            box-shadow: 0 15px 35px #e5e7eb;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
 
         .btn-primary {
-            background: #10b981; 100%);
+            background: var(--ordivo-primary);
             border: none;
             border-radius: 10px;
             padding: 10px 25px;
@@ -340,14 +430,14 @@ try {
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 2px 8px #e5e7eb;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .staff-avatar {
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: #10b981; 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -380,24 +470,53 @@ try {
             transform: scale(1.01);
         }
 
-        @media (max-width: 768px) {
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .sidebar-toggle-inline {
+                display: none; /* Hide inline hamburger on tablet+ */
+            }
+
             .sidebar {
-                transform: translateX(-100%);
+                left: 0; /* Always visible on tablet+ */
             }
-            
-            .sidebar.show {
-                transform: translateX(0);
+
+            .sidebar-overlay {
+                display: none !important;
             }
-            
+
             .main-content {
-                margin-left: 0;
+                margin-left: 250px;
+                padding: 1.5rem;
+            }
+
+            .header-card {
+                padding: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .header-info h1 {
+                font-size: 1.8rem;
+            }
+
+            .header-info p {
+                font-size: 1rem;
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 1200px) {
+            .main-content {
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <!-- Sidebar -->
-    <nav class="sidebar">
+    <nav class="sidebar" id="sidebar">
         <div class="p-4">
             <div class="d-flex align-items-center mb-4">
                 <?php if (!empty($vendorLogo)): ?>
@@ -467,15 +586,21 @@ try {
     <div class="main-content">
         <!-- Header -->
         <div class="header-card">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h1 class="mb-2">
-                        <i class="fas fa-users me-3"></i>Staff Management
+            <div class="header-card-content">
+                <!-- Mobile Hamburger Button -->
+                <button class="sidebar-toggle-inline" id="sidebarToggleInline">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="header-info">
+                    <h1>
+                        <i class="fas fa-users me-2"></i>Staff Management
                     </h1>
-                    <p class="mb-0 opacity-75">Manage your team members and their roles</p>
+                    <p class="opacity-75">Manage your team members and their roles</p>
                 </div>
-                <button class="btn btn-light btn-lg" data-bs-toggle="modal" data-bs-target="#addStaffModal">
-                    <i class="fas fa-plus me-2"></i>Add Staff Member
+                
+                <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addStaffModal">
+                    <i class="fas fa-plus me-2"></i>Add Staff
                 </button>
             </div>
         </div>
@@ -497,25 +622,25 @@ try {
 
         <!-- Statistics -->
         <div class="row mb-4">
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="col-6 col-lg-3 col-md-6 mb-3">
                 <div class="stat-card">
                     <div class="stat-value text-primary"><?= number_format($stats['total_staff']) ?></div>
                     <div class="stat-label">Total Staff</div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="col-6 col-lg-3 col-md-6 mb-3">
                 <div class="stat-card">
                     <div class="stat-value text-success"><?= number_format($stats['active_staff']) ?></div>
                     <div class="stat-label">Active Staff</div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="col-6 col-lg-3 col-md-6 mb-3">
                 <div class="stat-card">
                     <div class="stat-value text-info"><?= number_format($stats['kitchen_staff']) ?></div>
                     <div class="stat-label">Kitchen Staff</div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="col-6 col-lg-3 col-md-6 mb-3">
                 <div class="stat-card">
                     <div class="stat-value text-warning"><?= number_format($stats['store_staff']) ?></div>
                     <div class="stat-label">Store Staff</div>
@@ -673,6 +798,36 @@ try {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const sidebarToggleInline = document.getElementById('sidebarToggleInline');
+
+            function toggleSidebar() {
+                if (sidebar && sidebarOverlay) {
+                    sidebar.classList.toggle('show');
+                    sidebarOverlay.classList.toggle('show');
+                }
+            }
+
+            if (sidebarToggleInline) {
+                sidebarToggleInline.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+        });
         function editStaff(staffId) {
             // Implementation for edit staff modal
             alert('Edit staff functionality - Staff ID: ' + staffId);
@@ -715,21 +870,6 @@ try {
                 password += chars.charAt(Math.floor(Math.random() * chars.length));
             }
             document.getElementById('password').value = password;
-        }
-
-        // Mobile sidebar toggle
-        function toggleSidebar() {
-            document.querySelector('.sidebar').classList.toggle('show');
-        }
-
-        // Add mobile menu button for small screens
-        if (window.innerWidth <= 768) {
-            const mobileMenuBtn = document.createElement('button');
-            mobileMenuBtn.className = 'btn btn-primary position-fixed';
-            mobileMenuBtn.style.cssText = 'top: 20px; left: 20px; z-index: 1001;';
-            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            mobileMenuBtn.onclick = toggleSidebar;
-            document.body.appendChild(mobileMenuBtn);
         }
     </script>
 </body>

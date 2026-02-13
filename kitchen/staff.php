@@ -207,12 +207,14 @@ if (isset($_GET['ajax'])) {
     
     <style>
         :root {
-            --ordivo-primary: #f97316;
-            --ordivo-secondary: #fb923c;
+            --ordivo-primary: #10b981;
+            --ordivo-secondary: #059669;
             --ordivo-success: #28a745;
             --ordivo-warning: #ffc107;
             --ordivo-danger: #dc3545;
             --ordivo-info: #17a2b8;
+            --ordivo-dark: #1a1a1a;
+            --ordivo-light: #f8f9fa;
         }
 
         body {
@@ -222,48 +224,175 @@ if (isset($_GET['ajax'])) {
             padding: 0;
         }
 
-        .header {
-            background: #10b981;);
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px #e5e7eb;
-            position: sticky;
+        /* Mobile First - Sidebar hidden by default on mobile */
+        .sidebar {
+            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+            min-height: 100vh;
+            width: 250px;
+            position: fixed;
+            left: -250px; /* Hidden by default on mobile */
             top: 0;
             z-index: 1000;
+            transition: left 0.3s ease;
+            overflow-y: auto;
         }
 
-        .header .navbar-brand {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: white !important;
-            text-decoration: none;
+        .sidebar.show {
+            left: 0;
+        }
+
+        /* Overlay for mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.9);
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 2px 10px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .main-content {
+            margin-left: 0; /* No margin on mobile */
+            padding: 0.625rem 1rem 1rem; /* 10px top, 1rem sides and bottom */
+            transition: all 0.3s ease;
+        }
+
+        .header-card {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-top: 4px solid #10b981;
+        }
+
+        .header-card-content {
             display: flex;
+            justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .header .navbar-brand img {
-            height: 35px;
-            margin-right: 10px;
+        /* Inline hamburger button for mobile - positioned in header card */
+        .sidebar-toggle-inline {
+            display: block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
         }
 
-        .header .navbar-brand i {
-            font-size: 1.5rem;
-            margin-right: 10px;
+        .sidebar-toggle-inline:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        .header-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .header-info h1 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-info p {
+            font-size: 0.875rem;
+            margin-bottom: 0;
+        }
+
+        /* User dropdown in header */
+        .user-dropdown {
+            display: block;
+            flex-shrink: 0;
+        }
+
+        .user-dropdown .btn-light {
+            background: white;
+            border: none;
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .user-dropdown .btn-light:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .user-dropdown .dropdown-menu {
+            right: 0;
+            left: auto;
+        }
+
+        @media (max-width: 576px) {
+            .header-card-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .sidebar-toggle-inline {
+                width: 100%;
+            }
+
+            .header-info {
+                width: 100%;
+                text-align: center;
+            }
+
+            .header-card-content .btn {
+                width: 100%;
+            }
         }
 
         .order-card {
             background: white;
             border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 5px 15px #e5e7eb;
+            padding: 1rem;
+            margin-bottom: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             border-left: 4px solid var(--ordivo-primary);
             transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .order-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px #e5e7eb;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
         .order-card.urgent {
@@ -284,31 +413,37 @@ if (isset($_GET['ajax'])) {
 
         .order-header {
             display: flex;
-            justify-content: between;
-            align-items: center;
-            margin-bottom: 1rem;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
         }
 
         .order-number {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--ordivo-primary);
         }
 
         .order-time {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #6c757d;
         }
 
         .order-items {
             background: #f8f9fa;
-            padding: 1rem;
+            padding: 0.75rem;
             border-radius: 8px;
-            margin: 1rem 0;
+            margin: 0.75rem 0;
+            flex: 1;
+        }
+
+        .order-items h6 {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
         }
 
         .btn-action {
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem;
             border-radius: 8px;
             border: none;
             font-weight: 600;
@@ -347,11 +482,68 @@ if (isset($_GET['ajax'])) {
             opacity: 0.5;
         }
 
-        @media (max-width: 768px) {
-            .order-card {
-                padding: 1rem;
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .sidebar-toggle-inline {
+                display: none; /* Hide inline hamburger on tablet+ */
             }
-            
+
+            .sidebar {
+                left: 0; /* Always visible on tablet+ */
+            }
+
+            .sidebar-overlay {
+                display: none !important;
+            }
+
+            .main-content {
+                margin-left: 250px;
+                padding: 1.5rem;
+            }
+
+            .header-card {
+                padding: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .header-info h1 {
+                font-size: 1.8rem;
+            }
+
+            .header-info p {
+                font-size: 1rem;
+            }
+
+            .order-card {
+                padding: 1.5rem;
+            }
+
+            .order-number {
+                font-size: 1.2rem;
+            }
+
+            .order-time {
+                font-size: 0.9rem;
+            }
+
+            .order-items {
+                padding: 1rem;
+                margin: 1rem 0;
+            }
+
+            .order-items h6 {
+                font-size: 1rem;
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 1200px) {
+            .main-content {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 767px) {
             .order-header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -361,61 +553,129 @@ if (isset($_GET['ajax'])) {
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container-fluid">
-            <div class="d-flex justify-content-between align-items-center">
-                <a class="navbar-brand" href="staff.php">
-                    <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
-                        <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>">
-                    <?php else: ?>
-                        <i class="fas fa-utensils"></i>
-                    <?php endif; ?>
-                    Kitchen Staff - <?= htmlspecialchars($vendorName) ?>
-                </a>
-                
-                <div class="d-flex align-items-center gap-3">
-                    <div class="text-end">
-                        <div class="fw-bold"><?= htmlspecialchars($_SESSION['user_name']) ?></div>
-                        <small class="opacity-75"><?= ucfirst($_SESSION['user_role']) ?></small>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="p-4">
+            <div class="d-flex align-items-center mb-4">
+                <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
+                    <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" 
+                         style="height: 60px; width: 60px; object-fit: cover; border-radius: 10px; margin-right: 12px; background: white; padding: 5px;"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div style="display: none; width: 60px; height: 60px; background: #ffffff; border-radius: 10px; align-items: center; justify-content: center; margin-right: 12px;">
+                        <i class="fas fa-utensils fa-2x" style="color: #10b981;"></i>
                     </div>
-                    <div class="dropdown">
-                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user"></i>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <?php if ($_SESSION['user_role'] === 'kitchen_manager'): ?>
-                                <li><a class="dropdown-item" href="dashboard.php">Manager Dashboard</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                            <?php endif; ?>
-                            <li><a class="dropdown-item" href="../customer/profile.php">Profile</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="../auth/logout.php">Logout</a></li>
-                        </ul>
+                <?php else: ?>
+                    <div style="display: flex; width: 60px; height: 60px; background: #ffffff; border-radius: 10px; align-items: center; justify-content: center; margin-right: 12px;">
+                        <i class="fas fa-utensils fa-2x" style="color: #10b981;"></i>
                     </div>
+                <?php endif; ?>
+                <div>
+                    <h5 class="text-white mb-0" style="font-size: 1.1rem; font-weight: 600;"><?= htmlspecialchars($vendorName) ?></h5>
+                    <small class="text-white-50">Kitchen Portal</small>
                 </div>
             </div>
         </div>
-    </header>
+        
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="../vendor/dashboard.php">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../vendor/products.php">
+                    <i class="fas fa-box me-2"></i>Products
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../vendor/orders.php">
+                    <i class="fas fa-shopping-cart me-2"></i>Orders
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../vendor/categories.php">
+                    <i class="fas fa-tags me-2"></i>Categories
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="dashboard.php">
+                    <i class="fas fa-utensils me-2"></i>Kitchen
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../vendor/staff.php">
+                    <i class="fas fa-users me-2"></i>Staff
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../vendor/settings.php">
+                    <i class="fas fa-cog me-2"></i>Settings
+                </a>
+            </li>
+            <li class="nav-item mt-4">
+                <a class="nav-link" href="../auth/logout.php">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+            </li>
+        </ul>
+    </nav>
 
     <!-- Main Content -->
-    <div class="container-fluid py-4">
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header-card">
+            <div class="header-card-content">
+                <!-- Mobile Hamburger Button -->
+                <button class="sidebar-toggle-inline" id="sidebarToggleInline">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="header-info">
+                    <h1>
+                        <i class="fas fa-clipboard-list me-2"></i>Kitchen Staff
+                    </h1>
+                    <p class="opacity-75">Manage your assigned orders</p>
+                </div>
+                
+                <!-- User Dropdown -->
+                <div class="dropdown user-dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user me-2"></i><span class="d-none d-md-inline"><?= htmlspecialchars($_SESSION['user_name']) ?></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <?php if ($_SESSION['user_role'] === 'kitchen_manager'): ?>
+                            <li><a class="dropdown-item" href="dashboard.php"><i class="fas fa-tachometer-alt me-2"></i>Manager Dashboard</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                        <?php endif; ?>
+                        <li><a class="dropdown-item" href="../customer/profile.php"><i class="fas fa-user me-2"></i>Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="../auth/logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4 class="mb-0">
-                        <i class="fas fa-clipboard-list text-primary me-2"></i>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-fire text-danger me-2"></i>
                         My Orders
-                    </h4>
-                    <button class="btn btn-primary" onclick="loadMyOrders()">
-                        <i class="fas fa-sync-alt me-2"></i>Refresh
+                    </h5>
+                    <button class="btn btn-primary btn-sm" onclick="loadMyOrders()">
+                        <i class="fas fa-sync-alt"></i> <span class="d-none d-md-inline">Refresh</span>
                     </button>
                 </div>
                 
-                <div id="ordersContainer">
-                    <div class="loading">
-                        <i class="fas fa-spinner"></i>
-                        <p class="mt-2">Loading your orders...</p>
+                <div class="row" id="ordersContainer">
+                    <div class="col-12">
+                        <div class="loading">
+                            <i class="fas fa-spinner"></i>
+                            <p class="mt-2">Loading your orders...</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -426,8 +686,37 @@ if (isset($_GET['ajax'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Load orders on page load
+        // Wait for DOM to be fully loaded
         document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const sidebarToggleInline = document.getElementById('sidebarToggleInline');
+
+            function toggleSidebar() {
+                if (sidebar && sidebarOverlay) {
+                    sidebar.classList.toggle('show');
+                    sidebarOverlay.classList.toggle('show');
+                }
+            }
+
+            if (sidebarToggleInline) {
+                sidebarToggleInline.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+
+            // Load orders on page load
             loadMyOrders();
             
             // Auto-refresh every 30 seconds
@@ -456,10 +745,12 @@ if (isset($_GET['ajax'])) {
             
             if (!orders || orders.length === 0) {
                 container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-clipboard-check"></i>
-                        <h5>No orders assigned</h5>
-                        <p>You don't have any orders to prepare at the moment.</p>
+                    <div class="col-12">
+                        <div class="empty-state">
+                            <i class="fas fa-clipboard-check"></i>
+                            <h5>No orders assigned</h5>
+                            <p>You don't have any orders to prepare at the moment.</p>
+                        </div>
                     </div>
                 `;
                 return;
@@ -474,60 +765,61 @@ if (isset($_GET['ajax'])) {
                 let actionButtons = '';
                 if (order.status === 'confirmed' && !isAssignedToMe) {
                     actionButtons = `
-                        <button class="btn btn-success btn-action" onclick="startOrder(${order.id})">
-                            <i class="fas fa-play me-2"></i>Start Cooking
+                        <button class="btn btn-success btn-action btn-sm" onclick="startOrder(${order.id})">
+                            <i class="fas fa-play me-1"></i>Start
                         </button>
                     `;
                 } else if (order.status === 'preparing' && isAssignedToMe) {
                     actionButtons = `
-                        <button class="btn btn-primary btn-action" onclick="completeOrder(${order.id})">
-                            <i class="fas fa-check me-2"></i>Mark Ready
+                        <button class="btn btn-primary btn-action btn-sm" onclick="completeOrder(${order.id})">
+                            <i class="fas fa-check me-1"></i>Ready
                         </button>
                     `;
                 } else if (order.status === 'ready') {
                     actionButtons = `
-                        <span class="badge bg-success fs-6">
-                            <i class="fas fa-check-circle me-1"></i>Ready for Delivery
+                        <span class="badge bg-success">
+                            <i class="fas fa-check-circle me-1"></i>Ready
                         </span>
                     `;
                 }
                 
                 return `
-                    <div class="order-card ${priorityClass} ${statusClass}">
-                        <div class="order-header">
-                            <div>
-                                <div class="order-number">Order #${order.order_number}</div>
-                                <div class="order-time">
-                                    <i class="fas fa-clock me-1"></i>${elapsedTime} minutes ago
-                                    • <i class="fas fa-user me-1"></i>${order.customer_name}
+                    <div class="col-12 col-md-6 mb-3">
+                        <div class="order-card ${priorityClass} ${statusClass}">
+                            <div class="order-header">
+                                <div>
+                                    <div class="order-number">Order #${order.order_number}</div>
+                                    <div class="order-time">
+                                        <i class="fas fa-clock me-1"></i>${elapsedTime} min ago
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <div class="mb-1">
+                                        <span class="badge bg-${priorityClass === 'urgent' ? 'danger' : priorityClass === 'high' ? 'warning' : 'info'}">
+                                            ${(priorityClass || 'normal').toUpperCase()}
+                                        </span>
+                                    </div>
+                                    <div class="fw-bold text-success">৳${parseFloat(order.total_amount).toFixed(2)}</div>
                                 </div>
                             </div>
-                            <div class="text-end">
-                                <div class="mb-2">
-                                    <span class="badge bg-${priorityClass === 'urgent' ? 'danger' : priorityClass === 'high' ? 'warning' : 'info'}">
-                                        ${(priorityClass || 'normal').toUpperCase()}
+                            
+                            <div class="order-items">
+                                <h6 class="mb-2">
+                                    <i class="fas fa-utensils me-2"></i>Items:
+                                </h6>
+                                <p class="mb-0 small">${order.items}</p>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="badge bg-${statusClass === 'confirmed' ? 'warning' : statusClass === 'preparing' ? 'info' : 'success'}">
+                                        ${statusClass.replace('_', ' ').toUpperCase()}
                                     </span>
+                                    ${isAssignedToMe ? '<small class="text-muted ms-1 d-none d-md-inline"><i class="fas fa-user-check me-1"></i>You</small>' : ''}
                                 </div>
-                                <div class="fw-bold text-success">৳${parseFloat(order.total_amount).toFixed(2)}</div>
-                            </div>
-                        </div>
-                        
-                        <div class="order-items">
-                            <h6 class="mb-2">
-                                <i class="fas fa-utensils me-2"></i>Items to Prepare:
-                            </h6>
-                            <p class="mb-0">${order.items}</p>
-                        </div>
-                        
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="badge bg-${statusClass === 'confirmed' ? 'warning' : statusClass === 'preparing' ? 'info' : 'success'}">
-                                    ${statusClass.replace('_', ' ').toUpperCase()}
-                                </span>
-                                ${isAssignedToMe ? '<small class="text-muted ms-2"><i class="fas fa-user-check me-1"></i>Assigned to you</small>' : ''}
-                            </div>
-                            <div>
-                                ${actionButtons}
+                                <div>
+                                    ${actionButtons}
+                                </div>
                             </div>
                         </div>
                     </div>

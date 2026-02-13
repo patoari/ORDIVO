@@ -772,6 +772,34 @@ try {
             border-right: 3px solid var(--ordivo-primary);
         }
 
+        /* Settings navigation in header */
+        .settings-nav-header {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 0.5rem;
+        }
+
+        .settings-nav-header .nav-link {
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .settings-nav-header .nav-link:hover,
+        .settings-nav-header .nav-link.active {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        @media (min-width: 992px) {
+            .settings-nav-header {
+                display: flex;
+                gap: 0.5rem;
+            }
+        }
+
         .profile-image-container, .cover-image-container {
             position: relative;
             overflow: hidden;
@@ -968,6 +996,29 @@ try {
                     <p class="opacity-75">Manage your account and business settings</p>
                 </div>
             </div>
+            
+            <!-- Settings Navigation Dropdown -->
+            <div class="mt-3">
+                <button class="btn btn-light w-100 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#settingsMenu" aria-expanded="false" aria-controls="settingsMenu">
+                    <i class="fas fa-bars me-2"></i>Settings Menu
+                </button>
+                <div class="collapse d-lg-block" id="settingsMenu">
+                    <nav class="nav flex-column flex-lg-row settings-nav-header mt-3 mt-lg-0">
+                        <a class="nav-link active" href="#profile" data-bs-toggle="tab" onclick="closeMenuOnMobile()">
+                            <i class="fas fa-user me-2"></i>Profile
+                        </a>
+                        <a class="nav-link" href="#images" data-bs-toggle="tab" onclick="closeMenuOnMobile()">
+                            <i class="fas fa-images me-2"></i>Shop Images
+                        </a>
+                        <a class="nav-link" href="#security" data-bs-toggle="tab" onclick="closeMenuOnMobile()">
+                            <i class="fas fa-lock me-2"></i>Security
+                        </a>
+                        <a class="nav-link" href="#business" data-bs-toggle="tab" onclick="closeMenuOnMobile()">
+                            <i class="fas fa-building me-2"></i>Business
+                        </a>
+                    </nav>
+                </div>
+            </div>
         </div>
 
         <!-- Alerts -->
@@ -1001,53 +1052,29 @@ try {
             </div>
         <?php endif; ?>
 
-        <div class="row">
-            <!-- Settings Navigation -->
-            <div class="col-md-3">
+        <!-- Settings Content -->
+        <div class="tab-content">
+            <!-- Profile Settings -->
+            <div class="tab-pane fade show active" id="profile">
                 <div class="card">
-                    <div class="card-body p-0">
-                        <nav class="nav flex-column settings-nav">
-                            <a class="nav-link active" href="#profile" data-bs-toggle="tab">
-                                <i class="fas fa-user me-2"></i>Profile
-                            </a>
-                            <a class="nav-link" href="#images" data-bs-toggle="tab">
-                                <i class="fas fa-images me-2"></i>Shop Images
-                            </a>
-                            <a class="nav-link" href="#security" data-bs-toggle="tab">
-                                <i class="fas fa-lock me-2"></i>Security
-                            </a>
-                            <a class="nav-link" href="#business" data-bs-toggle="tab">
-                                <i class="fas fa-building me-2"></i>Business
-                            </a>
-                        </nav>
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user me-2"></i>Profile Information
+                        </h5>
                     </div>
-                </div>
-            </div>
-
-            <!-- Settings Content -->
-            <div class="col-md-9">
-                <div class="tab-content">
-                    <!-- Profile Settings -->
-                    <div class="tab-pane fade show active" id="profile">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">
-                                    <i class="fas fa-user me-2"></i>Profile Information
-                                </h5>
+                    <div class="card-body">
+                        <form method="POST">
+                            <input type="hidden" name="action" value="update_profile">
+                            
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" id="name" name="name" value="<?= htmlspecialchars($vendor['name'] ?? '') ?>" required>
                             </div>
-                            <div class="card-body">
-                                <form method="POST">
-                                    <input type="hidden" name="action" value="update_profile">
-                                    
-                                    <div class="mb-3">
-                                        <label for="name" class="form-label">Full Name *</label>
-                                        <input type="text" class="form-control" id="name" name="name" value="<?= htmlspecialchars($vendor['name'] ?? '') ?>" required>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="email" class="form-label">Email Address *</label>
-                                        <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($vendor['email'] ?? '') ?>" required>
-                                    </div>
+                            
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($vendor['email'] ?? '') ?>" required>
+                            </div>
                                     
                                     <div class="mb-3">
                                         <label for="phone" class="form-label">Phone Number</label>
@@ -1398,6 +1425,18 @@ try {
                 });
             }
         });
+
+        // Close settings menu on mobile after selecting an option
+        function closeMenuOnMobile() {
+            if (window.innerWidth < 992) {
+                const settingsMenu = document.getElementById('settingsMenu');
+                if (settingsMenu && settingsMenu.classList.contains('show')) {
+                    const bsCollapse = new bootstrap.Collapse(settingsMenu, {
+                        toggle: true
+                    });
+                }
+            }
+        }
 
         // Password confirmation validation
         document.getElementById('confirm_password').addEventListener('input', function() {

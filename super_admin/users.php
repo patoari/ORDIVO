@@ -145,17 +145,45 @@ try {
         }
 
         /* Static Sidebar */
+        /* Mobile First - Sidebar hidden by default on mobile */
         .sidebar {
             position: fixed;
             top: 0;
-            left: 0;
+            left: -280px;
             height: 100vh;
             width: var(--sidebar-width);
             background: linear-gradient(180deg, #10b981 0%, #059669 100%);
             color: white;
             z-index: 1000;
             overflow-y: auto;
+            transition: left 0.3s ease;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar.show {
+            left: 0;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .sidebar-toggle {
+            display: none;
         }
 
         .sidebar-header {
@@ -207,27 +235,66 @@ try {
             margin-right: 0.75rem;
         }
 
-        /* Main Content */
+        /* Main Content - Mobile First */
         .main-content {
-            margin-left: var(--sidebar-width);
+            margin-left: 0;
             min-height: 100vh;
-            padding: 2rem;
+            padding: 0.625rem 1rem 1rem;
         }
 
         .page-header {
             background: white;
             border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             border-top: 4px solid #10b981;
+            display: flex;
+            flex-direction: row;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .sidebar-toggle-inline {
+            display: block;
+            width: 40px;
+            height: 40px;
+            background: #10b981;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle-inline:hover {
+            background: #059669;
+            transform: scale(1.05);
+        }
+
+        .page-header-content {
+            flex: 1;
+            min-width: 0;
         }
 
         .page-title {
-            font-size: 1.8rem;
+            font-size: 1rem;
             font-weight: 700;
             color: var(--ordivo-dark);
             margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .page-subtitle {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin: 0;
+            display: none;
         }
 
         .btn-primary {
@@ -268,11 +335,55 @@ try {
             color: white;
             font-weight: 600;
         }
+
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .sidebar-toggle-inline {
+                display: none;
+            }
+
+            .sidebar {
+                left: 0;
+            }
+
+            .sidebar-overlay {
+                display: none !important;
+            }
+
+            .main-content {
+                margin-left: var(--sidebar-width);
+                padding: 1.5rem;
+            }
+
+            .page-header {
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+                white-space: normal;
+            }
+
+            .page-subtitle {
+                display: block;
+                font-size: 1rem;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .main-content {
+                padding: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-brand">
                 <?php 
@@ -352,10 +463,15 @@ try {
     <div class="main-content">
         <!-- Page Header -->
         <div class="page-header">
-            <h1 class="page-title">
-                <i class="fas fa-users me-3"></i>User Management
-            </h1>
-            <p class="mb-0 text-muted">Manage all platform users and their permissions</p>
+            <button class="sidebar-toggle-inline" id="sidebarToggleInline">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="page-header-content">
+                <h1 class="page-title">
+                    <i class="fas fa-users me-2"></i>User Management
+                </h1>
+                <p class="page-subtitle">Manage all platform users and their permissions</p>
+            </div>
         </div>
 
         <!-- Alerts -->
@@ -611,6 +727,34 @@ try {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // Mobile menu toggle
+        const sidebarToggleInline = document.getElementById('sidebarToggleInline');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        if (sidebarToggleInline) {
+            sidebarToggleInline.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+                sidebarOverlay.classList.toggle('show');
+            });
+        }
+
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('show');
+                sidebarOverlay.classList.remove('show');
+            });
+        }
+
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 768) {
+                    sidebar.classList.remove('show');
+                    sidebarOverlay.classList.remove('show');
+                }
+            });
+        });
+
         function editUser(id, name, role, status) {
             document.getElementById('editUserId').value = id;
             document.getElementById('editUserName').value = name;

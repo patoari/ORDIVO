@@ -157,18 +157,45 @@ try {
             padding: 0;
         }
 
-        /* Static Sidebar - Always Visible */
+        /* Mobile First - Sidebar hidden by default on mobile */
         .sidebar {
             position: fixed;
             top: 0;
-            left: 0;
+            left: -280px;
             height: 100vh;
             width: var(--sidebar-width);
             background: linear-gradient(180deg, #10b981 0%, #059669 100%);
             color: white;
             z-index: 1000;
             overflow-y: auto;
+            transition: left 0.3s ease;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar.show {
+            left: 0;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .sidebar-toggle {
+            display: none;
         }
 
         .sidebar-header {

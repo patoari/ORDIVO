@@ -275,23 +275,9 @@ try {
             opacity: 1;
         }
 
-        /* Mobile toggle button */
+        /* Mobile toggle button - Hidden, using inline version */
         .sidebar-toggle {
-            display: block;
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            width: 45px;
-            height: 45px;
-            background: #10b981;
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            z-index: 1001;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
+            display: none;
         }
 
         .sidebar-toggle:hover {
@@ -348,45 +334,74 @@ try {
         .main-content {
             margin-left: 0; /* No margin on mobile */
             min-height: 100vh;
-            padding: 1rem;
-            padding-top: 70px; /* Space for toggle button */
+            padding: 0.625rem 1rem 1rem; /* 10px top, 1rem sides and bottom */
         }
 
         .top-bar {
             background: white;
             border-radius: 12px;
             padding: 1rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             box-shadow: 0 2px 10px #e5e7eb;
             display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            align-items: flex-start;
+            flex-direction: row;
+            gap: 0.75rem;
+            align-items: center;
             border-top: 4px solid #10b981;
         }
 
+        /* Inline hamburger button for mobile */
+        .sidebar-toggle-inline {
+            display: block;
+            width: 40px;
+            height: 40px;
+            background: #10b981;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle-inline:hover {
+            background: #059669;
+            transform: scale(1.05);
+        }
+
         .welcome-text {
-            width: 100%;
+            flex: 1;
+            min-width: 0;
         }
 
         .welcome-title {
-            font-size: 1.25rem;
+            font-size: 1rem;
             font-weight: 700;
             color: var(--ordivo-dark);
             margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .welcome-subtitle {
             color: #6c757d;
             margin: 0;
-            font-size: 0.875rem;
+            font-size: 0.75rem;
+            display: none; /* Hide subtitle on mobile */
         }
 
         .user-info {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            width: 100%;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .user-info-text {
+            display: none; /* Hide on mobile */
         }
 
         .user-avatar {
@@ -571,6 +586,10 @@ try {
                 display: none;
             }
 
+            .sidebar-toggle-inline {
+                display: none; /* Hide inline hamburger on tablet+ */
+            }
+
             .sidebar {
                 left: 0; /* Always visible on tablet+ */
             }
@@ -582,23 +601,27 @@ try {
             .main-content {
                 margin-left: var(--sidebar-width);
                 padding: 1.5rem;
-                padding-top: 1.5rem;
             }
 
             .top-bar {
                 flex-direction: row;
                 justify-content: space-between;
-                align-items: center;
                 padding: 1rem 1.5rem;
                 margin-bottom: 2rem;
             }
 
             .welcome-title {
                 font-size: 1.5rem;
+                white-space: normal;
             }
 
             .welcome-subtitle {
                 font-size: 1rem;
+                display: block; /* Show subtitle on tablet+ */
+            }
+
+            .user-info-text {
+                display: block; /* Show user info text on tablet+ */
             }
 
             .stats-grid {
@@ -761,6 +784,9 @@ try {
     <div class="main-content">
         <!-- Top Bar -->
         <div class="top-bar">
+            <button class="sidebar-toggle-inline" id="sidebarToggleInline">
+                <i class="fas fa-bars"></i>
+            </button>
             <div class="welcome-text">
                 <h1 class="welcome-title">Welcome back, <?= htmlspecialchars($_SESSION['user_name']) ?>!</h1>
                 <p class="welcome-subtitle">Here's what's happening with your platform today.</p>
@@ -769,7 +795,7 @@ try {
                 <div class="user-avatar">
                     <?= strtoupper(substr($_SESSION['user_name'], 0, 1)) ?>
                 </div>
-                <div>
+                <div class="user-info-text">
                     <div class="fw-bold"><?= htmlspecialchars($_SESSION['user_name']) ?></div>
                     <small class="text-muted">Super Administrator</small>
                 </div>
@@ -1067,9 +1093,19 @@ try {
     <script>
         // Mobile menu toggle
         const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarToggleInline = document.getElementById('sidebarToggleInline');
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
 
+        // Handle inline toggle button
+        if (sidebarToggleInline) {
+            sidebarToggleInline.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+                sidebarOverlay.classList.toggle('show');
+            });
+        }
+
+        // Handle fixed toggle button (if exists)
         if (sidebarToggle) {
             sidebarToggle.addEventListener('click', function() {
                 sidebar.classList.toggle('show');

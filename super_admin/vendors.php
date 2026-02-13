@@ -238,18 +238,47 @@ try {
             padding: 0;
         }
 
-        /* Static Sidebar - Always Visible */
+        /* Mobile First - Sidebar hidden by default on mobile */
         .sidebar {
             position: fixed;
             top: 0;
-            left: 0;
+            left: -280px; /* Hidden by default on mobile */
             height: 100vh;
             width: var(--sidebar-width);
             background: linear-gradient(180deg, #10b981 0%, #059669 100%);
             color: white;
             z-index: 1000;
             overflow-y: auto;
+            transition: left 0.3s ease;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar.show {
+            left: 0;
+        }
+
+        /* Overlay for mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Mobile toggle button - Hidden, using inline version */
+        .sidebar-toggle {
+            display: none;
         }
 
         .sidebar-header {
@@ -301,52 +330,92 @@ try {
             margin-right: 0.75rem;
         }
 
-        /* Main Content - Adjusted for sidebar */
+        /* Main Content - Mobile First */
         .main-content {
-            margin-left: var(--sidebar-width);
+            margin-left: 0; /* No margin on mobile */
             min-height: 100vh;
-            padding: 2rem;
+            padding: 0.625rem 1rem 1rem; /* 10px top */
         }
         
         .page-header {
             background: white;
             border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             border-top: 4px solid #10b981;
+            display: flex;
+            flex-direction: row;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        /* Inline hamburger button for mobile */
+        .sidebar-toggle-inline {
+            display: block;
+            width: 40px;
+            height: 40px;
+            background: #10b981;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle-inline:hover {
+            background: #059669;
+            transform: scale(1.05);
+        }
+
+        .page-header-content {
+            flex: 1;
+            min-width: 0;
         }
 
         .page-title {
-            font-size: 1.8rem;
+            font-size: 1rem;
             font-weight: 700;
             color: var(--ordivo-dark);
             margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .page-subtitle {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin: 0;
+            display: none; /* Hide on mobile */
         }
         
         .stat-card {
             background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 5px 15px #e5e7eb;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 2px 10px #e5e7eb;
             transition: all 0.3s ease;
             border-left: 4px solid var(--primary);
         }
         
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px #e5e7eb;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px #e5e7eb;
         }
         
         .stat-value {
-            font-size: 2.5rem;
+            font-size: 1.5rem;
             font-weight: 800;
             color: var(--primary);
         }
         
         .stat-label {
             color: #6c757d;
-            font-size: 0.9rem;
+            font-size: 0.7rem;
             font-weight: 600;
             text-transform: uppercase;
         }
@@ -402,11 +471,67 @@ try {
             font-weight: 600;
             color: #495057;
         }
+
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .sidebar-toggle-inline {
+                display: none;
+            }
+
+            .sidebar {
+                left: 0;
+            }
+
+            .sidebar-overlay {
+                display: none !important;
+            }
+
+            .main-content {
+                margin-left: var(--sidebar-width);
+                padding: 1.5rem;
+            }
+
+            .page-header {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+                white-space: normal;
+            }
+
+            .page-subtitle {
+                display: block;
+                font-size: 1rem;
+            }
+
+            .stat-card {
+                padding: 1.5rem;
+            }
+
+            .stat-value {
+                font-size: 2.5rem;
+            }
+
+            .stat-label {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .main-content {
+                padding: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-brand">
                 <?php 
@@ -486,15 +611,16 @@ try {
     <div class="main-content">
         <!-- Page Header -->
         <div class="page-header">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h1 class="page-title"><i class="fas fa-store me-2"></i>Vendor Management</h1>
-                    <p class="text-muted mb-0">Manage restaurants, set featured vendors, and control access</p>
-                </div>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addVendorModal">
-                    <i class="fas fa-plus me-2"></i>Add New Vendor
-                </button>
+            <button class="sidebar-toggle-inline" id="sidebarToggleInline">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="page-header-content">
+                <h1 class="page-title"><i class="fas fa-store me-2"></i>Vendor Management</h1>
+                <p class="page-subtitle">Manage restaurants, set featured vendors, and control access</p>
             </div>
+            <button class="btn btn-primary btn-sm d-none d-md-block" data-bs-toggle="modal" data-bs-target="#addVendorModal">
+                <i class="fas fa-plus me-2"></i>Add New Vendor
+            </button>
         </div>
 
         <!-- Alerts -->
@@ -514,25 +640,25 @@ try {
 
         <!-- Statistics Cards -->
         <div class="row mb-4">
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="col-6 col-lg-3 mb-3">
                 <div class="stat-card">
                     <div class="stat-value"><?= number_format($stats['total']) ?></div>
                     <div class="stat-label">Total Vendors</div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="col-6 col-lg-3 mb-3">
                 <div class="stat-card" style="border-left-color: var(--success);">
                     <div class="stat-value" style="color: var(--success);"><?= number_format($stats['active']) ?></div>
                     <div class="stat-label">Active Vendors</div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="col-6 col-lg-3 mb-3">
                 <div class="stat-card" style="border-left-color: #ffd700;">
                     <div class="stat-value" style="color: #ffd700;"><?= number_format($stats['featured']) ?></div>
                     <div class="stat-label">Featured Restaurants</div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="col-6 col-lg-3 mb-3">
                 <div class="stat-card" style="border-left-color: var(--warning);">
                     <div class="stat-value" style="color: var(--warning);"><?= number_format($stats['pending']) ?></div>
                     <div class="stat-label">Pending Approval</div>
@@ -804,5 +930,36 @@ try {
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Mobile menu toggle
+        const sidebarToggleInline = document.getElementById('sidebarToggleInline');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        if (sidebarToggleInline) {
+            sidebarToggleInline.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+                sidebarOverlay.classList.toggle('show');
+            });
+        }
+
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('show');
+                sidebarOverlay.classList.remove('show');
+            });
+        }
+
+        // Close sidebar when clicking a link on mobile
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 768) {
+                    sidebar.classList.remove('show');
+                    sidebarOverlay.classList.remove('show');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

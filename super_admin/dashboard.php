@@ -237,17 +237,18 @@ try {
         }
 
         /* Static Sidebar - Always Visible */
+        /* Mobile First - Sidebar hidden by default on mobile */
         .sidebar {
             position: fixed;
             top: 0;
-            left: 0; /* Always visible */
+            left: -280px; /* Hidden by default on mobile */
             height: 100vh;
             width: var(--sidebar-width);
             background: linear-gradient(180deg, #10b981 0%, #059669 100%);
             color: white;
             z-index: 1000;
             overflow-y: auto;
-            transition: none;
+            transition: left 0.3s ease;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
 
@@ -255,14 +256,47 @@ try {
             left: 0;
         }
 
-        /* Hide overlay - not needed for static sidebar */
+        /* Overlay for mobile */
         .sidebar-overlay {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
-        /* Hide toggle button - not needed for static sidebar */
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Mobile toggle button */
         .sidebar-toggle {
-            display: none;
+            display: block;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            width: 45px;
+            height: 45px;
+            background: #10b981;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle:hover {
+            background: #059669;
+            transform: scale(1.05);
         }
 
         .sidebar-header {
@@ -312,29 +346,31 @@ try {
         }
 
         .main-content {
-            margin-left: var(--sidebar-width); /* Always offset by sidebar width */
+            margin-left: 0; /* No margin on mobile */
             min-height: 100vh;
-            padding: 1.5rem;
+            padding: 1rem;
+            padding-top: 70px; /* Space for toggle button */
         }
 
         .top-bar {
             background: white;
             border-radius: 12px;
-            padding: 1rem 1.5rem;
-            margin-bottom: 2rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
             box-shadow: 0 2px 10px #e5e7eb;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
             border-top: 4px solid #10b981;
         }
 
         .welcome-text {
-            flex: 1;
+            width: 100%;
         }
 
         .welcome-title {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 700;
             color: var(--ordivo-dark);
             margin: 0;
@@ -343,12 +379,14 @@ try {
         .welcome-subtitle {
             color: #6c757d;
             margin: 0;
+            font-size: 0.875rem;
         }
 
         .user-info {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
+            width: 100%;
         }
 
         .user-avatar {
@@ -365,21 +403,21 @@ try {
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
         }
 
         .stat-card {
             background: white;
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 1rem;
             box-shadow: 0 2px 10px #e5e7eb;
             transition: all 0.3s ease;
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
             box-shadow: 0 8px 25px #e5e7eb;
         }
 
@@ -387,36 +425,36 @@ try {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         .stat-title {
-            font-size: 0.9rem;
+            font-size: 0.7rem;
             color: #6c757d;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
 
         .stat-icon {
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
 
         .stat-value {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 800;
             color: var(--ordivo-dark);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
         .stat-change {
-            font-size: 0.85rem;
+            font-size: 0.7rem;
             display: flex;
             align-items: center;
             gap: 0.25rem;
@@ -433,43 +471,45 @@ try {
         .content-section {
             background: white;
             border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
             box-shadow: 0 2px 10px #e5e7eb;
         }
 
         .section-header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
             padding-bottom: 1rem;
             border-bottom: 1px solid #e9ecef;
         }
 
         .section-title {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--ordivo-dark);
             margin: 0;
         }
 
         .btn-primary {
-            background: #10b981; 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             border: none;
             border-radius: 8px;
             padding: 0.5rem 1rem;
             font-weight: 600;
             transition: all 0.3s ease;
+            font-size: 0.875rem;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px #f97316;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
         }
 
         .table {
             margin: 0;
+            font-size: 0.875rem;
         }
 
         .table th {
@@ -477,68 +517,155 @@ try {
             font-weight: 600;
             color: var(--ordivo-dark);
             background: #f8f9fa;
+            font-size: 0.8rem;
+            padding: 0.75rem 0.5rem;
+        }
+
+        .table td {
+            padding: 0.75rem 0.5rem;
         }
 
         .badge {
-            font-size: 0.75rem;
-            padding: 0.35rem 0.65rem;
+            font-size: 0.7rem;
+            padding: 0.3rem 0.5rem;
         }
 
-        .modal-header {
-            background: #10b981; 100%);
-            color: white;
-            border-bottom: none;
+        /* Quick Access Cards - Mobile Styles */
+        .card-title {
+            font-size: 0.9rem !important;
         }
 
-        .modal-header .btn-close {
-            filter: invert(1);
+        .card-text {
+            font-size: 0.7rem !important;
         }
 
-        .alert {
-            border-radius: 8px;
-            border: none;
+        .card-body .fa-store,
+        .card-body .fa-star {
+            font-size: 2rem !important;
         }
 
-        .loading {
-            opacity: 0.6;
-            pointer-events: none;
+        .card-body .me-3 {
+            margin-right: 0.75rem !important;
         }
 
-        .chart-container {
-            position: relative;
-            height: 300px;
-            margin-top: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                padding: 1rem;
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .card-title {
+                font-size: 1.25rem !important;
             }
-            
+
+            .card-text {
+                font-size: 1rem !important;
+            }
+
+            .card-body .fa-store,
+            .card-body .fa-star {
+                font-size: 3rem !important;
+            }
+
+            .card-body .me-3 {
+                margin-right: 1rem !important;
+            }
+
             .sidebar-toggle {
-                top: 15px;
-                left: 15px;
-                width: 45px;
-                height: 45px;
+                display: none;
             }
-            
+
+            .sidebar {
+                left: 0; /* Always visible on tablet+ */
+            }
+
+            .sidebar-overlay {
+                display: none !important;
+            }
+
+            .main-content {
+                margin-left: var(--sidebar-width);
+                padding: 1.5rem;
+                padding-top: 1.5rem;
+            }
+
             .top-bar {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem 1.5rem;
+                margin-bottom: 2rem;
             }
-            
+
+            .welcome-title {
+                font-size: 1.5rem;
+            }
+
+            .welcome-subtitle {
+                font-size: 1rem;
+            }
+
             .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .stat-card {
+                padding: 1.5rem;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+
+            .stat-title {
+                font-size: 0.9rem;
+            }
+
+            .stat-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            .content-section {
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .section-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.25rem;
+            }
+
+            .table {
+                font-size: 1rem;
+            }
+
+            .table th {
+                font-size: 0.9rem;
+                padding: 0.75rem;
+            }
+
+            .table td {
+                padding: 0.75rem;
+            }
+
+            .badge {
+                font-size: 0.75rem;
+                padding: 0.35rem 0.65rem;
             }
         }
 
+        /* Desktop */
         @media (min-width: 1200px) {
             .main-content {
                 padding: 2rem;
             }
-            
+
             .stats-grid {
                 grid-template-columns: repeat(4, 1fr);
             }
@@ -668,8 +795,8 @@ try {
         <div id="section-dashboard" class="content-section">
             <!-- Quick Access Cards -->
             <div class="row mb-4">
-                <div class="col-md-6 mb-3">
-                    <a href="vendors_new.php" class="text-decoration-none">
+                <div class="col-6 mb-3">
+                    <a href="vendors.php" class="text-decoration-none">
                         <div class="card border-0 shadow-sm h-100" style="background: #f97316;">
                             <div class="card-body text-white">
                                 <div class="d-flex align-items-center">
@@ -685,7 +812,7 @@ try {
                         </div>
                     </a>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-6 mb-3">
                     <a href="products_featured.php" class="text-decoration-none">
                         <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);">
                             <div class="card-body text-dark">
@@ -938,6 +1065,35 @@ try {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // Mobile menu toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+                sidebarOverlay.classList.toggle('show');
+            });
+        }
+
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('show');
+                sidebarOverlay.classList.remove('show');
+            });
+        }
+
+        // Close sidebar when clicking a link on mobile
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 768) {
+                    sidebar.classList.remove('show');
+                    sidebarOverlay.classList.remove('show');
+                }
+            });
+        });
+
         // Navigation handling
         document.querySelectorAll('.nav-link[data-section]').forEach(link => {
             link.addEventListener('click', function(e) {

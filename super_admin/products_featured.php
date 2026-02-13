@@ -388,6 +388,10 @@ try {
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
+
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-6 mb-3">
                 <div class="stat-card">
                     <div class="stat-value"><?= number_format($stats['total']) ?></div>
                     <div class="stat-label">Total Products</div>

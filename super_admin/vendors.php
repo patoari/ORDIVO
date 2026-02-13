@@ -422,7 +422,7 @@ try {
                 
                 <?php if (!empty($sidebarLogoUrl)): ?>
                     <img src="<?= htmlspecialchars($sidebarLogoUrl) ?>" alt="ORDIVO" 
-                         style="height: 50px; width: auto; vertical-align: middle;"
+                         style="height: 90px; width: auto; vertical-align: middle;"
                          onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
                     <i class="fas fa-utensils" style="display: none; font-size: 2rem;"></i>
                 <?php else: ?>

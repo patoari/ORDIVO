@@ -312,7 +312,7 @@ try {
             background: white;
             border-radius: 12px;
             padding: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
@@ -510,7 +510,6 @@ try {
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
-        </div>
 
         <!-- Statistics Cards -->
         <div class="row mb-4">

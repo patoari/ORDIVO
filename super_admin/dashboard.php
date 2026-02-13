@@ -214,8 +214,6 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- Super Admin Responsive CSS -->
-    <link href="../assets/css/super-admin-responsive.css" rel="stylesheet">
     <!-- SweetAlert2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <!-- Chart.js -->
@@ -1181,39 +1179,6 @@ try {
             
             // Auto-refresh every 30 seconds
             setInterval(loadStats, 30000);
-        });
-    </script>
-    
-    <!-- Mobile Menu Toggle Script -->
-    <script>
-        // Mobile sidebar toggle
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebar = document.getElementById('sidebar');
-        const sidebarOverlay = document.getElementById('sidebarOverlay');
-        
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('show');
-                sidebarOverlay.classList.toggle('show');
-            });
-        }
-        
-        if (sidebarOverlay) {
-            sidebarOverlay.addEventListener('click', function() {
-                sidebar.classList.remove('show');
-                sidebarOverlay.classList.remove('show');
-            });
-        }
-        
-        // Close sidebar when clicking a link on mobile
-        const navLinks = document.querySelectorAll('.sidebar .nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                if (window.innerWidth < 992) {
-                    sidebar.classList.remove('show');
-                    sidebarOverlay.classList.remove('show');
-                }
-            });
         });
     </script>
 </body>

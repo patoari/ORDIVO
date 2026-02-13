@@ -215,8 +215,6 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Super Admin Responsive CSS -->
-    <link href="../assets/css/super-admin-responsive.css" rel="stylesheet">
     
     <style>
         :root {
@@ -806,35 +804,5 @@ try {
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Mobile Menu Toggle Script -->
-    <script>
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebar = document.getElementById('sidebar');
-        const sidebarOverlay = document.getElementById('sidebarOverlay');
-        
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('show');
-                sidebarOverlay.classList.toggle('show');
-            });
-        }
-        
-        if (sidebarOverlay) {
-            sidebarOverlay.addEventListener('click', () => {
-                sidebar.classList.remove('show');
-                sidebarOverlay.classList.remove('show');
-            });
-        }
-        
-        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth < 992) {
-                    sidebar.classList.remove('show');
-                    sidebarOverlay.classList.remove('show');
-                }
-            });
-        });
-    </script>
 </body>
 </html>

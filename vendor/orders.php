@@ -201,28 +201,129 @@ try {
         }
 
         .main-content {
-            margin-left: 250px;
-            padding: 20px;
+            margin-left: 0; /* No margin on mobile */
+            padding: 0.625rem 1rem 1rem; /* 10px top, 1rem sides and bottom */
             transition: all 0.3s ease;
         }
 
         .header-card {
-            background: #10b981; 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             border-radius: 15px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 8px #e5e7eb;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .header-card-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* Inline hamburger button for mobile - positioned in header card */
+        .sidebar-toggle-inline {
+            display: block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .sidebar-toggle-inline:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        .header-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .header-info h1 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-info p {
+            font-size: 0.875rem;
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 576px) {
+            .header-card-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .sidebar-toggle-inline {
+                width: 100%;
+            }
+
+            .header-info {
+                width: 100%;
+                text-align: center;
+            }
         }
 
         .stat-card {
             background: white;
             border-radius: 15px;
             padding: 1.5rem;
-            box-shadow: 0 5px 15px #e5e7eb;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             transition: all 0.3s ease;
             border: none;
             text-align: center;
+        }
+
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .sidebar-toggle-inline {
+                display: none; /* Hide inline hamburger on tablet+ */
+            }
+
+            .sidebar {
+                left: 0; /* Always visible on tablet+ */
+            }
+
+            .sidebar-overlay {
+                display: none !important;
+            }
+
+            .main-content {
+                margin-left: 250px;
+                padding: 1.5rem;
+            }
+
+            .header-card {
+                padding: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .header-info h1 {
+                font-size: 1.8rem;
+            }
+
+            .header-info p {
+                font-size: 1rem;
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 1200px) {
+            .main-content {
+                padding: 20px;
+            }
+        }
         }
 
         .stat-card:hover {
@@ -309,8 +410,11 @@ try {
     </style>
 </head>
 <body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <!-- Sidebar -->
-    <nav class="sidebar">
+    <nav class="sidebar" id="sidebar">
         <div class="p-4">
             <div class="d-flex align-items-center mb-4">
                 <?php if (!empty($vendorLogo)): ?>
@@ -380,13 +484,19 @@ try {
     <div class="main-content">
         <!-- Header -->
         <div class="header-card">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h1 class="mb-2">
-                        <i class="fas fa-shopping-cart me-3"></i>Order Management
+            <div class="header-card-content">
+                <!-- Mobile Hamburger Button -->
+                <button class="sidebar-toggle-inline" id="sidebarToggleInline">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="header-info">
+                    <h1>
+                        <i class="fas fa-shopping-cart me-2"></i>Order Management
                     </h1>
-                    <p class="mb-0 opacity-75">Track and manage your customer orders</p>
+                    <p class="opacity-75">Track and manage your customer orders</p>
                 </div>
+                
                 <div class="text-end">
                     <div class="h5 mb-0">৳<?= number_format($stats['total_revenue'], 0) ?></div>
                     <div class="opacity-75">Total Revenue</div>
@@ -411,37 +521,37 @@ try {
 
         <!-- Statistics -->
         <div class="row mb-4">
-            <div class="col-lg-2 col-md-4 col-6 mb-3">
+            <div class="col-6 col-lg-2 col-md-4 mb-3">
                 <div class="stat-card">
                     <div class="stat-value text-primary"><?= number_format($stats['total']) ?></div>
                     <div class="stat-label">Total Orders</div>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-4 col-6 mb-3">
+            <div class="col-6 col-lg-2 col-md-4 mb-3">
                 <div class="stat-card">
                     <div class="stat-value text-warning"><?= number_format($stats['pending']) ?></div>
                     <div class="stat-label">Pending</div>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-4 col-6 mb-3">
+            <div class="col-6 col-lg-2 col-md-4 mb-3">
                 <div class="stat-card">
                     <div class="stat-value text-info"><?= number_format($stats['processing']) ?></div>
                     <div class="stat-label">Processing</div>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-4 col-6 mb-3">
+            <div class="col-6 col-lg-2 col-md-4 mb-3">
                 <div class="stat-card">
                     <div class="stat-value text-success"><?= number_format($stats['completed']) ?></div>
                     <div class="stat-label">Completed</div>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-4 col-6 mb-3">
+            <div class="col-6 col-lg-2 col-md-4 mb-3">
                 <div class="stat-card">
                     <div class="stat-value text-danger"><?= number_format($stats['cancelled']) ?></div>
                     <div class="stat-label">Cancelled</div>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-4 col-6 mb-3">
+            <div class="col-6 col-lg-2 col-md-4 mb-3">
                 <div class="stat-card">
                     <div class="stat-value text-success">৳<?= number_format($stats['total_revenue'], 0) ?></div>
                     <div class="stat-label">Revenue</div>
@@ -572,6 +682,47 @@ try {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const sidebarToggleInline = document.getElementById('sidebarToggleInline');
+
+            console.log('Sidebar:', sidebar);
+            console.log('Overlay:', sidebarOverlay);
+            console.log('Toggle button:', sidebarToggleInline);
+
+            function toggleSidebar() {
+                console.log('Toggle sidebar called');
+                if (sidebar && sidebarOverlay) {
+                    sidebar.classList.toggle('show');
+                    sidebarOverlay.classList.toggle('show');
+                    console.log('Sidebar classes:', sidebar.className);
+                    console.log('Overlay classes:', sidebarOverlay.className);
+                }
+            }
+
+            if (sidebarToggleInline) {
+                sidebarToggleInline.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Hamburger clicked');
+                    toggleSidebar();
+                });
+                console.log('Event listener added to hamburger button');
+            } else {
+                console.error('Hamburger button not found!');
+            }
+
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleSidebar();
+                });
+            }
+        });
+
         function viewOrder(orderId) {
             // Implementation for view order details
             alert('View order details - Order ID: ' + orderId);
@@ -589,21 +740,6 @@ try {
                 document.body.appendChild(form);
                 form.submit();
             }
-        }
-
-        // Mobile sidebar toggle
-        function toggleSidebar() {
-            document.querySelector('.sidebar').classList.toggle('show');
-        }
-
-        // Add mobile menu button for small screens
-        if (window.innerWidth <= 768) {
-            const mobileMenuBtn = document.createElement('button');
-            mobileMenuBtn.className = 'btn btn-primary position-fixed';
-            mobileMenuBtn.style.cssText = 'top: 20px; left: 20px; z-index: 1001;';
-            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            mobileMenuBtn.onclick = toggleSidebar;
-            document.body.appendChild(mobileMenuBtn);
         }
     </script>
 </body>

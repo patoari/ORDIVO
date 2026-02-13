@@ -650,9 +650,28 @@ try {
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
-            <a href="dashboard.php" class="sidebar-brand">
-                <i class="fas fa-utensils me-2"></i>ORDIVO
-            </a>
+            <div class="sidebar-brand">
+                <?php 
+                $settings = fetchRow("SELECT * FROM site_settings LIMIT 1");
+                $sidebarLogoUrl = $settings['logo_url'] ?? '';
+                
+                // Fix path for super_admin directory
+                if (!empty($sidebarLogoUrl)) {
+                    if (strpos($sidebarLogoUrl, 'uploads/') === 0) {
+                        $sidebarLogoUrl = '../' . $sidebarLogoUrl;
+                    }
+                }
+                ?>
+                
+                <?php if (!empty($sidebarLogoUrl)): ?>
+                    <img src="<?= htmlspecialchars($sidebarLogoUrl) ?>" alt="ORDIVO" 
+                         style="height: 50px; width: auto; vertical-align: middle;"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <i class="fas fa-utensils" style="display: none; font-size: 2rem;"></i>
+                <?php else: ?>
+                    <i class="fas fa-utensils" style="font-size: 2rem;"></i>
+                <?php endif; ?>
+            </div>
             <div class="sidebar-subtitle">Super Admin Panel</div>
         </div>
         

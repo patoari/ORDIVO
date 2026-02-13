@@ -479,18 +479,47 @@ try {
             padding: 0;
         }
 
-        /* Static Sidebar */
+        /* Mobile First - Sidebar hidden by default on mobile */
         .sidebar {
             position: fixed;
             top: 0;
-            left: 0;
+            left: -280px; /* Hidden by default on mobile */
             height: 100vh;
             width: var(--sidebar-width);
             background: linear-gradient(180deg, #10b981 0%, #059669 100%);
             color: white;
             z-index: 1000;
             overflow-y: auto;
+            transition: left 0.3s ease;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar.show {
+            left: 0;
+        }
+
+        /* Overlay for mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Mobile toggle button - Hidden, using inline version */
+        .sidebar-toggle {
+            display: none;
         }
 
         .sidebar-header {
@@ -544,25 +573,65 @@ try {
 
         /* Main Content */
         .main-content {
-            margin-left: var(--sidebar-width);
+            margin-left: 0; /* No margin on mobile */
             min-height: 100vh;
-            padding: 2rem;
+            padding: 0.625rem 1rem 1rem; /* 10px top, 1rem sides and bottom */
         }
 
         .page-header {
             background: white;
             border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             border-top: 4px solid #10b981;
+            display: flex;
+            flex-direction: row;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        /* Inline hamburger button for mobile */
+        .sidebar-toggle-inline {
+            display: block;
+            width: 40px;
+            height: 40px;
+            background: #10b981;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle-inline:hover {
+            background: #059669;
+            transform: scale(1.05);
+        }
+
+        .page-header-content {
+            flex: 1;
+            min-width: 0;
         }
 
         .page-title {
-            font-size: 1.8rem;
+            font-size: 1rem;
             font-weight: 700;
             color: var(--ordivo-dark);
             margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .page-subtitle {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin: 0;
+            display: none; /* Hide subtitle on mobile */
         }
 
         .btn-primary {
@@ -645,11 +714,56 @@ try {
             font-weight: 600;
             margin-bottom: 1rem;
         }
+
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .sidebar-toggle-inline {
+                display: none; /* Hide inline hamburger on tablet+ */
+            }
+
+            .sidebar {
+                left: 0; /* Always visible on tablet+ */
+            }
+
+            .sidebar-overlay {
+                display: none !important;
+            }
+
+            .main-content {
+                margin-left: var(--sidebar-width);
+                padding: 1.5rem;
+            }
+
+            .page-header {
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+                white-space: normal;
+            }
+
+            .page-subtitle {
+                font-size: 1rem;
+                display: block; /* Show subtitle on tablet+ */
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 1200px) {
+            .main-content {
+                padding: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-brand">
                 <?php 
@@ -729,10 +843,15 @@ try {
     <div class="main-content">
         <!-- Page Header -->
         <div class="page-header">
-            <h1 class="page-title">
-                <i class="fas fa-cog me-3"></i>System Settings
-            </h1>
-            <p class="mb-0 text-muted">Configure platform settings and preferences</p>
+            <button class="sidebar-toggle-inline" id="sidebarToggleInline">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="page-header-content">
+                <h1 class="page-title">
+                    <i class="fas fa-cog me-2"></i>System Settings
+                </h1>
+                <p class="page-subtitle">Configure platform settings and preferences</p>
+            </div>
         </div>
 
         <!-- Alerts -->
@@ -755,37 +874,47 @@ try {
             <div class="col-lg-3">
                 <div class="card">
                     <div class="card-body">
-                        <div class="nav flex-column nav-pills" role="tablist">
-                            <button class="nav-link active" onclick="showSection('general')">
-                                <i class="fas fa-info-circle me-2"></i>General Settings
-                            </button>
-                            <button class="nav-link" onclick="showSection('hero')">
-                                <i class="fas fa-image me-2"></i>Hero Section
-                            </button>
-                            <button class="nav-link" onclick="showSection('images')">
-                                <i class="fas fa-images me-2"></i>Image Manager
-                            </button>
-                            <button class="nav-link" onclick="showSection('contact')">
-                                <i class="fas fa-address-book me-2"></i>Contact Information
-                            </button>
-                            <button class="nav-link" onclick="showSection('layout')">
-                                <i class="fas fa-layout me-2"></i>Page Layout
-                            </button>
-                            <button class="nav-link" onclick="showSection('theme')">
-                                <i class="fas fa-palette me-2"></i>Theme Settings
-                            </button>
-                            <button class="nav-link" onclick="showSection('ui')">
-                                <i class="fas fa-desktop me-2"></i>UI Settings
-                            </button>
-                            <button class="nav-link" onclick="showSection('advanced')">
-                                <i class="fas fa-cogs me-2"></i>Advanced Editor
-                            </button>
-                            <button class="nav-link" onclick="showSection('security')">
-                                <i class="fas fa-shield-alt me-2"></i>Security
-                            </button>
-                            <button class="nav-link" onclick="showSection('maintenance')">
-                                <i class="fas fa-tools me-2"></i>Maintenance
-                            </button>
+                        <!-- Mobile toggle for settings nav -->
+                        <button class="btn btn-primary w-100 mb-3 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#settingsNav" aria-expanded="false" aria-controls="settingsNav">
+                            <i class="fas fa-bars me-2"></i>Settings Menu
+                        </button>
+                        
+                        <div class="collapse d-lg-block" id="settingsNav">
+                            <div class="nav flex-column nav-pills" role="tablist">
+                                <button class="nav-link active" onclick="showSection('general')">
+                                    <i class="fas fa-info-circle me-2"></i>General Settings
+                                </button>
+                                <button class="nav-link" onclick="showSection('hero')">
+                                    <i class="fas fa-image me-2"></i>Hero Section
+                                </button>
+                                <button class="nav-link" onclick="showSection('images')">
+                                    <i class="fas fa-images me-2"></i>Image Manager
+                                </button>
+                                <button class="nav-link" onclick="showSection('contact')">
+                                    <i class="fas fa-address-book me-2"></i>Contact Information
+                                </button>
+                                <button class="nav-link" onclick="showSection('layout')">
+                                    <i class="fas fa-layout me-2"></i>Page Layout
+                                </button>
+                                <button class="nav-link" onclick="showSection('theme')">
+                                    <i class="fas fa-palette me-2"></i>Theme Settings
+                                </button>
+                                <button class="nav-link" onclick="showSection('ui')">
+                                    <i class="fas fa-desktop me-2"></i>UI Settings
+                                </button>
+                                <button class="nav-link" onclick="showSection('advanced')">
+                                    <i class="fas fa-cogs me-2"></i>Advanced Editor
+                                </button>
+                                <button class="nav-link" onclick="showSection('advanced')">
+                                    <i class="fas fa-cogs me-2"></i>Advanced Editor
+                                </button>
+                                <button class="nav-link" onclick="showSection('security')">
+                                    <i class="fas fa-shield-alt me-2"></i>Security
+                                </button>
+                                <button class="nav-link" onclick="showSection('maintenance')">
+                                    <i class="fas fa-tools me-2"></i>Maintenance
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1492,6 +1621,24 @@ try {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // Mobile menu toggle
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const sidebarToggleInline = document.getElementById('sidebarToggleInline');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('show');
+            sidebarOverlay.classList.toggle('show');
+        }
+
+        if (sidebarToggleInline) {
+            sidebarToggleInline.addEventListener('click', toggleSidebar);
+        }
+
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', toggleSidebar);
+        }
+
         function showSection(sectionName) {
             // Hide all sections
             document.querySelectorAll('.settings-section').forEach(section => {
@@ -1509,6 +1656,16 @@ try {
                 link.classList.remove('active');
             });
             event.target.classList.add('active');
+            
+            // Auto-collapse settings nav on mobile after selection
+            if (window.innerWidth < 992) {
+                const settingsNav = document.getElementById('settingsNav');
+                if (settingsNav && settingsNav.classList.contains('show')) {
+                    const bsCollapse = new bootstrap.Collapse(settingsNav, {
+                        toggle: true
+                    });
+                }
+            }
             
             // Load images if image manager section is shown
             if (sectionName === 'images') {

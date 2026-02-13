@@ -314,7 +314,7 @@ try {
         .main-content {
             margin-left: var(--sidebar-width); /* Always offset by sidebar width */
             min-height: 100vh;
-            padding: 2rem;
+            padding: 1.5rem;
         }
 
         .top-bar {
@@ -326,6 +326,7 @@ try {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-top: 4px solid #10b981;
         }
 
         .welcome-text {
@@ -512,7 +513,6 @@ try {
         @media (max-width: 768px) {
             .main-content {
                 padding: 1rem;
-                padding-top: 4rem;
             }
             
             .sidebar-toggle {
@@ -536,8 +536,7 @@ try {
 
         @media (min-width: 1200px) {
             .main-content {
-                padding: 3rem;
-                padding-top: 6rem;
+                padding: 2rem;
             }
             
             .stats-grid {

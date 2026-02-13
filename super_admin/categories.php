@@ -352,6 +352,7 @@ $iconOptions = [
             padding: 1.5rem;
             margin-bottom: 1.5rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-top: 4px solid #10b981;
         }
 
         .page-title {

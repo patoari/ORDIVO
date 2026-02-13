@@ -350,7 +350,7 @@ $iconOptions = [
             background: white;
             border-radius: 12px;
             padding: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
@@ -592,12 +592,13 @@ $iconOptions = [
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
-                </div>
-            </div>
+
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
             <div class="col-md-3">
                 <div class="stat-card">
-                    <div class="stat-value text-success"><?= number_format($stats['active']) ?></div>
-                    <div class="stat-label">Active</div>
+                    <div class="stat-value text-primary"><?= number_format($stats['total']) ?></div>
+                    <div class="stat-label">Total Categories</div>
                 </div>
             </div>
             <div class="col-md-3">

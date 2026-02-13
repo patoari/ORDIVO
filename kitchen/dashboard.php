@@ -427,6 +427,7 @@ $kitchenStaff = fetchAll("
         /* User dropdown in header */
         .user-dropdown {
             display: block;
+            flex-shrink: 0;
         }
 
         .user-dropdown .btn-light {
@@ -438,6 +439,11 @@ $kitchenStaff = fetchAll("
 
         .user-dropdown .btn-light:hover {
             background: rgba(255, 255, 255, 0.9);
+        }
+
+        .user-dropdown .dropdown-menu {
+            right: 0;
+            left: auto;
         }
 
         @media (max-width: 576px) {

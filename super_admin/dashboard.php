@@ -301,8 +301,8 @@ try {
         }
 
         .nav-link:hover, .nav-link.active {
-            background: #ffffff;
-            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
             transform: translateX(5px);
         }
 

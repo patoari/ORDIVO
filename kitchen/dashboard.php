@@ -313,66 +313,166 @@ $kitchenStaff = fetchAll("
             padding: 0;
         }
 
-        /* Header */
-        .header {
-            background: #10b981;);
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px #e5e7eb;
-            position: sticky;
+        /* Mobile First - Sidebar hidden by default on mobile */
+        .sidebar {
+            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+            min-height: 100vh;
+            width: 250px;
+            position: fixed;
+            left: -250px; /* Hidden by default on mobile */
             top: 0;
             z-index: 1000;
+            transition: left 0.3s ease;
+            overflow-y: auto;
         }
 
-        .header .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: white !important;
-            text-decoration: none;
+        .sidebar.show {
+            left: 0;
+        }
+
+        /* Overlay for mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.9);
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 2px 10px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .main-content {
+            margin-left: 0; /* No margin on mobile */
+            padding: 0.625rem 1rem 1rem; /* 10px top, 1rem sides and bottom */
+            transition: all 0.3s ease;
+        }
+
+        .header-card {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-top: 4px solid #10b981;
+        }
+
+        .header-card-content {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-        }
-
-        .header .navbar-brand img {
-            height: 40px;
-            margin-right: 10px;
-        }
-
-        .header .navbar-brand i {
-            font-size: 1.8rem;
-            margin-right: 10px;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
+            flex-wrap: wrap;
             gap: 1rem;
         }
 
-        .user-avatar {
+        /* Inline hamburger button for mobile - positioned in header card */
+        .sidebar-toggle-inline {
+            display: block;
             width: 40px;
             height: 40px;
-            border-radius: 50%;
-            background: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .sidebar-toggle-inline:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        .header-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .header-info h1 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-info p {
+            font-size: 0.875rem;
+            margin-bottom: 0;
+        }
+
+        /* User dropdown in header */
+        .user-dropdown {
+            display: block;
+        }
+
+        .user-dropdown .dropdown-toggle {
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown .dropdown-toggle:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 576px) {
+            .header-card-content {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .header-info h1 {
+                font-size: 1.1rem;
+            }
+
+            .header-info p {
+                font-size: 0.8rem;
+            }
         }
 
         /* Dashboard Cards */
         .dashboard-card {
             background: white;
             border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 5px 15px #e5e7eb;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             border: none;
             transition: all 0.3s ease;
             height: 100%;
+            margin-bottom: 1rem;
         }
 
         .dashboard-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px #e5e7eb;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
         .stat-card {
@@ -388,28 +488,212 @@ $kitchenStaff = fetchAll("
             left: 0;
             right: 0;
             height: 4px;
-            background: #10b981;);
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
         }
 
         .stat-number {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
             margin: 0.5rem 0;
         }
 
         .stat-label {
             color: #6c757d;
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .stat-icon {
-            font-size: 3rem;
+            font-size: 2rem;
             opacity: 0.1;
             position: absolute;
             top: 50%;
-            right: 1rem;
+            right: 0.5rem;
+            transform: translateY(-50%);
+        }
+
+        /* Order Status Colors */
+        .status-pending { color: var(--ordivo-warning); }
+        .status-preparing { color: var(--ordivo-info); }
+        .status-ready { color: var(--ordivo-success); }
+        .status-delivered { color: #28a745; }
+        .status-cancelled { color: var(--ordivo-danger); }
+
+        .priority-urgent { border-left: 4px solid var(--ordivo-danger); }
+        .priority-high { border-left: 4px solid var(--ordivo-warning); }
+        .priority-normal { border-left: 4px solid var(--ordivo-info); }
+        .priority-low { border-left: 4px solid #6c757d; }
+
+        /* Kitchen Stations */
+        .station-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--ordivo-primary);
+            transition: all 0.3s ease;
+        }
+
+        .station-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .station-active {
+            border-left-color: var(--ordivo-success);
+        }
+
+        .station-busy {
+            border-left-color: var(--ordivo-warning);
+        }
+
+        .station-overloaded {
+            border-left-color: var(--ordivo-danger);
+        }
+
+        /* Workflow Cards */
+        .workflow-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .workflow-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Action Buttons */
+        .btn-action {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: var(--ordivo-primary);
+            border-color: var(--ordivo-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--ordivo-secondary);
+            border-color: var(--ordivo-secondary);
+        }
+
+        /* Loading States */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+        }
+
+        .loading i {
+            font-size: 2rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .sidebar-toggle-inline {
+                display: none; /* Hide inline hamburger on tablet+ */
+            }
+
+            .sidebar {
+                left: 0; /* Always visible on tablet+ */
+            }
+
+            .sidebar-overlay {
+                display: none !important;
+            }
+
+            .main-content {
+                margin-left: 250px;
+                padding: 1.5rem;
+            }
+
+            .header-card {
+                padding: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .header-info h1 {
+                font-size: 1.8rem;
+            }
+
+            .header-info p {
+                font-size: 1rem;
+            }
+
+            .dashboard-card {
+                padding: 1.5rem;
+                margin-bottom: 0;
+            }
+            
+            .stat-number {
+                font-size: 2.5rem;
+            }
+
+            .stat-label {
+                font-size: 0.9rem;
+            }
+
+            .stat-icon {
+                font-size: 3rem;
+                right: 1rem;
+            }
+            
+            .workflow-card {
+                padding: 1rem;
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 1200px) {
+            .main-content {
+                padding: 20px;
+            }
+
+            .dashboard-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            opacity: 0.1;
+            position: absolute;
+            top: 50%;
+            right: 0.5rem;
             transform: translateY(-50%);
         }
 
@@ -506,65 +790,171 @@ $kitchenStaff = fetchAll("
             100% { transform: rotate(360deg); }
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        /* Responsive - Tablet and up */
+        @media (min-width: 768px) {
+            .header {
+                padding: 1rem 0;
+            }
+
+            .header .navbar-brand {
+                font-size: 1.5rem;
+            }
+
+            .header .navbar-brand img {
+                height: 90px;
+            }
+
+            .header .navbar-brand i {
+                font-size: 1.8rem;
+                margin-right: 10px;
+            }
+
+            .user-info {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .mobile-menu-toggle {
+                display: none;
+            }
+
             .dashboard-card {
-                margin-bottom: 1rem;
+                padding: 1.5rem;
+                margin-bottom: 0;
             }
             
             .stat-number {
-                font-size: 2rem;
+                font-size: 2.5rem;
+            }
+
+            .stat-label {
+                font-size: 0.9rem;
+            }
+
+            .stat-icon {
+                font-size: 3rem;
+                right: 1rem;
             }
             
             .workflow-card {
-                padding: 0.8rem;
+                padding: 1rem;
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 1200px) {
+            .dashboard-card {
+                padding: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container-fluid">
-            <div class="d-flex justify-content-between align-items-center">
-                <a class="navbar-brand" href="dashboard.php">
-                    <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
-                        <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>">
-                    <?php else: ?>
-                        <i class="fas fa-utensils"></i>
-                    <?php endif; ?>
-                    Kitchen Manager - <?= htmlspecialchars($vendorName) ?>
-                </a>
-                
-                <div class="user-info">
-                    <div class="user-avatar">
-                        <i class="fas fa-user"></i>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="p-4">
+            <div class="d-flex align-items-center mb-4">
+                <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
+                    <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" 
+                         style="height: 60px; width: 60px; object-fit: cover; border-radius: 10px; margin-right: 12px; background: white; padding: 5px;"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div style="display: none; width: 60px; height: 60px; background: #ffffff; border-radius: 10px; align-items: center; justify-content: center; margin-right: 12px;">
+                        <i class="fas fa-utensils fa-2x" style="color: #10b981;"></i>
                     </div>
-                    <div>
-                        <div class="fw-bold"><?= htmlspecialchars($_SESSION['user_name']) ?></div>
-                        <small class="opacity-75"><?= ucfirst($_SESSION['user_role']) ?></small>
+                <?php else: ?>
+                    <div style="display: flex; width: 60px; height: 60px; background: #ffffff; border-radius: 10px; align-items: center; justify-content: center; margin-right: 12px;">
+                        <i class="fas fa-utensils fa-2x" style="color: #10b981;"></i>
                     </div>
-                    <div class="dropdown">
-                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-cog"></i>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="inventory.php"><i class="fas fa-boxes me-2"></i>Kitchen Inventory</a></li>
-                            <li><a class="dropdown-item" href="../vendor/inventory.php"><i class="fas fa-warehouse me-2"></i>Full Inventory</a></li>
-                            <li><a class="dropdown-item" href="../customer/profile.php"><i class="fas fa-user me-2"></i>Profile</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="../auth/logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
-                        </ul>
-                    </div>
+                <?php endif; ?>
+                <div>
+                    <h5 class="text-white mb-0" style="font-size: 1.1rem; font-weight: 600;"><?= htmlspecialchars($vendorName) ?></h5>
+                    <small class="text-white-50">Kitchen Portal</small>
                 </div>
             </div>
         </div>
-    </header>
+        
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="dashboard.php">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="inventory.php">
+                    <i class="fas fa-boxes me-2"></i>Kitchen Inventory
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="staff.php">
+                    <i class="fas fa-users me-2"></i>Kitchen Staff
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../vendor/dashboard.php">
+                    <i class="fas fa-store me-2"></i>Vendor Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../vendor/products.php">
+                    <i class="fas fa-box me-2"></i>Products
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../vendor/orders.php">
+                    <i class="fas fa-shopping-cart me-2"></i>Orders
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../customer/profile.php">
+                    <i class="fas fa-user me-2"></i>Profile
+                </a>
+            </li>
+            <li class="nav-item mt-4">
+                <a class="nav-link" href="../auth/logout.php">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+            </li>
+        </ul>
+    </nav>
 
     <!-- Main Content -->
-    <div class="container-fluid py-4">
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header-card">
+            <div class="header-card-content">
+                <!-- Mobile Hamburger Button -->
+                <button class="sidebar-toggle-inline" id="sidebarToggleInline">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="header-info">
+                    <h1>
+                        <i class="fas fa-fire me-2"></i>Kitchen Manager Dashboard
+                    </h1>
+                    <p class="opacity-75">Real-time kitchen operations and order management</p>
+                </div>
+                
+                <!-- User Dropdown -->
+                <div class="dropdown user-dropdown">
+                    <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user me-2"></i><?= htmlspecialchars($_SESSION['user_name']) ?>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="inventory.php"><i class="fas fa-boxes me-2"></i>Kitchen Inventory</a></li>
+                        <li><a class="dropdown-item" href="../vendor/inventory.php"><i class="fas fa-warehouse me-2"></i>Full Inventory</a></li>
+                        <li><a class="dropdown-item" href="../customer/profile.php"><i class="fas fa-user me-2"></i>Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="../auth/logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <!-- Dashboard Stats -->
-        <div class="row mb-4" id="dashboardStats">
+        <div class="row mb-3" id="dashboardStats">
             <div class="col-12">
                 <div class="loading">
                     <i class="fas fa-spinner"></i>
@@ -575,7 +965,7 @@ $kitchenStaff = fetchAll("
 
         <div class="row">
             <!-- Active Orders & Workflows -->
-            <div class="col-lg-8">
+            <div class="col-lg-8 mb-3">
                 <div class="dashboard-card">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="mb-0">
@@ -583,7 +973,7 @@ $kitchenStaff = fetchAll("
                             Active Kitchen Workflows
                         </h5>
                         <button class="btn btn-outline-primary btn-sm" onclick="refreshWorkflows()">
-                            <i class="fas fa-sync-alt"></i> Refresh
+                            <i class="fas fa-sync-alt"></i> <span class="d-none d-md-inline">Refresh</span>
                         </button>
                     </div>
                     <div id="activeWorkflows">
@@ -596,7 +986,7 @@ $kitchenStaff = fetchAll("
             </div>
 
             <!-- Kitchen Stations -->
-            <div class="col-lg-4">
+            <div class="col-lg-4 mb-3">
                 <div class="dashboard-card">
                     <h5 class="mb-3">
                         <i class="fas fa-industry text-primary me-2"></i>
@@ -684,8 +1074,37 @@ $kitchenStaff = fetchAll("
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Load dashboard data
+        // Wait for DOM to be fully loaded
         document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const sidebarToggleInline = document.getElementById('sidebarToggleInline');
+
+            function toggleSidebar() {
+                if (sidebar && sidebarOverlay) {
+                    sidebar.classList.toggle('show');
+                    sidebarOverlay.classList.toggle('show');
+                }
+            }
+
+            if (sidebarToggleInline) {
+                sidebarToggleInline.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+
+            // Load dashboard data
             loadDashboardData();
             
             // Auto-refresh every 30 seconds
@@ -716,42 +1135,42 @@ $kitchenStaff = fetchAll("
             const revenue = parseFloat(stats.revenue || 0).toFixed(2);
             
             document.getElementById('dashboardStats').innerHTML = `
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="dashboard-card stat-card">
                         <i class="fas fa-clock stat-icon"></i>
                         <div class="stat-number status-pending">${stats.pending_orders || 0}</div>
                         <div class="stat-label">Pending Orders</div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="dashboard-card stat-card">
                         <i class="fas fa-fire stat-icon"></i>
                         <div class="stat-number status-preparing">${stats.preparing_orders || 0}</div>
                         <div class="stat-label">Preparing</div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="dashboard-card stat-card">
                         <i class="fas fa-check-circle stat-icon"></i>
                         <div class="stat-number status-ready">${stats.ready_orders || 0}</div>
                         <div class="stat-label">Ready</div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="dashboard-card stat-card">
                         <i class="fas fa-chart-line stat-icon"></i>
                         <div class="stat-number text-success">৳${revenue}</div>
                         <div class="stat-label">Today's Revenue</div>
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-6 col-md-6 mb-3">
                     <div class="dashboard-card stat-card">
                         <i class="fas fa-stopwatch stat-icon"></i>
                         <div class="stat-number text-info">${avgTime} min</div>
                         <div class="stat-label">Avg Prep Time</div>
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-6 col-md-6 mb-3">
                     <div class="dashboard-card stat-card">
                         <i class="fas fa-trophy stat-icon"></i>
                         <div class="stat-number status-delivered">${stats.completed_orders || 0}</div>

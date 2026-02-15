@@ -799,7 +799,7 @@ $kitchenStaff = fetchAll("
 
         <div class="row">
             <!-- Active Orders & Workflows -->
-            <div class="col-lg-8 mb-3">
+            <div class="col-6 col-lg-8 mb-3">
                 <div class="dashboard-card">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="mb-0">
@@ -820,7 +820,7 @@ $kitchenStaff = fetchAll("
             </div>
 
             <!-- Kitchen Stations -->
-            <div class="col-lg-4 mb-3">
+            <div class="col-6 col-lg-4 mb-3">
                 <div class="dashboard-card">
                     <h5 class="mb-3">
                         <i class="fas fa-industry text-primary me-2"></i>

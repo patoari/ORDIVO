@@ -275,6 +275,8 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="../assets/css/ordivo-responsive.css" rel="stylesheet">
     
@@ -560,6 +562,34 @@ try {
                 padding: 20px;
             }
         }
+
+        /* DataTable Controls - One Line Layout */
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter {
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .dataTables_wrapper .row:first-child {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .dataTables_wrapper .row:first-child > div {
+            flex: 0 0 auto;
+        }
+
+        @media (min-width: 576px) {
+            .dataTables_wrapper .dataTables_length {
+                margin-right: auto;
+            }
+            
+            .dataTables_wrapper .dataTables_filter {
+                margin-left: auto;
+            }
+        }
     </style>
 </head>
 <body>
@@ -723,7 +753,7 @@ try {
                     </div>
                 <?php else: ?>
                     <div class="table-responsive">
-                        <table class="table">
+                        <table class="table" id="categoriesTable">
                             <thead>
                                 <tr>
                                     <th>Category Name</th>
@@ -874,10 +904,37 @@ try {
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery (required for DataTables) -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     
     <script>
         // Wait for DOM to be fully loaded
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize DataTable with pagination
+            <?php if (!empty($categories)): ?>
+            $('#categoriesTable').DataTable({
+                pageLength: 10,
+                order: [[4, 'desc']], // Sort by Created date descending
+                language: {
+                    search: "Search categories:",
+                    lengthMenu: "Show _MENU_ categories per page",
+                    info: "Showing _START_ to _END_ of _TOTAL_ categories",
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    }
+                },
+                columnDefs: [
+                    { orderable: false, targets: [5] } // Disable sorting on Actions column
+                ]
+            });
+            <?php endif; ?>
+
             // Mobile menu toggle
             const sidebar = document.getElementById('sidebar');
             const sidebarOverlay = document.getElementById('sidebarOverlay');

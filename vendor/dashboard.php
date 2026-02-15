@@ -214,6 +214,7 @@ require_once 'components/load_vendor_images.php';
         .sidebar .nav-link.active {
             background: #ffffff;
             color: #10b981;
+            border-radius: 0.5rem;
             font-weight: 600;
             transform: translateX(5px);
         }

@@ -341,8 +341,13 @@ try {
         .sidebar .nav-link:hover,
         .sidebar .nav-link.active {
             background: #ffffff;
-            color: white;
+            color: #10b981;
+            border-radius: 0.5rem;
             transform: translateX(5px);
+        }
+
+        .sidebar .nav-link.active i {
+            color: #10b981;
         }
 
         .main-content {

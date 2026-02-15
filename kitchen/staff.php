@@ -270,8 +270,15 @@ if (isset($_GET['ajax'])) {
 
         .sidebar .nav-link:hover,
         .sidebar .nav-link.active {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
+            background: #ffffff;
+            color: #10b981;
+            border-radius: 0.5rem;
+            transform: translateX(5px);
+        }
+
+        .sidebar .nav-link.active i {
+            color: #10b981;
+        }
             transform: translateX(5px);
         }
 

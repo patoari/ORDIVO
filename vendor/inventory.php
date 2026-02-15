@@ -578,6 +578,34 @@ if (isset($_GET['ajax'])) {
                 padding: 20px;
             }
         }
+
+        /* DataTable Controls - One Line Layout */
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter {
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .dataTables_wrapper .row:first-child {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .dataTables_wrapper .row:first-child > div {
+            flex: 0 0 auto;
+        }
+
+        @media (min-width: 576px) {
+            .dataTables_wrapper .dataTables_length {
+                margin-right: auto;
+            }
+            
+            .dataTables_wrapper .dataTables_filter {
+                margin-left: auto;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1014,37 +1042,37 @@ if (isset($_GET['ajax'])) {
 
         function renderStatsCards(stats) {
             const statsHtml = `
-                <div class="col-md-2 mb-3">
+                <div class="col-6 col-lg-2 mb-3">
                     <div class="dashboard-card stat-card">
                         <div class="stat-number text-primary">${stats.total_items}</div>
                         <div class="stat-label">Total Items</div>
                     </div>
                 </div>
-                <div class="col-md-2 mb-3">
+                <div class="col-6 col-lg-2 mb-3">
                     <div class="dashboard-card stat-card">
                         <div class="stat-number text-warning">${stats.low_stock_items}</div>
                         <div class="stat-label">Low Stock</div>
                     </div>
                 </div>
-                <div class="col-md-2 mb-3">
+                <div class="col-6 col-lg-2 mb-3">
                     <div class="dashboard-card stat-card">
                         <div class="stat-number text-danger">${stats.out_of_stock_items}</div>
                         <div class="stat-label">Out of Stock</div>
                     </div>
                 </div>
-                <div class="col-md-2 mb-3">
+                <div class="col-6 col-lg-2 mb-3">
                     <div class="dashboard-card stat-card">
                         <div class="stat-number text-warning">${stats.expiring_items}</div>
                         <div class="stat-label">Expiring Soon</div>
                     </div>
                 </div>
-                <div class="col-md-2 mb-3">
+                <div class="col-6 col-lg-2 mb-3">
                     <div class="dashboard-card stat-card">
                         <div class="stat-number text-danger">${stats.expired_items}</div>
                         <div class="stat-label">Expired</div>
                     </div>
                 </div>
-                <div class="col-md-2 mb-3">
+                <div class="col-6 col-lg-2 mb-3">
                     <div class="dashboard-card stat-card">
                         <div class="stat-number text-success">৳${parseFloat(stats.total_value).toFixed(2)}</div>
                         <div class="stat-label">Total Value</div>

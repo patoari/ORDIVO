@@ -23,20 +23,20 @@ if ($_SESSION['user_role'] === 'vendor') {
     $vendorBusinessName = $vendorInfo['name'] ?? 'My Business';
     $vendorLogo = $vendorInfo['logo'] ?? '';
 } else {
-    // For staff members, get vendor ID from vendor_staff table
+    // For staff members (including kitchen_manager), get vendor ID from vendor_staff table
     global $pdo;
     $stmt = $pdo->prepare("
         SELECT vs.vendor_id, v.name as vendor_name, v.logo as vendor_logo
         FROM vendor_staff vs 
         JOIN vendors v ON vs.vendor_id = v.id 
-        WHERE vs.user_id = ? AND vs.status = 'active'
+        WHERE vs.user_id = ?
         LIMIT 1
     ");
     $stmt->execute([$_SESSION['user_id']]);
     $staffInfo = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if (!$staffInfo) {
-        die('Staff member not assigned to any vendor');
+        die('Staff member not assigned to any vendor. Please contact your administrator to assign you to a vendor.');
     }
     
     $vendorId = $staffInfo['vendor_id'];

@@ -48,19 +48,19 @@ if ($_SESSION['user_role'] === 'super_admin') {
         $vendorName = $_SESSION['user_name'] ?? 'Vendor';
     }
 } else {
-    // For kitchen staff and store staff, get vendor ID from vendor_staff table
+    // For kitchen staff, store staff, kitchen manager, and store manager - get vendor ID from vendor_staff table
     $staffInfo = fetchRow("
         SELECT vs.vendor_id, v.name as vendor_name 
         FROM vendor_staff vs 
         JOIN vendors v ON vs.vendor_id = v.id 
-        WHERE vs.user_id = ? AND vs.status = 'active'
+        WHERE vs.user_id = ?
     ", [$_SESSION['user_id']]);
 
     $vendorId = $staffInfo['vendor_id'] ?? null;
     $vendorName = $staffInfo['vendor_name'] ?? 'Kitchen';
 
     if (!$vendorId) {
-        die('Staff member not assigned to any vendor');
+        die('Staff member not assigned to any vendor. Please contact your administrator to assign you to a vendor.');
     }
 }
 

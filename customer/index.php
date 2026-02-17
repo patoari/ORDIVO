@@ -536,6 +536,231 @@ if (isset($_GET['ajax'])) {
             margin-left: 0.5rem;
         }
 
+        /* Mobile Header Layout */
+        @media (max-width: 768px) {
+            .header {
+                height: auto;
+                min-height: auto;
+                padding: 0;
+            }
+
+            .header .navbar {
+                height: auto;
+                padding: 0;
+                flex-direction: column;
+                align-items: stretch !important;
+            }
+
+            .header .container-fluid {
+                height: auto;
+                padding: 0;
+            }
+
+            /* Row 1: Top Utility Bar - Address + Login */
+            .mobile-header-top {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                height: 44px;
+                padding: 0 0.75rem;
+                background: #f8f9fa;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .location-display {
+                flex: 1;
+                font-size: 0.75rem;
+                padding: 0.4rem 0.75rem;
+                border-radius: 20px;
+                background: white;
+                border: 1px solid #e5e7eb;
+                max-width: calc(100% - 60px);
+                height: 32px;
+                display: flex;
+                align-items: center;
+            }
+
+            .location-display i {
+                font-size: 0.7rem;
+                flex-shrink: 0;
+            }
+
+            .location-display span {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                flex: 1;
+                font-size: 0.7rem;
+            }
+
+            .location-display:hover {
+                background: #f8f9fa;
+                border-color: #10b981;
+            }
+
+            .mobile-login-btn {
+                flex-shrink: 0;
+                margin-left: 0.5rem;
+            }
+
+            .mobile-login-btn .btn-user {
+                padding: 0.4rem 0.75rem;
+                height: 32px;
+                min-width: 40px;
+                border-radius: 20px;
+                font-size: 0.75rem;
+            }
+
+            /* Row 2: Main Header - Hamburger + Logo + Action Icons (MERGED) */
+            .mobile-header-middle {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                height: 60px;
+                padding: 0 0.5rem; /* Reduced padding */
+                background: white;
+                border-bottom: 2px solid #10b981;
+            }
+
+            /* Left side: Hamburger + Logo */
+            .mobile-header-left {
+                display: flex;
+                align-items: center;
+                flex: 0 1 auto; /* Don't grow, shrink if needed */
+                min-width: 0;
+                gap: 0.5rem; /* 8px gap between hamburger and logo */
+            }
+
+            .mobile-header-middle .mobile-nav-toggle {
+                display: none; /* Hide the fixed hamburger, will be in nav area instead */
+            }
+
+            /* Adjust left side to not include hamburger */
+            .mobile-header-left {
+                display: flex;
+                align-items: center;
+                flex: 0 1 auto;
+                min-width: 0;
+                gap: 0; /* Remove gap since hamburger is outside */
+            }
+
+            .mobile-header-middle .navbar-brand {
+                margin: 0;
+                padding: 0;
+                padding-left: 15px; /* Reduced since hamburger is outside */
+                flex: 0 0 auto; /* Don't grow or shrink */
+                min-width: 0;
+            }
+
+            /* Right side: Action Icons */
+            .mobile-header-right {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem; /* 8px gap between icons */
+                flex-shrink: 0;
+                margin-left: auto; /* Push to the right, removing empty space */
+            }
+
+            .mobile-header-right .btn-user,
+            .mobile-header-right .dropdown button {
+                width: 40px;
+                height: 40px;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 8px;
+                flex-shrink: 0;
+                position: relative;
+            }
+
+            .mobile-header-right .btn-user i,
+            .mobile-header-right .dropdown button i {
+                font-size: 1.1rem;
+                margin: 0;
+            }
+
+            .mobile-header-right .dropdown-toggle::after {
+                display: none;
+            }
+
+            /* Cart badge */
+            .cart-badge {
+                position: absolute;
+                top: -4px;
+                right: -4px;
+                background: #dc3545;
+                color: white;
+                font-size: 0.65rem;
+                font-weight: 700;
+                padding: 0.15rem 0.35rem;
+                border-radius: 10px;
+                min-width: 18px;
+                height: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid white;
+            }
+
+            /* Hide Row 3 (merged into Row 2) */
+            .mobile-header-bottom {
+                display: none !important;
+            }
+
+            .navbar-brand {
+                margin-right: 0;
+            }
+
+            .navbar-brand img {
+                height: 90px; /* Increased from 45px to 90px (twice the size) */
+            }
+
+            .navbar-brand i.fa-utensils {
+                font-size: 2.8rem !important; /* Increased from 1.4rem to 2.8rem (twice the size) */
+            }
+
+            .user-menu {
+                gap: 0.5rem;
+            }
+
+            .btn-user {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+
+            .btn-user i {
+                font-size: 1rem;
+            }
+
+            /* Hide text in buttons on mobile, show only icons */
+            .btn-user .btn-text {
+                display: none;
+            }
+
+            /* Desktop-only elements */
+            .desktop-only {
+                display: none !important;
+            }
+        }
+
+        /* Desktop: Hide mobile-specific elements */
+        @media (min-width: 769px) {
+            .mobile-header-top,
+            .mobile-header-middle,
+            .mobile-header-bottom,
+            .mobile-header-left,
+            .mobile-header-right {
+                display: none !important;
+            }
+
+            .mobile-only {
+                display: none !important;
+            }
+        }
+
         /* Navigation Tabs */
         .nav-tabs-container {
             background: white;
@@ -554,6 +779,47 @@ if (isset($_GET['ajax'])) {
             background-origin: border-box;
             background-clip: padding-box, border-box;
             animation: navbarBorderPulse 3s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Mobile Menu Toggle Button */
+        .mobile-nav-toggle {
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            width: 40px;
+            height: 40px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            display: none; /* Hidden by default, shown on mobile */
+        }
+
+        .mobile-nav-toggle:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs-container {
+                top: 104px; /* Row1(44px) + Row2(60px) = 104px */
+            }
+
+            body {
+                padding-top: 164px; /* Header (104px) + Nav tabs (60px) */
+            }
+
+            .main-layout {
+                min-height: calc(100vh - 164px);
+            }
+
+            .sidebar {
+                top: 164px;
+                height: calc(100vh - 164px);
+            }
         }
 
         @keyframes navbarBorderPulse {
@@ -581,6 +847,7 @@ if (isset($_GET['ajax'])) {
 
         .nav-tabs {
             border-bottom: none;
+            flex: 1;
         }
 
         .nav-tabs .nav-link {
@@ -607,6 +874,73 @@ if (isset($_GET['ajax'])) {
             color: #ffffff;
             border: 2px solid #ffffff;
             background: #059669;
+        }
+
+        /* Mobile Navigation Styles */
+        @media (max-width: 768px) {
+            .nav-tabs-container {
+                padding: 0; /* Remove padding for full green area */
+            }
+
+            .nav-tabs-container .container-fluid {
+                width: 100%;
+                padding: 0;
+                display: flex;
+                align-items: center;
+            }
+
+            /* Hamburger in green nav area */
+            .nav-hamburger-mobile {
+                display: flex !important; /* Override inline style */
+                align-items: center;
+                justify-content: center;
+                width: 60px;
+                height: 60px;
+                background: #10b981;
+                border: none;
+                color: white;
+                font-size: 1.3rem;
+                cursor: pointer;
+                flex-shrink: 0;
+                transition: background 0.3s ease;
+            }
+
+            .nav-hamburger-mobile:hover {
+                background: #059669;
+            }
+
+            .nav-hamburger-mobile:active {
+                background: #047857;
+            }
+
+            .nav-tabs {
+                display: none;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: #10b981;
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                max-height: calc(100vh - 164px);
+                overflow-y: auto;
+            }
+
+            .nav-tabs.show {
+                display: flex;
+            }
+
+            .nav-tabs .nav-item {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+
+            .nav-tabs .nav-link {
+                width: 100%;
+                margin-right: 0;
+                text-align: left;
+            }
         }
 
         /* Main Layout */
@@ -1986,7 +2320,8 @@ if (isset($_GET['ajax'])) {
     <header class="header">
         <div class="container-fluid">
             <nav class="navbar d-flex justify-content-between align-items-center">
-                <a class="navbar-brand" href="index.php">
+                <!-- Desktop Layout (hidden on mobile) -->
+                <a class="navbar-brand desktop-only" href="index.php">
                     <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
                         <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" 
                              class="logo-img logo-sparkle"
@@ -1997,13 +2332,13 @@ if (isset($_GET['ajax'])) {
                     <?php endif; ?>
                 </a>
                 
-                <div class="location-display" data-bs-toggle="modal" data-bs-target="#locationModal">
+                <div class="location-display desktop-only" data-bs-toggle="modal" data-bs-target="#locationModal">
                     <i class="fas fa-map-marker-alt me-2"></i>
                     <span id="currentLocation"><?= htmlspecialchars($userLocation) ?></span>
                     <i class="fas fa-chevron-down ms-2"></i>
                 </div>
                 
-                <div class="user-menu">
+                <div class="user-menu desktop-only">
                     <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
                         <div class="dropdown">
                             <button class="btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -2038,6 +2373,76 @@ if (isset($_GET['ajax'])) {
                         <i class="fas fa-shopping-cart"></i>
                     </a>
                 </div>
+
+                <!-- Mobile Layout (hidden on desktop) -->
+                <!-- Row 1: Top Utility Bar - Address + Login (UNCHANGED) -->
+                <div class="mobile-header-top mobile-only">
+                    <div class="location-display" data-bs-toggle="modal" data-bs-target="#locationModal">
+                        <i class="fas fa-map-marker-alt me-1"></i>
+                        <span id="currentLocationMobile"><?= htmlspecialchars($userLocation) ?></span>
+                    </div>
+                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
+                        <div class="dropdown mobile-login-btn">
+                            <button class="btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="profile.php"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                                <li><a class="dropdown-item" href="orders.php"><i class="fas fa-shopping-bag me-2"></i>My Orders</a></li>
+                                <li><a class="dropdown-item" href="favorites.php"><i class="fas fa-heart me-2"></i>Favorites</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="../auth/logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            </ul>
+                        </div>
+                    <?php else: ?>
+                        <a href="../auth/login.php" class="btn-user mobile-login-btn">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Hamburger Menu Button (Removed from here, moved to nav area) -->
+
+                <!-- Row 2: Main Header - Logo + Action Icons (MERGED) -->
+                <div class="mobile-header-middle mobile-only">
+                    <!-- Left Side: Logo -->
+                    <div class="mobile-header-left">
+                        <a class="navbar-brand" href="index.php">
+                            <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
+                                <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" 
+                                     class="logo-img logo-sparkle"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                                <i class="fas fa-utensils logo-icon" style="display: none; color: var(--foodpanda-pink);"></i>
+                            <?php else: ?>
+                                <i class="fas fa-utensils logo-icon" style="color: var(--foodpanda-pink);"></i>
+                            <?php endif; ?>
+                        </a>
+                    </div>
+
+                    <!-- Right Side: Action Icons -->
+                    <div class="mobile-header-right">
+                        <div class="dropdown">
+                            <button class="btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown" title="Language">
+                                <i class="fas fa-globe"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-check me-2 text-success"></i>English</a></li>
+                                <li><a class="dropdown-item" href="#">বাংলা</a></li>
+                            </ul>
+                        </div>
+                        <a href="favorites.php" class="btn-user" title="Favorites">
+                            <i class="fas fa-heart"></i>
+                        </a>
+                        <a href="cart.php" class="btn-user" title="Cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Row 3: Hidden (merged into Row 2) -->
+                <div class="mobile-header-bottom mobile-only" style="display: none;">
+                </div>
             </nav>
         </div>
     </header>
@@ -2045,7 +2450,11 @@ if (isset($_GET['ajax'])) {
     <!-- Navigation Tabs -->
     <div class="nav-tabs-container">
         <div class="container-fluid">
-            <ul class="nav nav-tabs">
+            <!-- Hamburger button in green area (mobile only) -->
+            <button class="nav-hamburger-mobile" id="mobileNavToggle" style="display: none;">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav nav-tabs" id="navTabs">
                 <li class="nav-item">
                     <a class="nav-link active" href="index.php">
                         <i class="fas fa-home me-2"></i>Home
@@ -2557,6 +2966,51 @@ if (isset($_GET['ajax'])) {
             // Initialize filters only
             initializeFilters();
             
+            // Mobile navigation toggle
+            const mobileNavToggle = document.getElementById('mobileNavToggle');
+            const navTabs = document.getElementById('navTabs');
+            
+            if (mobileNavToggle && navTabs) {
+                mobileNavToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    navTabs.classList.toggle('show');
+                    
+                    // Change icon
+                    const icon = this.querySelector('i');
+                    if (navTabs.classList.contains('show')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+                
+                // Close menu when clicking on a nav link
+                const navLinks = navTabs.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        if (window.innerWidth <= 768) {
+                            navTabs.classList.remove('show');
+                            const icon = mobileNavToggle.querySelector('i');
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    });
+                });
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!navTabs.contains(e.target) && !mobileNavToggle.contains(e.target)) {
+                        navTabs.classList.remove('show');
+                        const icon = mobileNavToggle.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            }
+            
             // Debug logo loading
             const logoImg = document.querySelector('.navbar-brand img');
             if (logoImg) {
@@ -2573,7 +3027,26 @@ if (isset($_GET['ajax'])) {
             
             // Add special logo effects
             initLogoEffects();
+
+            // Update cart badge count
+            updateCartBadge();
         });
+
+        // Function to update cart badge
+        function updateCartBadge() {
+            // Get cart count from localStorage or session
+            const cartCount = localStorage.getItem('cartCount') || 0;
+            const cartBadge = document.getElementById('cartBadge');
+            
+            if (cartBadge) {
+                if (cartCount > 0) {
+                    cartBadge.textContent = cartCount > 99 ? '99+' : cartCount;
+                    cartBadge.style.display = 'flex';
+                } else {
+                    cartBadge.style.display = 'none';
+                }
+            }
+        }
 
         // Load featured products
         async function loadFeaturedProducts() {

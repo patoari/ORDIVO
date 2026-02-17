@@ -794,11 +794,6 @@ if (isset($_GET['ajax'])) {
             display: none;
         }
 
-        /* Search bar (mobile only) */
-        .nav-search-bar {
-            display: none;
-        }
-
         /* Mobile Menu Toggle Button */
         .mobile-nav-toggle {
             background: rgba(255, 255, 255, 0.3);
@@ -892,42 +887,22 @@ if (isset($_GET['ajax'])) {
                 font-size: 1rem;
             }
 
-            /* Search Bar */
-            .nav-search-bar {
-                display: flex;
-                flex: 1;
-                min-width: 0;
+            body {
+                padding-top: 174px; /* Header (114px) + Nav tabs (60px) */
             }
 
-            .nav-search-input {
-                width: 100%;
-                height: 45px;
-                background: white;
-                border: 2px solid #10b981;
-                border-radius: 10px;
-                padding: 0 1rem;
-                font-size: 0.9rem;
-                color: #333;
-                transition: all 0.3s ease;
+            .main-layout {
+                min-height: calc(100vh - 174px);
             }
 
-            .nav-search-input:focus {
-                outline: none;
-                border-color: #059669;
-                box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-            }
-
-            .nav-search-input::placeholder {
-                color: #999;
-            }
-
-            /* Hide sidebar on mobile */
             .sidebar {
-                display: none !important;
+                top: 174px;
+                height: calc(100vh - 174px);
+                display: none; /* Hide sidebar on mobile */
             }
 
-            /* Filters Modal */
-            .filters-modal {
+            /* Mobile Filters Modal */
+            .mobile-filters-modal {
                 display: none;
                 position: fixed;
                 top: 0;
@@ -939,20 +914,20 @@ if (isset($_GET['ajax'])) {
                 animation: fadeIn 0.3s ease;
             }
 
-            .filters-modal.show {
+            .mobile-filters-modal.show {
                 display: block;
             }
 
-            .filters-modal-content {
+            .mobile-filters-content {
                 position: absolute;
                 bottom: 0;
                 left: 0;
                 right: 0;
+                max-height: 80vh;
                 background: white;
                 border-radius: 20px 20px 0 0;
-                max-height: 80vh;
-                overflow-y: auto;
                 padding: 1.5rem;
+                overflow-y: auto;
                 animation: slideUp 0.3s ease;
             }
 
@@ -966,7 +941,7 @@ if (isset($_GET['ajax'])) {
                 to { transform: translateY(0); }
             }
 
-            .filters-modal-header {
+            .mobile-filters-header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -975,14 +950,14 @@ if (isset($_GET['ajax'])) {
                 border-bottom: 2px solid #e5e7eb;
             }
 
-            .filters-modal-header h5 {
+            .mobile-filters-header h5 {
                 margin: 0;
-                font-size: 1.25rem;
+                font-size: 1.2rem;
                 font-weight: 700;
                 color: #333;
             }
 
-            .filters-close-btn {
+            .mobile-filters-close {
                 background: none;
                 border: none;
                 font-size: 1.5rem;
@@ -996,59 +971,40 @@ if (isset($_GET['ajax'])) {
                 justify-content: center;
             }
 
-            .filters-modal-footer {
+            .mobile-filters-footer {
                 position: sticky;
                 bottom: 0;
                 background: white;
                 padding: 1rem 0 0;
+                margin-top: 1rem;
                 border-top: 2px solid #e5e7eb;
-                margin-top: 1.5rem;
                 display: flex;
                 gap: 0.5rem;
             }
 
-            .filters-apply-btn,
-            .filters-clear-btn {
+            .mobile-filters-footer button {
                 flex: 1;
                 height: 45px;
                 border-radius: 10px;
                 font-weight: 600;
-                font-size: 1rem;
+                border: none;
                 cursor: pointer;
                 transition: all 0.3s ease;
             }
 
-            .filters-apply-btn {
+            .btn-clear-filters {
+                background: white;
+                border: 2px solid #10b981 !important;
+                color: #10b981;
+            }
+
+            .btn-apply-filters {
                 background: #10b981;
                 color: white;
-                border: none;
             }
 
-            .filters-apply-btn:hover {
+            .btn-apply-filters:hover {
                 background: #059669;
-            }
-
-            .filters-clear-btn {
-                background: white;
-                color: #10b981;
-                border: 2px solid #10b981;
-            }
-
-            .filters-clear-btn:hover {
-                background: #f0fdf4;
-            }
-
-            body {
-                padding-top: 174px; /* Header (114px) + Nav tabs (60px) */
-            }
-
-            .main-layout {
-                min-height: calc(100vh - 174px);
-            }
-
-            .main-content {
-                margin-left: 0 !important;
-                width: 100% !important;
             }
         }
 
@@ -2657,11 +2613,6 @@ if (isset($_GET['ajax'])) {
             </button>
         </div>
         
-        <!-- Search Bar (Mobile Only) -->
-        <div class="nav-search-bar">
-            <input type="text" class="nav-search-input" id="navSearchInput" placeholder="Search restaurants, food...">
-        </div>
-        
         <div class="container-fluid">
             <ul class="nav nav-tabs" id="navTabs">
                 <li class="nav-item">
@@ -2698,12 +2649,12 @@ if (isset($_GET['ajax'])) {
         </div>
     </div>
 
-    <!-- Filters Modal (Mobile Only) -->
-    <div class="filters-modal" id="filtersModal">
-        <div class="filters-modal-content">
-            <div class="filters-modal-header">
+    <!-- Mobile Filters Modal -->
+    <div class="mobile-filters-modal" id="mobileFiltersModal">
+        <div class="mobile-filters-content">
+            <div class="mobile-filters-header">
                 <h5><i class="fas fa-filter me-2"></i>Filters</h5>
-                <button class="filters-close-btn" id="filtersCloseBtn">
+                <button class="mobile-filters-close" id="closeFiltersModal">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -2711,19 +2662,19 @@ if (isset($_GET['ajax'])) {
             <div class="filter-section">
                 <h6>Sort by</h6>
                 <div class="filter-option">
-                    <input type="radio" name="sort" id="relevance-mobile" checked>
+                    <input type="radio" name="sort-mobile" id="relevance-mobile" checked>
                     <label for="relevance-mobile">Relevance</label>
                 </div>
                 <div class="filter-option">
-                    <input type="radio" name="sort" id="fastest-mobile">
+                    <input type="radio" name="sort-mobile" id="fastest-mobile">
                     <label for="fastest-mobile">Fastest delivery</label>
                 </div>
                 <div class="filter-option">
-                    <input type="radio" name="sort" id="distance-mobile">
+                    <input type="radio" name="sort-mobile" id="distance-mobile">
                     <label for="distance-mobile">Distance</label>
                 </div>
                 <div class="filter-option">
-                    <input type="radio" name="sort" id="top-rated-mobile">
+                    <input type="radio" name="sort-mobile" id="top-rated-mobile">
                     <label for="top-rated-mobile">Top rated</label>
                 </div>
             </div>
@@ -2801,9 +2752,9 @@ if (isset($_GET['ajax'])) {
                 </div>
             </div>
 
-            <div class="filters-modal-footer">
-                <button class="filters-clear-btn" id="filtersClearBtn">Clear All</button>
-                <button class="filters-apply-btn" id="filtersApplyBtn">Apply Filters</button>
+            <div class="mobile-filters-footer">
+                <button class="btn-clear-filters" id="clearFiltersBtn">Clear All</button>
+                <button class="btn-apply-filters" id="applyFiltersBtn">Apply Filters</button>
             </div>
         </div>
     </div>
@@ -3285,60 +3236,61 @@ if (isset($_GET['ajax'])) {
             // Initialize filters only
             initializeFilters();
             
-            // Mobile filters modal
+            // Mobile Filters Modal
             const navFiltersBtn = document.getElementById('navFiltersBtn');
-            const filtersModal = document.getElementById('filtersModal');
-            const filtersCloseBtn = document.getElementById('filtersCloseBtn');
-            const filtersApplyBtn = document.getElementById('filtersApplyBtn');
-            const filtersClearBtn = document.getElementById('filtersClearBtn');
+            const mobileFiltersModal = document.getElementById('mobileFiltersModal');
+            const closeFiltersModal = document.getElementById('closeFiltersModal');
+            const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+            const clearFiltersBtn = document.getElementById('clearFiltersBtn');
 
-            if (navFiltersBtn && filtersModal) {
+            if (navFiltersBtn && mobileFiltersModal) {
                 // Open filters modal
                 navFiltersBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    filtersModal.classList.add('show');
+                    mobileFiltersModal.classList.add('show');
                     document.body.style.overflow = 'hidden';
                 });
 
                 // Close filters modal
-                function closeFiltersModal() {
-                    filtersModal.classList.remove('show');
+                closeFiltersModal.addEventListener('click', function() {
+                    mobileFiltersModal.classList.remove('show');
                     document.body.style.overflow = '';
-                }
-
-                if (filtersCloseBtn) {
-                    filtersCloseBtn.addEventListener('click', closeFiltersModal);
-                }
+                });
 
                 // Close when clicking outside
-                filtersModal.addEventListener('click', function(e) {
-                    if (e.target === filtersModal) {
-                        closeFiltersModal();
+                mobileFiltersModal.addEventListener('click', function(e) {
+                    if (e.target === mobileFiltersModal) {
+                        mobileFiltersModal.classList.remove('show');
+                        document.body.style.overflow = '';
                     }
                 });
 
                 // Apply filters
-                if (filtersApplyBtn) {
-                    filtersApplyBtn.addEventListener('click', function() {
-                        // Apply filter logic here
-                        closeFiltersModal();
-                    });
-                }
+                applyFiltersBtn.addEventListener('click', function() {
+                    mobileFiltersModal.classList.remove('show');
+                    document.body.style.overflow = '';
+                    // Add your filter logic here
+                    console.log('Filters applied');
+                });
 
-                // Clear all filters
-                if (filtersClearBtn) {
-                    filtersClearBtn.addEventListener('click', function() {
-                        // Clear all checkboxes and radio buttons in the modal
-                        const checkboxes = filtersModal.querySelectorAll('input[type="checkbox"]');
-                        checkboxes.forEach(cb => cb.checked = false);
-                        
-                        const radios = filtersModal.querySelectorAll('input[type="radio"]');
-                        if (radios.length > 0) {
-                            radios[0].checked = true; // Check first radio (relevance)
+                // Clear filters
+                clearFiltersBtn.addEventListener('click', function() {
+                    // Clear all checkboxes and radio buttons
+                    const checkboxes = mobileFiltersModal.querySelectorAll('input[type="checkbox"]');
+                    const radios = mobileFiltersModal.querySelectorAll('input[type="radio"]');
+                    
+                    checkboxes.forEach(cb => cb.checked = false);
+                    radios.forEach(radio => {
+                        if (radio.id.includes('relevance')) {
+                            radio.checked = true;
+                        } else {
+                            radio.checked = false;
                         }
                     });
-                }
+                    
+                    console.log('Filters cleared');
+                });
             }
             
             // Mobile navigation toggle - Centered hamburger in green bar

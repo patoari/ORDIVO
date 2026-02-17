@@ -556,7 +556,7 @@ if (isset($_GET['ajax'])) {
                 padding: 0;
             }
 
-            /* Row 1: Top Utility Bar - Address + Login */
+            /* Row 1: Top Utility Bar - Address + Login (UNCHANGED) */
             .mobile-header-top {
                 display: flex;
                 justify-content: space-between;
@@ -612,55 +612,55 @@ if (isset($_GET['ajax'])) {
                 font-size: 0.75rem;
             }
 
-            /* Row 2: Main Header - Hamburger + Logo + Action Icons (MERGED) */
+            /* Row 2: Merged Row - Logo + Hamburger + Action Icons */
             .mobile-header-middle {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 width: 100%;
-                height: 60px;
-                padding: 0 0.5rem; /* Reduced padding */
+                height: 70px;
+                padding: 0 0.75rem;
                 background: white;
                 border-bottom: 2px solid #10b981;
             }
 
-            /* Left side: Hamburger + Logo */
+            /* Left side: Logo + Hamburger */
             .mobile-header-left {
                 display: flex;
                 align-items: center;
-                flex: 0 1 auto; /* Don't grow, shrink if needed */
+                gap: 0.75rem;
+                flex: 1;
                 min-width: 0;
-                gap: 0.5rem; /* 8px gap between hamburger and logo */
-            }
-
-            .mobile-header-middle .mobile-nav-toggle {
-                display: none; /* Hide the fixed hamburger, will be in nav area instead */
-            }
-
-            /* Adjust left side to not include hamburger */
-            .mobile-header-left {
-                display: flex;
-                align-items: center;
-                flex: 0 1 auto;
-                min-width: 0;
-                gap: 0; /* Remove gap since hamburger is outside */
             }
 
             .mobile-header-middle .navbar-brand {
                 margin: 0;
                 padding: 0;
-                padding-left: 15px; /* Reduced since hamburger is outside */
-                flex: 0 0 auto; /* Don't grow or shrink */
-                min-width: 0;
+                flex: 0 0 auto;
+                order: 1;
+            }
+
+            .mobile-header-middle .mobile-nav-toggle {
+                display: block;
+                margin: 0;
+                background: white;
+                border: 2px solid #10b981;
+                color: #10b981;
+                flex-shrink: 0;
+                order: 2;
+            }
+
+            .mobile-header-middle .mobile-nav-toggle:hover {
+                background: #10b981;
+                color: white;
             }
 
             /* Right side: Action Icons */
             .mobile-header-right {
-                display: flex;
+                display: flex !important;
                 align-items: center;
-                gap: 0.5rem; /* 8px gap between icons */
+                gap: 0.5rem;
                 flex-shrink: 0;
-                margin-left: auto; /* Push to the right, removing empty space */
             }
 
             .mobile-header-right .btn-user,
@@ -715,11 +715,11 @@ if (isset($_GET['ajax'])) {
             }
 
             .navbar-brand img {
-                height: 90px; /* Increased from 45px to 90px (twice the size) */
+                height: 100px; /* Doubled from 50px to 100px */
             }
 
             .navbar-brand i.fa-utensils {
-                font-size: 2.8rem !important; /* Increased from 1.4rem to 2.8rem (twice the size) */
+                font-size: 3rem !important; /* Doubled from 1.5rem to 3rem */
             }
 
             .user-menu {
@@ -781,6 +781,22 @@ if (isset($_GET['ajax'])) {
             animation: navbarBorderPulse 3s ease-in-out infinite;
             display: flex;
             align-items: center;
+            justify-content: center;
+        }
+
+        /* Hamburger icon in green bar (mobile only) */
+        .nav-hamburger-center {
+            display: none;
+        }
+
+        /* Filters dropdown (mobile only) */
+        .nav-filters-dropdown {
+            display: none;
+        }
+
+        /* Search bar (mobile only) */
+        .nav-search-bar {
+            display: none;
         }
 
         /* Mobile Menu Toggle Button */
@@ -805,20 +821,234 @@ if (isset($_GET['ajax'])) {
 
         @media (max-width: 768px) {
             .nav-tabs-container {
-                top: 104px; /* Row1(44px) + Row2(60px) = 104px */
+                top: 114px; /* Row1(44px) + Row2(70px) = 114px */
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                padding: 0.5rem 0.75rem;
+                height: auto;
+                animation: none;
+                display: flex;
+                gap: 0.5rem;
+                align-items: center;
+            }
+
+            .nav-hamburger-center {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 50px;
+                height: 45px;
+                background: #10b981;
+                border: 2px solid white;
+                border-radius: 10px;
+                color: white;
+                font-size: 1.2rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                flex-shrink: 0;
+            }
+
+            .nav-hamburger-center:hover {
+                background: #059669;
+                transform: scale(1.05);
+            }
+
+            .nav-hamburger-center:active {
+                transform: scale(0.95);
+            }
+
+            /* Filters Dropdown */
+            .nav-filters-dropdown {
+                display: flex;
+                position: relative;
+            }
+
+            .nav-filters-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                width: auto;
+                min-width: 100px;
+                height: 45px;
+                background: #10b981;
+                border: 2px solid white;
+                border-radius: 10px;
+                color: white;
+                font-size: 0.9rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                padding: 0 1rem;
+                flex-shrink: 0;
+            }
+
+            .nav-filters-btn:hover {
+                background: #059669;
+            }
+
+            .nav-filters-btn i {
+                font-size: 1rem;
+            }
+
+            /* Search Bar */
+            .nav-search-bar {
+                display: flex;
+                flex: 1;
+                min-width: 0;
+            }
+
+            .nav-search-input {
+                width: 100%;
+                height: 45px;
+                background: white;
+                border: 2px solid #10b981;
+                border-radius: 10px;
+                padding: 0 1rem;
+                font-size: 0.9rem;
+                color: #333;
+                transition: all 0.3s ease;
+            }
+
+            .nav-search-input:focus {
+                outline: none;
+                border-color: #059669;
+                box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+            }
+
+            .nav-search-input::placeholder {
+                color: #999;
+            }
+
+            /* Hide sidebar on mobile */
+            .sidebar {
+                display: none !important;
+            }
+
+            /* Filters Modal */
+            .filters-modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 2000;
+                animation: fadeIn 0.3s ease;
+            }
+
+            .filters-modal.show {
+                display: block;
+            }
+
+            .filters-modal-content {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                border-radius: 20px 20px 0 0;
+                max-height: 80vh;
+                overflow-y: auto;
+                padding: 1.5rem;
+                animation: slideUp 0.3s ease;
+            }
+
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+
+            @keyframes slideUp {
+                from { transform: translateY(100%); }
+                to { transform: translateY(0); }
+            }
+
+            .filters-modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1.5rem;
+                padding-bottom: 1rem;
+                border-bottom: 2px solid #e5e7eb;
+            }
+
+            .filters-modal-header h5 {
+                margin: 0;
+                font-size: 1.25rem;
+                font-weight: 700;
+                color: #333;
+            }
+
+            .filters-close-btn {
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                color: #666;
+                cursor: pointer;
+                padding: 0;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .filters-modal-footer {
+                position: sticky;
+                bottom: 0;
+                background: white;
+                padding: 1rem 0 0;
+                border-top: 2px solid #e5e7eb;
+                margin-top: 1.5rem;
+                display: flex;
+                gap: 0.5rem;
+            }
+
+            .filters-apply-btn,
+            .filters-clear-btn {
+                flex: 1;
+                height: 45px;
+                border-radius: 10px;
+                font-weight: 600;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .filters-apply-btn {
+                background: #10b981;
+                color: white;
+                border: none;
+            }
+
+            .filters-apply-btn:hover {
+                background: #059669;
+            }
+
+            .filters-clear-btn {
+                background: white;
+                color: #10b981;
+                border: 2px solid #10b981;
+            }
+
+            .filters-clear-btn:hover {
+                background: #f0fdf4;
             }
 
             body {
-                padding-top: 164px; /* Header (104px) + Nav tabs (60px) */
+                padding-top: 174px; /* Header (114px) + Nav tabs (60px) */
             }
 
             .main-layout {
-                min-height: calc(100vh - 164px);
+                min-height: calc(100vh - 174px);
             }
 
-            .sidebar {
-                top: 164px;
-                height: calc(100vh - 164px);
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
             }
         }
 
@@ -878,39 +1108,9 @@ if (isset($_GET['ajax'])) {
 
         /* Mobile Navigation Styles */
         @media (max-width: 768px) {
-            .nav-tabs-container {
-                padding: 0; /* Remove padding for full green area */
-            }
-
             .nav-tabs-container .container-fluid {
                 width: 100%;
-                padding: 0;
-                display: flex;
-                align-items: center;
-            }
-
-            /* Hamburger in green nav area */
-            .nav-hamburger-mobile {
-                display: flex !important; /* Override inline style */
-                align-items: center;
-                justify-content: center;
-                width: 60px;
-                height: 60px;
-                background: #10b981;
-                border: none;
-                color: white;
-                font-size: 1.3rem;
-                cursor: pointer;
-                flex-shrink: 0;
-                transition: background 0.3s ease;
-            }
-
-            .nav-hamburger-mobile:hover {
-                background: #059669;
-            }
-
-            .nav-hamburger-mobile:active {
-                background: #047857;
+                display: block !important; /* Override the display:none */
             }
 
             .nav-tabs {
@@ -923,12 +1123,13 @@ if (isset($_GET['ajax'])) {
                 flex-direction: column;
                 padding: 1rem;
                 box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-                max-height: calc(100vh - 164px);
+                max-height: calc(100vh - 174px);
                 overflow-y: auto;
+                z-index: 1000;
             }
 
             .nav-tabs.show {
-                display: flex;
+                display: flex !important;
             }
 
             .nav-tabs .nav-item {
@@ -2401,11 +2602,9 @@ if (isset($_GET['ajax'])) {
                     <?php endif; ?>
                 </div>
 
-                <!-- Hamburger Menu Button (Removed from here, moved to nav area) -->
-
-                <!-- Row 2: Main Header - Logo + Action Icons (MERGED) -->
+                <!-- Row 2: Merged Row - Logo + Action Icons (No Hamburger) -->
                 <div class="mobile-header-middle mobile-only">
-                    <!-- Left Side: Logo -->
+                    <!-- Left Side: Logo Only -->
                     <div class="mobile-header-left">
                         <a class="navbar-brand" href="index.php">
                             <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
@@ -2435,13 +2634,9 @@ if (isset($_GET['ajax'])) {
                         </a>
                         <a href="cart.php" class="btn-user" title="Cart">
                             <i class="fas fa-shopping-cart"></i>
-                            <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+                            <span class="cart-badge" id="cartBadgeMobile" style="display: none;">0</span>
                         </a>
                     </div>
-                </div>
-
-                <!-- Row 3: Hidden (merged into Row 2) -->
-                <div class="mobile-header-bottom mobile-only" style="display: none;">
                 </div>
             </nav>
         </div>
@@ -2449,11 +2644,25 @@ if (isset($_GET['ajax'])) {
 
     <!-- Navigation Tabs -->
     <div class="nav-tabs-container">
-        <div class="container-fluid">
-            <!-- Hamburger button in green area (mobile only) -->
-            <button class="nav-hamburger-mobile" id="mobileNavToggle" style="display: none;">
-                <i class="fas fa-bars"></i>
+        <!-- Hamburger Icon (Mobile Only) -->
+        <button class="nav-hamburger-center" id="navHamburgerCenter">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <!-- Filters Dropdown (Mobile Only) -->
+        <div class="nav-filters-dropdown">
+            <button class="nav-filters-btn" id="navFiltersBtn">
+                <i class="fas fa-filter"></i>
+                <span>Filters</span>
             </button>
+        </div>
+        
+        <!-- Search Bar (Mobile Only) -->
+        <div class="nav-search-bar">
+            <input type="text" class="nav-search-input" id="navSearchInput" placeholder="Search restaurants, food...">
+        </div>
+        
+        <div class="container-fluid">
             <ul class="nav nav-tabs" id="navTabs">
                 <li class="nav-item">
                     <a class="nav-link active" href="index.php">
@@ -2486,6 +2695,116 @@ if (isset($_GET['ajax'])) {
                     </a>
                 </li>
             </ul>
+        </div>
+    </div>
+
+    <!-- Filters Modal (Mobile Only) -->
+    <div class="filters-modal" id="filtersModal">
+        <div class="filters-modal-content">
+            <div class="filters-modal-header">
+                <h5><i class="fas fa-filter me-2"></i>Filters</h5>
+                <button class="filters-close-btn" id="filtersCloseBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="filter-section">
+                <h6>Sort by</h6>
+                <div class="filter-option">
+                    <input type="radio" name="sort" id="relevance-mobile" checked>
+                    <label for="relevance-mobile">Relevance</label>
+                </div>
+                <div class="filter-option">
+                    <input type="radio" name="sort" id="fastest-mobile">
+                    <label for="fastest-mobile">Fastest delivery</label>
+                </div>
+                <div class="filter-option">
+                    <input type="radio" name="sort" id="distance-mobile">
+                    <label for="distance-mobile">Distance</label>
+                </div>
+                <div class="filter-option">
+                    <input type="radio" name="sort" id="top-rated-mobile">
+                    <label for="top-rated-mobile">Top rated</label>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h6>Quick filters</h6>
+                <div class="filter-option">
+                    <input type="checkbox" id="ratings-4-mobile">
+                    <label for="ratings-4-mobile">Ratings 4+</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="super-restaurant-mobile">
+                    <label for="super-restaurant-mobile">🔥 Super restaurant</label>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h6>Offers</h6>
+                <div class="filter-option">
+                    <input type="checkbox" id="free-delivery-mobile">
+                    <label for="free-delivery-mobile">Free delivery</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="accepts-vouchers-mobile">
+                    <label for="accepts-vouchers-mobile">Accepts vouchers</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="deals-mobile">
+                    <label for="deals-mobile">Deals</label>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h6>Cuisines</h6>
+                <div class="cuisine-item">
+                    <input type="checkbox" id="american-mobile">
+                    <label for="american-mobile">American</label>
+                </div>
+                <div class="cuisine-item">
+                    <input type="checkbox" id="asian-mobile">
+                    <label for="asian-mobile">Asian</label>
+                </div>
+                <div class="cuisine-item">
+                    <input type="checkbox" id="bakery-mobile">
+                    <label for="bakery-mobile">Bakery</label>
+                </div>
+                <div class="cuisine-item">
+                    <input type="checkbox" id="bangladeshi-mobile">
+                    <label for="bangladeshi-mobile">Bangladeshi</label>
+                </div>
+                <div class="cuisine-item">
+                    <input type="checkbox" id="biryani-mobile">
+                    <label for="biryani-mobile">Biryani</label>
+                </div>
+                <div class="cuisine-item">
+                    <input type="checkbox" id="burgers-mobile">
+                    <label for="burgers-mobile">Burgers</label>
+                </div>
+                <div class="cuisine-item">
+                    <input type="checkbox" id="cafe-mobile">
+                    <label for="cafe-mobile">Cafe</label>
+                </div>
+                <div class="cuisine-item">
+                    <input type="checkbox" id="cakes-mobile">
+                    <label for="cakes-mobile">Cakes</label>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h6>Price</h6>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-secondary btn-sm">৳</button>
+                    <button class="btn btn-outline-secondary btn-sm">৳৳</button>
+                    <button class="btn btn-outline-secondary btn-sm">৳৳৳</button>
+                </div>
+            </div>
+
+            <div class="filters-modal-footer">
+                <button class="filters-clear-btn" id="filtersClearBtn">Clear All</button>
+                <button class="filters-apply-btn" id="filtersApplyBtn">Apply Filters</button>
+            </div>
         </div>
     </div>
 
@@ -2966,12 +3285,68 @@ if (isset($_GET['ajax'])) {
             // Initialize filters only
             initializeFilters();
             
-            // Mobile navigation toggle
-            const mobileNavToggle = document.getElementById('mobileNavToggle');
+            // Mobile filters modal
+            const navFiltersBtn = document.getElementById('navFiltersBtn');
+            const filtersModal = document.getElementById('filtersModal');
+            const filtersCloseBtn = document.getElementById('filtersCloseBtn');
+            const filtersApplyBtn = document.getElementById('filtersApplyBtn');
+            const filtersClearBtn = document.getElementById('filtersClearBtn');
+
+            if (navFiltersBtn && filtersModal) {
+                // Open filters modal
+                navFiltersBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    filtersModal.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                });
+
+                // Close filters modal
+                function closeFiltersModal() {
+                    filtersModal.classList.remove('show');
+                    document.body.style.overflow = '';
+                }
+
+                if (filtersCloseBtn) {
+                    filtersCloseBtn.addEventListener('click', closeFiltersModal);
+                }
+
+                // Close when clicking outside
+                filtersModal.addEventListener('click', function(e) {
+                    if (e.target === filtersModal) {
+                        closeFiltersModal();
+                    }
+                });
+
+                // Apply filters
+                if (filtersApplyBtn) {
+                    filtersApplyBtn.addEventListener('click', function() {
+                        // Apply filter logic here
+                        closeFiltersModal();
+                    });
+                }
+
+                // Clear all filters
+                if (filtersClearBtn) {
+                    filtersClearBtn.addEventListener('click', function() {
+                        // Clear all checkboxes and radio buttons in the modal
+                        const checkboxes = filtersModal.querySelectorAll('input[type="checkbox"]');
+                        checkboxes.forEach(cb => cb.checked = false);
+                        
+                        const radios = filtersModal.querySelectorAll('input[type="radio"]');
+                        if (radios.length > 0) {
+                            radios[0].checked = true; // Check first radio (relevance)
+                        }
+                    });
+                }
+            }
+            
+            // Mobile navigation toggle - Centered hamburger in green bar
+            const navHamburgerCenter = document.getElementById('navHamburgerCenter');
             const navTabs = document.getElementById('navTabs');
             
-            if (mobileNavToggle && navTabs) {
-                mobileNavToggle.addEventListener('click', function(e) {
+            if (navHamburgerCenter && navTabs) {
+                navHamburgerCenter.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     navTabs.classList.toggle('show');
@@ -2993,7 +3368,7 @@ if (isset($_GET['ajax'])) {
                     link.addEventListener('click', function() {
                         if (window.innerWidth <= 768) {
                             navTabs.classList.remove('show');
-                            const icon = mobileNavToggle.querySelector('i');
+                            const icon = navHamburgerCenter.querySelector('i');
                             icon.classList.remove('fa-times');
                             icon.classList.add('fa-bars');
                         }
@@ -3002,9 +3377,9 @@ if (isset($_GET['ajax'])) {
                 
                 // Close menu when clicking outside
                 document.addEventListener('click', function(e) {
-                    if (!navTabs.contains(e.target) && !mobileNavToggle.contains(e.target)) {
+                    if (!navTabs.contains(e.target) && !navHamburgerCenter.contains(e.target)) {
                         navTabs.classList.remove('show');
-                        const icon = mobileNavToggle.querySelector('i');
+                        const icon = navHamburgerCenter.querySelector('i');
                         icon.classList.remove('fa-times');
                         icon.classList.add('fa-bars');
                     }

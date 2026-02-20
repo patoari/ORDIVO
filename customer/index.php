@@ -784,22 +784,12 @@ if (isset($_GET['ajax'])) {
             justify-content: center;
         }
 
-        /* Hamburger icon in green bar (mobile only) */
-        .nav-hamburger-center {
-            display: none;
-        }
-
-        /* Filters dropdown (mobile only) */
-        .nav-filters-dropdown {
-            display: none;
-        }
-
         /* Mobile Menu Toggle Button */
         .mobile-nav-toggle {
-            background: rgba(255, 255, 255, 0.3);
-            border: 2px solid white;
+            background: white;
+            border: 2px solid #10b981;
             border-radius: 8px;
-            color: white;
+            color: #10b981;
             width: 40px;
             height: 40px;
             font-size: 1.1rem;
@@ -810,7 +800,8 @@ if (isset($_GET['ajax'])) {
         }
 
         .mobile-nav-toggle:hover {
-            background: rgba(255, 255, 255, 0.5);
+            background: #10b981;
+            color: white;
             transform: scale(1.05);
         }
 
@@ -826,65 +817,6 @@ if (isset($_GET['ajax'])) {
                 display: flex;
                 gap: 0.5rem;
                 align-items: center;
-            }
-
-            .nav-hamburger-center {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 50px;
-                height: 45px;
-                background: #10b981;
-                border: 2px solid white;
-                border-radius: 10px;
-                color: white;
-                font-size: 1.2rem;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                flex-shrink: 0;
-            }
-
-            .nav-hamburger-center:hover {
-                background: #059669;
-                transform: scale(1.05);
-            }
-
-            .nav-hamburger-center:active {
-                transform: scale(0.95);
-            }
-
-            /* Filters Dropdown */
-            .nav-filters-dropdown {
-                display: flex;
-                position: relative;
-            }
-
-            .nav-filters-btn {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 0.5rem;
-                width: auto;
-                min-width: 100px;
-                height: 45px;
-                background: #10b981;
-                border: 2px solid white;
-                border-radius: 10px;
-                color: white;
-                font-size: 0.9rem;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                padding: 0 1rem;
-                flex-shrink: 0;
-            }
-
-            .nav-filters-btn:hover {
-                background: #059669;
-            }
-
-            .nav-filters-btn i {
-                font-size: 1rem;
             }
 
             body {
@@ -1069,23 +1001,50 @@ if (isset($_GET['ajax'])) {
                 display: block !important; /* Override the display:none */
             }
 
+            /* Sliding Sidebar Menu */
             .nav-tabs {
-                display: none;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                right: 0;
+                display: flex;
+                position: fixed;
+                top: 114px; /* Below mobile header (44px + 70px) */
+                left: -280px; /* Hidden off-screen to the left */
+                width: 280px;
+                height: calc(100vh - 114px); /* Full height minus header */
                 background: #10b981;
                 flex-direction: column;
-                padding: 1rem;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-                max-height: calc(100vh - 174px);
+                padding: 1.5rem 1rem;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.3);
                 overflow-y: auto;
-                z-index: 1000;
+                z-index: 9999;
+                transition: left 0.3s ease-in-out;
             }
 
             .nav-tabs.show {
-                display: flex !important;
+                left: 0; /* Slide in from left */
+            }
+
+            /* Overlay backdrop */
+            .nav-tabs::before {
+                content: '';
+                position: fixed;
+                top: 114px; /* Below mobile header */
+                left: 280px;
+                width: 0;
+                height: calc(100vh - 114px);
+                background: rgba(0, 0, 0, 0);
+                transition: all 0.3s ease-in-out;
+                pointer-events: none;
+                z-index: -1;
+            }
+
+            .nav-tabs.show::before {
+                width: calc(100vw - 280px);
+                background: rgba(0, 0, 0, 0.5);
+                pointer-events: auto;
+            }
+
+            /* Sidebar header */
+            .nav-tabs .nav-item:first-child {
+                margin-top: 0; /* No extra space needed */
             }
 
             .nav-tabs .nav-item {
@@ -1097,6 +1056,19 @@ if (isset($_GET['ajax'])) {
                 width: 100%;
                 margin-right: 0;
                 text-align: left;
+                padding: 1rem;
+                border-radius: 8px;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+            }
+
+            .nav-tabs .nav-link:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateX(5px);
+            }
+
+            .nav-tabs .nav-link.active {
+                background: rgba(255, 255, 255, 0.3);
             }
         }
 
@@ -1416,6 +1388,41 @@ if (isset($_GET['ajax'])) {
             border: 2px solid #10b981;
         }
 
+        /* Mobile: 2 restaurant cards per line */
+        @media (max-width: 768px) {
+            .restaurant-card {
+                min-width: calc(50% - 10px);
+            }
+
+            .restaurant-image {
+                height: 140px;
+            }
+
+            .restaurant-info {
+                padding: 0.75rem;
+            }
+
+            .restaurant-name {
+                font-size: 0.9rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .restaurant-meta {
+                font-size: 0.75rem;
+                gap: 0.5rem;
+            }
+
+            .restaurant-badge {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.4rem;
+            }
+
+            .restaurant-time {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.4rem;
+            }
+        }
+
         .restaurant-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 25px #e5e7eb;
@@ -1647,6 +1654,41 @@ if (isset($_GET['ajax'])) {
             
         }
 
+        /* Mobile: 4 cuisine cards per line */
+        @media (max-width: 768px) {
+            .cuisinesSwiper {
+                padding: 10px 5px;
+            }
+
+            .cuisinesSwiper .swiper-slide {
+                width: calc(25% - 8px) !important;
+                min-width: calc(25% - 8px);
+                max-width: calc(25% - 8px);
+                margin-right: 8px;
+            }
+
+            .cuisinesSwiper .swiper-button-next,
+            .cuisinesSwiper .swiper-button-prev {
+                display: none;
+            }
+
+            .cuisine-card {
+                min-width: auto;
+                padding: 0.5rem;
+            }
+
+            .cuisine-icon {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 0.3rem;
+            }
+
+            .cuisine-name {
+                font-size: 0.7rem;
+                line-height: 1.2;
+            }
+        }
+
         /* Featured Products Section */
         .featured-products-section {
             margin-bottom: 3rem;
@@ -1674,6 +1716,71 @@ if (isset($_GET['ajax'])) {
             height: auto;
             margin-right: 16px;
             flex-shrink: 0;
+        }
+
+        /* Mobile: 2 product cards per line */
+        @media (max-width: 768px) {
+            .featuredProductsSwiper .swiper-slide,
+            .topChoiceProductsSwiper .swiper-slide {
+                width: calc(50% - 8px) !important;
+                min-width: calc(50% - 8px);
+                max-width: calc(50% - 8px);
+                margin-right: 8px;
+            }
+
+            .featuredProductsSwiper,
+            .topChoiceProductsSwiper {
+                padding: 10px 5px;
+            }
+
+            .featuredProductsSwiper .swiper-button-next,
+            .featuredProductsSwiper .swiper-button-prev,
+            .topChoiceProductsSwiper .swiper-button-next,
+            .topChoiceProductsSwiper .swiper-button-prev {
+                display: none;
+            }
+
+            /* Optimize product card content for mobile 2-column layout */
+            .product-card .product-image {
+                height: 120px;
+            }
+
+            .product-card .product-info {
+                padding: 0.6rem;
+            }
+
+            .product-card .product-name {
+                font-size: 0.8rem;
+                margin-bottom: 0.3rem;
+                -webkit-line-clamp: 2;
+            }
+
+            .product-card .product-vendor {
+                font-size: 0.7rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .product-card .product-price {
+                font-size: 0.9rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .product-card .product-rating {
+                font-size: 0.7rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .product-card .product-badge {
+                font-size: 0.65rem;
+                padding: 0.25rem 0.5rem;
+                top: 6px;
+                left: 6px;
+            }
+
+            .product-card .btn {
+                padding: 0.4rem;
+                font-size: 0.75rem;
+            }
         }
 
         .featuredProductsSwiper .swiper-button-next,
@@ -1844,6 +1951,27 @@ if (isset($_GET['ajax'])) {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1rem;
+        }
+
+        /* Mobile: 2 deal banners per line */
+        @media (max-width: 768px) {
+            .deals-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .deal-card {
+                padding: 1rem;
+            }
+
+            .deal-title {
+                font-size: 1rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .deal-subtitle {
+                font-size: 0.8rem;
+            }
         }
 
         .deal-card {
@@ -2146,23 +2274,16 @@ if (isset($_GET['ajax'])) {
         }
 
         .footer-logo {
-            height: 40px;
+            height: 80px;
             width: auto;
-            margin-right: 12px;
+            margin-right: 0;
             filter: brightness(0) invert(1);
         }
 
         .footer-logo-icon {
-            font-size: 2rem;
+            font-size: 4rem;
             color: #ffffff;
-            margin-right: 12px;
-            
-        }
-
-        .footer-brand-text {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #ffffff;
+            margin-right: 0;
             
         }
 
@@ -2187,20 +2308,25 @@ if (isset($_GET['ajax'])) {
             justify-content: center;
             width: 40px;
             height: 40px;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.2);
             color: #ffffff;
             border-radius: 50%;
             text-decoration: none;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
-            border: 1px solid #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
         .social-link:hover {
             background: #ffffff;
-            color: #ffffff;
+            color: #10b981;
             transform: translateY(-3px) scale(1.1);
-            box-shadow: 0 5px 15px #e5e7eb;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-color: #ffffff;
+        }
+
+        .social-link i {
+            font-size: 1rem;
         }
 
         .footer-title {
@@ -2288,7 +2414,7 @@ if (isset($_GET['ajax'])) {
         }
 
         .contact-item i {
-            color: #ffffff;
+            color: #10b981;
             width: 16px;
             text-align: center;
             background: #ffffff;
@@ -2299,33 +2425,8 @@ if (isset($_GET['ajax'])) {
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .app-buttons {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            position: relative;
-            z-index: 1;
-        }
-
-        .app-button {
-            display: block;
-            transition: all 0.3s ease;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px #e5e7eb;
-        }
-
-        .app-button:hover {
-            transform: scale(1.05) translateY(-2px);
-            box-shadow: 0 5px 15px #e5e7eb;
-        }
-
-        .app-store-badge {
-            height: 50px;
-            width: auto;
-            filter: brightness(1.1);
+            font-size: 0.9rem;
+            flex-shrink: 0;
         }
 
         .newsletter-form {
@@ -2334,38 +2435,49 @@ if (isset($_GET['ajax'])) {
         }
 
         .newsletter-form .input-group {
-            max-width: 300px;
+            max-width: 500px;
         }
 
         .newsletter-form .form-control {
-            border: 1px solid #ffffff;
-            background: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.15);
             color: #ffffff;
             backdrop-filter: blur(10px);
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
         }
 
         .newsletter-form .form-control::placeholder {
-            color: #ffffff;
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .newsletter-form .form-control:focus {
             border-color: #ffffff;
-            box-shadow: 0 0 0 0.2rem #ffffff;
-            background: #ffffff;
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.25);
             color: #ffffff;
+            outline: none;
         }
 
         .newsletter-form .btn-primary {
             background: #ffffff;
             border-color: #ffffff;
-            color: #ffffff;
+            color: #10b981;
             backdrop-filter: blur(10px);
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
 
         .newsletter-form .btn-primary:hover {
-            background: #ffffff;
-            border-color: #ffffff;
+            background: #f0fdf4;
+            border-color: #f0fdf4;
+            color: #059669;
             transform: scale(1.05);
+        }
+
+        .newsletter-form .btn-primary i {
+            font-size: 1rem;
         }
 
         .footer-section .border-top {
@@ -2428,28 +2540,123 @@ if (isset($_GET['ajax'])) {
                 padding-left: 1rem !important;
                 padding-right: 1rem !important;
             }
-            
+
+            /* Company info - full width */
+            .footer-section .row > div:first-child {
+                order: 1;
+                margin-bottom: 2rem;
+            }
+
+            /* Footer links sections - 2 columns grid */
+            .footer-section .row > div:nth-child(2),
+            .footer-section .row > div:nth-child(3),
+            .footer-section .row > div:nth-child(4),
+            .footer-section .row > div:nth-child(5) {
+                flex: 0 0 50%;
+                max-width: 50%;
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+
+            /* Reorder for better mobile layout */
+            .footer-section .row > div:nth-child(2) { order: 2; }
+            .footer-section .row > div:nth-child(3) { order: 3; }
+            .footer-section .row > div:nth-child(4) { order: 4; }
+            .footer-section .row > div:nth-child(5) { order: 5; }
+
+            /* Reduce spacing */
+            .footer-section .row {
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            .footer-title {
+                font-size: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .footer-title::after {
+                width: 30px;
+            }
+
+            .footer-links {
+                margin-bottom: 0;
+            }
+
+            .footer-links li {
+                margin-bottom: 0.5rem;
+            }
+
+            .footer-links a {
+                font-size: 0.85rem;
+            }
+
+            .footer-description {
+                font-size: 0.85rem;
+                margin-bottom: 1rem;
+            }
+
+            .contact-info {
+                align-items: flex-start;
+                text-align: left;
+            }
+
+            .contact-item {
+                font-size: 0.85rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .contact-item i {
+                font-size: 0.9rem;
+                min-width: 20px;
+            }
+
+            /* App download and newsletter - stack vertically */
+            .footer-section .border-top.border-bottom .row > div {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+
+            /* Bottom footer */
             .footer-legal {
+                justify-content: flex-start;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                margin-top: 1rem;
+            }
+
+            .footer-legal a {
+                font-size: 0.8rem;
+            }
+
+            .footer-copyright {
+                font-size: 0.8rem;
+            }
+
+            .social-links {
                 justify-content: flex-start;
                 margin-top: 1rem;
             }
-            
-            .app-buttons {
-                justify-content: center;
-            }
-            
-            .social-links {
-                justify-content: center;
-            }
-            
+
             .footer-brand {
-                justify-content: center;
-                text-align: center;
+                justify-content: flex-start;
+                text-align: left;
             }
-            
-            .contact-info {
-                align-items: center;
-                text-align: center;
+
+            /* Reduce padding */
+            .footer-section .py-5 {
+                padding-top: 2rem !important;
+                padding-bottom: 2rem !important;
+            }
+
+            .footer-section .py-4 {
+                padding-top: 1.5rem !important;
+                padding-bottom: 1.5rem !important;
+            }
+
+            .footer-section .py-3 {
+                padding-top: 1rem !important;
+                padding-bottom: 1rem !important;
             }
         }
 
@@ -2560,7 +2767,7 @@ if (isset($_GET['ajax'])) {
 
                 <!-- Row 2: Merged Row - Logo + Action Icons (No Hamburger) -->
                 <div class="mobile-header-middle mobile-only">
-                    <!-- Left Side: Logo Only -->
+                    <!-- Left Side: Logo + Hamburger + Filters -->
                     <div class="mobile-header-left">
                         <a class="navbar-brand" href="index.php">
                             <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
@@ -2572,6 +2779,16 @@ if (isset($_GET['ajax'])) {
                                 <i class="fas fa-utensils logo-icon" style="color: var(--foodpanda-pink);"></i>
                             <?php endif; ?>
                         </a>
+                        
+                        <!-- Hamburger Icon -->
+                        <button class="mobile-nav-toggle" id="navHamburgerMobile">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        
+                        <!-- Filters Button -->
+                        <button class="mobile-nav-toggle" id="navFiltersMobile">
+                            <i class="fas fa-filter"></i>
+                        </button>
                     </div>
 
                     <!-- Right Side: Action Icons -->
@@ -2600,19 +2817,6 @@ if (isset($_GET['ajax'])) {
 
     <!-- Navigation Tabs -->
     <div class="nav-tabs-container">
-        <!-- Hamburger Icon (Mobile Only) -->
-        <button class="nav-hamburger-center" id="navHamburgerCenter">
-            <i class="fas fa-bars"></i>
-        </button>
-        
-        <!-- Filters Dropdown (Mobile Only) -->
-        <div class="nav-filters-dropdown">
-            <button class="nav-filters-btn" id="navFiltersBtn">
-                <i class="fas fa-filter"></i>
-                <span>Filters</span>
-            </button>
-        </div>
-        
         <div class="container-fluid">
             <ul class="nav nav-tabs" id="navTabs">
                 <li class="nav-item">
@@ -3006,11 +3210,10 @@ if (isset($_GET['ajax'])) {
                             <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" 
                                  class="footer-logo" style="filter: brightness(0) invert(1);"
                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                            <i class="fas fa-utensils" style="display: none; font-size: 1.5rem; margin-right: 8px;"></i>
+                            <i class="fas fa-utensils footer-logo-icon" style="display: none;"></i>
                         <?php else: ?>
-                            <i class="fas fa-utensils" style="font-size: 1.5rem; margin-right: 8px;"></i>
+                            <i class="fas fa-utensils footer-logo-icon"></i>
                         <?php endif; ?>
-                        <span class="footer-brand-text"><?= htmlspecialchars($siteName) ?></span>
                     </div>
                     <p class="footer-description">
                         Your favorite food delivery service bringing delicious meals from the best restaurants right to your doorstep. Fast, fresh, and reliable.
@@ -3087,24 +3290,13 @@ if (isset($_GET['ajax'])) {
                 </div>
             </div>
 
-            <!-- App Download Section -->
+            <!-- Newsletter Section -->
             <div class="row py-4 border-top border-bottom">
-                <div class="col-md-6 mb-3">
-                    <h6 class="mb-3">Download Our App</h6>
-                    <div class="app-buttons">
-                        <a href="#" class="app-button">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play" class="app-store-badge">
-                        </a>
-                        <a href="#" class="app-button">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Download on the App Store" class="app-store-badge">
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-12 mb-3">
                     <h6 class="mb-3">Newsletter</h6>
                     <p class="text-white small mb-3">Subscribe to get special offers and updates</p>
                     <div class="newsletter-form">
-                        <div class="input-group">
+                        <div class="input-group" style="max-width: 500px;">
                             <input type="email" class="form-control" placeholder="Enter your email">
                             <button class="btn btn-primary" type="button">
                                 <i class="fas fa-paper-plane"></i>
@@ -3237,7 +3429,7 @@ if (isset($_GET['ajax'])) {
             initializeFilters();
             
             // Mobile Filters Modal
-            const navFiltersBtn = document.getElementById('navFiltersBtn');
+            const navFiltersBtn = document.getElementById('navFiltersMobile');
             const mobileFiltersModal = document.getElementById('mobileFiltersModal');
             const closeFiltersModal = document.getElementById('closeFiltersModal');
             const applyFiltersBtn = document.getElementById('applyFiltersBtn');
@@ -3293,15 +3485,23 @@ if (isset($_GET['ajax'])) {
                 });
             }
             
-            // Mobile navigation toggle - Centered hamburger in green bar
-            const navHamburgerCenter = document.getElementById('navHamburgerCenter');
+            // Mobile navigation toggle - Hamburger in header
+            const navHamburgerCenter = document.getElementById('navHamburgerMobile');
             const navTabs = document.getElementById('navTabs');
             
             if (navHamburgerCenter && navTabs) {
+                // Toggle menu
                 navHamburgerCenter.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     navTabs.classList.toggle('show');
+                    
+                    // Lock/unlock body scroll
+                    if (navTabs.classList.contains('show')) {
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        document.body.style.overflow = '';
+                    }
                     
                     // Change icon
                     const icon = this.querySelector('i');
@@ -3320,6 +3520,7 @@ if (isset($_GET['ajax'])) {
                     link.addEventListener('click', function() {
                         if (window.innerWidth <= 768) {
                             navTabs.classList.remove('show');
+                            document.body.style.overflow = '';
                             const icon = navHamburgerCenter.querySelector('i');
                             icon.classList.remove('fa-times');
                             icon.classList.add('fa-bars');
@@ -3327,10 +3528,26 @@ if (isset($_GET['ajax'])) {
                     });
                 });
                 
-                // Close menu when clicking outside
-                document.addEventListener('click', function(e) {
-                    if (!navTabs.contains(e.target) && !navHamburgerCenter.contains(e.target)) {
+                // Close menu when clicking on backdrop (::before pseudo-element area)
+                navTabs.addEventListener('click', function(e) {
+                    // Check if click is on the backdrop area (outside the sidebar)
+                    const rect = navTabs.getBoundingClientRect();
+                    if (e.clientX > rect.right) {
                         navTabs.classList.remove('show');
+                        document.body.style.overflow = '';
+                        const icon = navHamburgerCenter.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+                
+                // Close menu when clicking outside (for safety)
+                document.addEventListener('click', function(e) {
+                    if (navTabs.classList.contains('show') && 
+                        !navTabs.contains(e.target) && 
+                        !navHamburgerCenter.contains(e.target)) {
+                        navTabs.classList.remove('show');
+                        document.body.style.overflow = '';
                         const icon = navHamburgerCenter.querySelector('i');
                         icon.classList.remove('fa-times');
                         icon.classList.add('fa-bars');
@@ -3424,6 +3641,20 @@ if (isset($_GET['ajax'])) {
                     },
                     freeMode: true,
                     grabCursor: true,
+                    breakpoints: {
+                        // Mobile: 2 cards per view
+                        320: {
+                            slidesPerView: 2,
+                            spaceBetween: 8,
+                            freeMode: false,
+                        },
+                        // Tablet and up: auto width
+                        769: {
+                            slidesPerView: 'auto',
+                            spaceBetween: 16,
+                            freeMode: true,
+                        }
+                    }
                 });
                 
                 // Load top choice products
@@ -3465,6 +3696,20 @@ if (isset($_GET['ajax'])) {
                     },
                     freeMode: true,
                     grabCursor: true,
+                    breakpoints: {
+                        // Mobile: 2 cards per view
+                        320: {
+                            slidesPerView: 2,
+                            spaceBetween: 8,
+                            freeMode: false,
+                        },
+                        // Tablet and up: auto width
+                        769: {
+                            slidesPerView: 'auto',
+                            spaceBetween: 16,
+                            freeMode: true,
+                        }
+                    }
                 });
                 
             } catch (error) {
@@ -3689,6 +3934,20 @@ if (isset($_GET['ajax'])) {
                     },
                     freeMode: true,
                     grabCursor: true,
+                    breakpoints: {
+                        // Mobile: 4 cards per view
+                        320: {
+                            slidesPerView: 4,
+                            spaceBetween: 8,
+                            freeMode: false,
+                        },
+                        // Tablet and up: auto width
+                        769: {
+                            slidesPerView: 'auto',
+                            spaceBetween: 0,
+                            freeMode: true,
+                        }
+                    }
                 });
                 
             } catch (error) {
@@ -3999,8 +4258,8 @@ if (isset($_GET['ajax'])) {
         // Initialize Swiper for restaurants section
         function initRestaurantsSwiper() {
             const restaurantsSwiper = new Swiper('#restaurantsSwiper', {
-                slidesPerView: 1,
-                spaceBetween: 20,
+                slidesPerView: 2,
+                spaceBetween: 12,
                 loop: true,
                 autoplay: {
                     delay: 4000,
@@ -4015,6 +4274,11 @@ if (isset($_GET['ajax'])) {
                     prevEl: '.swiper-button-prev',
                 },
                 breakpoints: {
+                    // Mobile: 2 cards per view
+                    320: {
+                        slidesPerView: 2,
+                        spaceBetween: 12,
+                    },
                     640: {
                         slidesPerView: 2,
                         spaceBetween: 20,

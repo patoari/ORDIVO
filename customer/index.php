@@ -33,6 +33,22 @@ try {
     $siteName = 'ORDIVO';
 }
 
+// Get active banners for homepage
+try {
+    $banners = fetchAll("
+        SELECT * FROM site_banners 
+        WHERE is_active = 1 
+        AND position = 'homepage_promo'
+        AND (start_date IS NULL OR start_date <= NOW())
+        AND (end_date IS NULL OR end_date >= NOW())
+        ORDER BY display_order ASC
+        LIMIT 5
+    ");
+} catch (Exception $e) {
+    error_log("Error loading banners: " . $e->getMessage());
+    $banners = [];
+}
+
 // Handle error messages
 $errorMessage = '';
 $successMessage = '';
@@ -1326,15 +1342,20 @@ if (isset($_GET['ajax'])) {
             }
         }
 
-        /* Promotional Banner */
+        /* Promotional Banner Carousel */
+        .promo-carousel-container {
+            margin-bottom: 2rem;
+        }
+
         .promo-banner {
-            background: #f97316;
             border-radius: 12px;
             padding: 2rem;
-            margin-bottom: 2rem;
             color: white;
             position: relative;
             overflow: hidden;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
         }
 
         .promo-content h2 {
@@ -1351,12 +1372,51 @@ if (isset($_GET['ajax'])) {
 
         .promo-btn {
             background: white;
-            color: var(--foodpanda-pink);
+            color: #f97316;
             border: none;
             padding: 0.75rem 1.5rem;
             border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .promo-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 40px;
+            height: 40px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .carousel-control-prev {
+            left: 10px;
+        }
+
+        .carousel-control-next {
+            right: 10px;
+        }
+
+        .carousel-indicators {
+            margin-bottom: 0.5rem;
+        }
+
+        .carousel-indicators button {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.5);
+        }
+
+        .carousel-indicators button.active {
+            background-color: white;
         }
 
         /* Restaurant Cards */
@@ -1390,6 +1450,40 @@ if (isset($_GET['ajax'])) {
 
         /* Mobile: 2 restaurant cards per line */
         @media (max-width: 768px) {
+            /* Promo carousel mobile */
+            .promo-banner {
+                padding: 1.5rem;
+                min-height: 160px;
+            }
+
+            .promo-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .promo-content p {
+                font-size: 0.9rem;
+            }
+
+            .promo-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+
+            .carousel-control-prev,
+            .carousel-control-next {
+                width: 32px;
+                height: 32px;
+            }
+
+            .carousel-indicators {
+                margin-bottom: 0.25rem;
+            }
+
+            .carousel-indicators button {
+                width: 8px;
+                height: 8px;
+            }
+
             .restaurant-card {
                 min-width: calc(50% - 10px);
             }
@@ -3080,12 +3174,66 @@ if (isset($_GET['ajax'])) {
                 </div>
             </div>
 
-            <!-- Promotional Banner -->
-            <div class="promo-banner">
-                <div class="promo-content">
-                    <h2>Get 25% off</h2>
-                    <p>Min order Tk 250</p>
-                    <button class="promo-btn">Get it</button>
+            <!-- Promotional Banner Carousel -->
+            <div class="promo-carousel-container">
+                <div id="promoCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <?php if (count($banners) > 1): ?>
+                    <div class="carousel-indicators">
+                        <?php foreach ($banners as $index => $banner): ?>
+                        <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="<?= $index ?>" 
+                                class="<?= $index === 0 ? 'active' : '' ?>"></button>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
+                    
+                    <div class="carousel-inner">
+                        <?php if (empty($banners)): ?>
+                            <!-- Default banner if no banners in database -->
+                            <div class="carousel-item active">
+                                <div class="promo-banner" style="background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);">
+                                    <div class="promo-content">
+                                        <h2>Get 25% off</h2>
+                                        <p>Min order Tk 250</p>
+                                        <button class="promo-btn">Get it</button>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php else: ?>
+                            <?php foreach ($banners as $index => $banner): ?>
+                            <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
+                                <div class="promo-banner" style="
+                                    <?php if (!empty($banner['background_image'])): ?>
+                                        background-image: url('../<?= htmlspecialchars($banner['background_image']) ?>');
+                                        background-size: cover;
+                                        background-position: center;
+                                    <?php endif; ?>
+                                    background-color: <?= htmlspecialchars($banner['background_color'] ?? '#f97316') ?>;
+                                ">
+                                    <div class="promo-content" style="color: <?= htmlspecialchars($banner['text_color'] ?? '#ffffff') ?>">
+                                        <h2><?= htmlspecialchars($banner['title']) ?></h2>
+                                        <?php if (!empty($banner['subtitle'])): ?>
+                                        <p><?= htmlspecialchars($banner['subtitle']) ?></p>
+                                        <?php endif; ?>
+                                        <?php if (!empty($banner['button_text'])): ?>
+                                        <button class="promo-btn" onclick="window.location.href='<?= htmlspecialchars($banner['button_link'] ?? '#') ?>'"><?= htmlspecialchars($banner['button_text']) ?></button>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <?php if (count($banners) > 1): ?>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#promoCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#promoCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                    <?php endif; ?>
                 </div>
             </div>
 

@@ -852,38 +852,423 @@ if ($vendorId) {
             border-top: 2px solid var(--ordivo-light);
         }
 
+        /* Mobile Header Styles */
+        .mobile-only {
+            display: none;
+        }
+
+        .desktop-only {
+            display: block;
+        }
+
+        /* Hide mobile sort panel on desktop */
+        .mobile-sort-panel {
+            display: none;
+        }
+
+        /* Mobile Menu Toggle Button */
+        .mobile-nav-toggle {
+            background: white;
+            border: 2px solid #10b981;
+            border-radius: 8px;
+            color: #10b981;
+            width: 40px;
+            height: 40px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            display: none;
+        }
+
+        .mobile-nav-toggle:hover {
+            background: #10b981;
+            color: white;
+            transform: scale(1.05);
+        }
+
         @media (max-width: 768px) {
+            .mobile-only {
+                display: block;
+            }
+
+            .desktop-only {
+                display: none !important;
+            }
+
             body {
-                padding-top: 140px; /* Adjusted for mobile - smaller header and search */
+                padding-top: 184px; /* Row1(44px) + Row2(70px) + Search(70px) */
             }
             
             .header {
-                height: 60px; /* Even smaller on mobile */
+                height: auto;
+                min-height: auto;
+                padding: 0;
+            }
+
+            .mobile-header-top {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                height: 44px;
+                padding: 0 0.75rem;
+                background: #f8f9fa;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .mobile-header-top .location-display {
+                flex: 1;
+                font-size: 0.75rem;
+                padding: 0.4rem 0.75rem;
+                border-radius: 20px;
+                background: white;
+                border: 1px solid #e5e7eb;
+                max-width: calc(100% - 60px);
+                height: 32px;
+                display: flex;
+                align-items: center;
+            }
+
+            .mobile-header-top .location-display i {
+                font-size: 0.7rem;
+                flex-shrink: 0;
+            }
+
+            .mobile-header-top .location-display span {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                flex: 1;
+                font-size: 0.7rem;
+            }
+
+            .mobile-header-top .location-display:hover {
+                background: #f8f9fa;
+                border-color: #10b981;
+            }
+
+            .mobile-login-btn {
+                flex-shrink: 0;
+                margin-left: 0.5rem;
+            }
+
+            .mobile-login-btn .btn-user {
+                padding: 0.4rem 0.75rem;
+                height: 32px;
+                min-width: 40px;
+                border-radius: 20px;
+                font-size: 0.75rem;
+            }
+
+            .mobile-header-middle {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                height: 70px;
+                padding: 0 0.75rem;
+                background: white;
+                border-bottom: 2px solid #10b981;
+            }
+
+            .mobile-header-left {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                flex: 1;
+                min-width: 0;
+            }
+
+            .mobile-header-middle .navbar-brand {
+                margin: 0;
+                padding: 0;
+                flex: 0 0 auto;
+                order: 1;
+            }
+
+            .mobile-header-middle .navbar-brand img {
+                height: 100px;
+            }
+
+            .mobile-header-middle .navbar-brand i.fa-utensils {
+                font-size: 3rem !important;
+            }
+
+            .mobile-header-middle .mobile-nav-toggle {
+                display: block;
+                margin: 0;
+                background: white;
+                border: 2px solid #10b981;
+                color: #10b981;
+                flex-shrink: 0;
+                order: 2;
+            }
+
+            .mobile-header-middle .mobile-nav-toggle:hover {
+                background: #10b981;
+                color: white;
+            }
+
+            .mobile-header-right {
+                display: flex !important;
+                align-items: center;
+                gap: 0.5rem;
+                flex-shrink: 0;
+            }
+
+            .mobile-header-right .btn-user,
+            .mobile-header-right .dropdown button {
+                width: 40px;
+                height: 40px;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 8px;
+                flex-shrink: 0;
+                position: relative;
+            }
+
+            .mobile-header-right .btn-user i,
+            .mobile-header-right .dropdown button i {
+                font-size: 1.1rem;
+                margin: 0;
+            }
+
+            .mobile-header-right .dropdown-toggle::after {
+                display: none;
+            }
+
+            .cart-badge,
+            #cartCount {
+                position: absolute;
+                top: -4px;
+                right: -4px;
+                background: #dc3545;
+                color: white;
+                font-size: 0.65rem;
+                font-weight: 700;
+                padding: 0.15rem 0.35rem;
+                border-radius: 10px;
+                min-width: 18px;
+                height: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid white;
             }
             
             .search-filters {
-                height: 70px; /* Smaller search section on mobile */
-                top: 60px;
+                height: 70px;
+                top: 114px;
                 padding: 1rem 0;
+                background: white !important;
+                border-top: none;
+                border-bottom: 1px solid #e9ecef;
+                animation: none;
             }
-            
-            .header .navbar-brand img {
-                height: 60px; /* Increased mobile logo size for better visibility */
-            }
-            
-            .header .navbar-brand i.fa-utensils {
-                font-size: 1.5rem; /* Smaller icon on mobile */
-            }
-            
-            .header .btn-outline-light,
-            .header .btn-light {
-                padding: 0.4rem 0.8rem; /* Smaller buttons on mobile */
-                font-size: 0.85rem;
+
+            /* Hide sort buttons on mobile - they're in the sort panel now */
+            .search-filters .col-md-6:last-child {
+                display: none !important;
             }
             
             .sidebar {
-                margin-bottom: 2rem;
-                top: 140px;
+                position: fixed;
+                top: 114px;
+                left: -280px;
+                width: 280px;
+                height: calc(100vh - 114px);
+                background: white;
+                padding: 1.5rem 1rem;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+                overflow-y: auto;
+                z-index: 10000;
+                transition: left 0.3s ease-in-out;
+                border-radius: 0;
+                margin-bottom: 0;
+            }
+
+            .sidebar.show {
+                left: 0 !important;
+            }
+
+            /* Overlay backdrop for sidebar */
+            .sidebar::before {
+                content: '';
+                position: fixed;
+                top: 114px;
+                left: 280px;
+                width: 0;
+                height: calc(100vh - 114px);
+                background: rgba(0, 0, 0, 0);
+                transition: all 0.3s ease-in-out;
+                pointer-events: none;
+                z-index: -1;
+            }
+
+            .sidebar.show::before {
+                width: calc(100vw - 280px);
+                background: rgba(0, 0, 0, 0.5);
+                pointer-events: auto;
+            }
+
+            /* Mobile Sort Panel */
+            .mobile-sort-panel {
+                display: block;
+                position: fixed;
+                top: 114px;
+                right: -300px;
+                width: 300px;
+                height: calc(100vh - 114px);
+                background: white;
+                box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+                z-index: 10001;
+                transition: right 0.3s ease-in-out;
+                overflow-y: auto;
+            }
+
+            .mobile-sort-panel.show {
+                right: 0 !important;
+            }
+
+            /* Overlay backdrop for sort panel */
+            .mobile-sort-panel::before {
+                content: '';
+                position: fixed;
+                top: 114px;
+                right: 300px;
+                width: 0;
+                height: calc(100vh - 114px);
+                background: rgba(0, 0, 0, 0);
+                transition: all 0.3s ease-in-out;
+                pointer-events: none;
+                z-index: -1;
+            }
+
+            .mobile-sort-panel.show::before {
+                width: calc(100vw - 300px);
+                background: rgba(0, 0, 0, 0.5);
+                pointer-events: auto;
+            }
+
+            .sort-panel-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1.5rem;
+                border-bottom: 2px solid #e9ecef;
+                background: #10b981;
+                color: white;
+            }
+
+            .sort-panel-header h5 {
+                margin: 0;
+                font-weight: 700;
+            }
+
+            .btn-close-sort {
+                background: transparent;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+                padding: 0;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .sort-panel-content {
+                padding: 1rem;
+            }
+
+            .sort-option {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                padding: 1rem;
+                margin-bottom: 0.5rem;
+                background: white;
+                border: 2px solid #e9ecef;
+                border-radius: 8px;
+                font-size: 1rem;
+                font-weight: 500;
+                color: #333;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-align: left;
+            }
+
+            .sort-option:hover {
+                background: #f0fdf4;
+                border-color: #10b981;
+                color: #10b981;
+            }
+
+            .sort-option.active {
+                background: #10b981;
+                border-color: #10b981;
+                color: white;
+            }
+
+            .sort-option i {
+                font-size: 1.1rem;
+            }
+
+            /* Product Cards - 2 per line on mobile */
+            .product-card {
+                margin-bottom: 1rem;
+            }
+
+            .product-image {
+                height: 140px;
+            }
+
+            .product-badge {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.5rem;
+                top: 8px;
+                left: 8px;
+            }
+
+            .product-info {
+                padding: 0.75rem;
+            }
+
+            .product-name {
+                font-size: 0.9rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .product-description {
+                font-size: 0.75rem;
+                margin-bottom: 0.5rem;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            .product-meta {
+                font-size: 0.8rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .product-price {
+                font-size: 1rem;
+            }
+
+            .product-rating {
+                font-size: 0.75rem;
+            }
+
+            .add-to-cart-btn {
+                font-size: 0.85rem;
+                padding: 0.5rem 0.75rem;
             }
         }
     </style>
@@ -891,7 +1276,8 @@ if ($vendorId) {
 <body>
     <!-- Header -->
     <header class="header">
-        <div class="container-fluid">
+        <!-- Desktop Header -->
+        <div class="container-fluid desktop-only">
             <nav class="navbar navbar-expand-lg d-flex justify-content-between align-items-center">
                 <a class="navbar-brand" href="index.php">
                     <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
@@ -947,6 +1333,80 @@ if ($vendorId) {
                     </a>
                 </div>
             </nav>
+        </div>
+
+        <!-- Mobile Header -->
+        <div class="mobile-only">
+            <!-- Row 1: Top Utility Bar - Address + Login -->
+            <div class="mobile-header-top">
+                <div class="location-display" data-bs-toggle="modal" data-bs-target="#locationModal">
+                    <i class="fas fa-map-marker-alt me-1"></i>
+                    <span id="currentLocationMobile">Dhaka, Bangladesh</span>
+                </div>
+                <div class="mobile-login-btn">
+                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
+                        <a href="profile.php" class="btn-user" title="Profile">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    <?php else: ?>
+                        <a href="../auth/login.php" class="btn-user" title="Login">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Row 2: Logo + Hamburger + Filters + Action Icons -->
+            <div class="mobile-header-middle">
+                <!-- Left Side: Logo + Hamburger + Filters -->
+                <div class="mobile-header-left">
+                    <a class="navbar-brand" href="index.php">
+                        <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
+                            <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" 
+                                 class="logo-img logo-sparkle"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                            <i class="fas fa-utensils logo-icon" style="display: none; color: var(--ordivo-primary);"></i>
+                        <?php else: ?>
+                            <i class="fas fa-utensils logo-icon" style="color: var(--ordivo-primary);"></i>
+                        <?php endif; ?>
+                    </a>
+                    
+                    <!-- Hamburger Icon -->
+                    <button class="mobile-nav-toggle" id="navHamburgerMobile">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <!-- Categories Button -->
+                    <button class="mobile-nav-toggle" id="navCategoriesMobile">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    
+                    <!-- Sort Button -->
+                    <button class="mobile-nav-toggle" id="navSortMobile">
+                        <i class="fas fa-sort-amount-down"></i>
+                    </button>
+                </div>
+
+                <!-- Right Side: Action Icons -->
+                <div class="mobile-header-right">
+                    <div class="dropdown">
+                        <button class="btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown" title="Language">
+                            <i class="fas fa-globe"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-check me-2 text-success"></i>English</a></li>
+                            <li><a class="dropdown-item" href="#">বাংলা</a></li>
+                        </ul>
+                    </div>
+                    <a href="favorites.php" class="btn-user" title="Favorites">
+                        <i class="fas fa-heart"></i>
+                    </a>
+                    <a href="cart.php" class="btn-user" title="Cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge" id="cartBadgeMobile" style="display: none;">0</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -1016,6 +1476,33 @@ if ($vendorId) {
             </div>
         </div>
     </section>
+
+    <!-- Mobile Sort Panel -->
+    <div class="mobile-sort-panel" id="mobileSortPanel">
+        <div class="sort-panel-header">
+            <h5>Sort By</h5>
+            <button class="btn-close-sort" id="closeSortPanel">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sort-panel-content">
+            <button class="sort-option active" data-sort="popular">
+                <i class="fas fa-fire me-2"></i>Popular
+            </button>
+            <button class="sort-option" data-sort="price_low">
+                <i class="fas fa-arrow-down me-2"></i>Price: Low to High
+            </button>
+            <button class="sort-option" data-sort="price_high">
+                <i class="fas fa-arrow-up me-2"></i>Price: High to Low
+            </button>
+            <button class="sort-option" data-sort="rating">
+                <i class="fas fa-star me-2"></i>Rating
+            </button>
+            <button class="sort-option" data-sort="newest">
+                <i class="fas fa-clock me-2"></i>Newest
+            </button>
+        </div>
+    </div>
 
     <!-- Main Content -->
     <section class="py-4">
@@ -1284,7 +1771,7 @@ if ($vendorId) {
                 }
                 
                 const productCards = products.map(product => `
-                    <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="col-lg-4 col-md-6 col-6 mb-4">
                         <div class="product-card" onclick="viewProduct(${product.id})">
                             <div class="product-image">
                                 ${product.image ? 
@@ -1604,6 +2091,211 @@ if ($vendorId) {
                     selectedLocation = this.value;
                 });
             }
+
+            // Mobile navigation toggle - Hamburger menu
+            setTimeout(function() {
+                const navHamburgerMobile = document.getElementById('navHamburgerMobile');
+                
+                if (navHamburgerMobile) {
+                    // Toggle sidebar when hamburger is clicked
+                    navHamburgerMobile.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const sidebar = document.querySelector('.sidebar');
+                        if (sidebar) {
+                            sidebar.classList.toggle('show');
+                            
+                            // Lock/unlock body scroll
+                            if (sidebar.classList.contains('show')) {
+                                document.body.style.overflow = 'hidden';
+                            } else {
+                                document.body.style.overflow = '';
+                            }
+                            
+                            // Change icon
+                            const icon = this.querySelector('i');
+                            if (icon) {
+                                if (sidebar.classList.contains('show')) {
+                                    icon.classList.remove('fa-bars');
+                                    icon.classList.add('fa-times');
+                                } else {
+                                    icon.classList.remove('fa-times');
+                                    icon.classList.add('fa-bars');
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Categories button functionality
+                const navCategoriesMobile = document.getElementById('navCategoriesMobile');
+                if (navCategoriesMobile) {
+                    navCategoriesMobile.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const sidebar = document.querySelector('.sidebar');
+                        if (sidebar) {
+                            sidebar.classList.toggle('show');
+                            
+                            // Lock/unlock body scroll
+                            if (sidebar.classList.contains('show')) {
+                                document.body.style.overflow = 'hidden';
+                            } else {
+                                document.body.style.overflow = '';
+                            }
+                            
+                            // Change icon
+                            const icon = this.querySelector('i');
+                            if (icon) {
+                                if (sidebar.classList.contains('show')) {
+                                    icon.classList.remove('fa-th-large');
+                                    icon.classList.add('fa-times');
+                                } else {
+                                    icon.classList.remove('fa-times');
+                                    icon.classList.add('fa-th-large');
+                                }
+                            }
+                        }
+                    });
+
+                    // Close sidebar when clicking on a category
+                    const sidebar = document.querySelector('.sidebar');
+                    if (sidebar) {
+                        const categoryItems = sidebar.querySelectorAll('.category-item');
+                        categoryItems.forEach(item => {
+                            item.addEventListener('click', function() {
+                                if (window.innerWidth <= 768 && sidebar.classList.contains('show')) {
+                                    sidebar.classList.remove('show');
+                                    document.body.style.overflow = '';
+                                    const icon = navCategoriesMobile.querySelector('i');
+                                    if (icon) {
+                                        icon.classList.remove('fa-times');
+                                        icon.classList.add('fa-th-large');
+                                    }
+                                }
+                            });
+                        });
+
+                        // Close sidebar when clicking on backdrop
+                        document.addEventListener('click', function(e) {
+                            if (sidebar.classList.contains('show') && window.innerWidth <= 768) {
+                                const rect = sidebar.getBoundingClientRect();
+                                // Check if click is outside the sidebar
+                                if (e.clientX > rect.right || e.clientX < rect.left) {
+                                    sidebar.classList.remove('show');
+                                    document.body.style.overflow = '';
+                                    const icon = navCategoriesMobile.querySelector('i');
+                                    if (icon) {
+                                        icon.classList.remove('fa-times');
+                                        icon.classList.add('fa-th-large');
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+
+                // Sort button functionality
+                const navSortMobile = document.getElementById('navSortMobile');
+                const mobileSortPanel = document.getElementById('mobileSortPanel');
+                const closeSortPanel = document.getElementById('closeSortPanel');
+                
+                if (navSortMobile && mobileSortPanel) {
+                    // Open sort panel
+                    navSortMobile.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        mobileSortPanel.classList.toggle('show');
+                        
+                        // Lock/unlock body scroll
+                        if (mobileSortPanel.classList.contains('show')) {
+                            document.body.style.overflow = 'hidden';
+                        } else {
+                            document.body.style.overflow = '';
+                        }
+                        
+                        // Change icon
+                        const icon = this.querySelector('i');
+                        if (icon) {
+                            if (mobileSortPanel.classList.contains('show')) {
+                                icon.classList.remove('fa-sort-amount-down');
+                                icon.classList.add('fa-times');
+                            } else {
+                                icon.classList.remove('fa-times');
+                                icon.classList.add('fa-sort-amount-down');
+                            }
+                        }
+                    });
+
+                    // Close button
+                    if (closeSortPanel) {
+                        closeSortPanel.addEventListener('click', function() {
+                            mobileSortPanel.classList.remove('show');
+                            document.body.style.overflow = '';
+                            const icon = navSortMobile.querySelector('i');
+                            if (icon) {
+                                icon.classList.remove('fa-times');
+                                icon.classList.add('fa-sort-amount-down');
+                            }
+                        });
+                    }
+
+                    // Handle sort option clicks
+                    const sortOptions = mobileSortPanel.querySelectorAll('.sort-option');
+                    sortOptions.forEach(option => {
+                        option.addEventListener('click', function() {
+                            const sortValue = this.getAttribute('data-sort');
+                            
+                            // Update active state
+                            sortOptions.forEach(opt => opt.classList.remove('active'));
+                            this.classList.add('active');
+                            
+                            // Update desktop sort buttons too
+                            const desktopSortButtons = document.querySelectorAll('.filter-btn');
+                            desktopSortButtons.forEach(btn => {
+                                btn.classList.remove('active');
+                                if (btn.getAttribute('data-sort') === sortValue) {
+                                    btn.classList.add('active');
+                                }
+                            });
+                            
+                            // Trigger sort
+                            currentSort = sortValue;
+                            currentPage = 1;
+                            loadProducts();
+                            
+                            // Close panel
+                            mobileSortPanel.classList.remove('show');
+                            document.body.style.overflow = '';
+                            const icon = navSortMobile.querySelector('i');
+                            if (icon) {
+                                icon.classList.remove('fa-times');
+                                icon.classList.add('fa-sort-amount-down');
+                            }
+                        });
+                    });
+
+                    // Close when clicking on backdrop
+                    document.addEventListener('click', function(e) {
+                        if (mobileSortPanel.classList.contains('show') && window.innerWidth <= 768) {
+                            const rect = mobileSortPanel.getBoundingClientRect();
+                            // Check if click is outside the panel
+                            if (e.clientX < rect.left || e.clientX > rect.right) {
+                                mobileSortPanel.classList.remove('show');
+                                document.body.style.overflow = '';
+                                const icon = navSortMobile.querySelector('i');
+                                if (icon) {
+                                    icon.classList.remove('fa-times');
+                                    icon.classList.add('fa-sort-amount-down');
+                                }
+                            }
+                        }
+                    });
+                }
+            }, 100);
         });
     </script>
 </body>

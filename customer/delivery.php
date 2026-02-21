@@ -40,31 +40,45 @@ if (isset($_GET['ajax'])) {
             try {
                 // Get delivery restaurants with fast delivery times
                 $restaurants = fetchAll("
-                    SELECT DISTINCT u.id, u.name as vendor_name, u.address, u.phone,
+                    SELECT DISTINCT u.id, u.name as vendor_name, u.avatar, u.cover_photo,
                            COUNT(p.id) as product_count,
                            AVG(p.rating) as avg_rating,
                            MIN(p.price) as min_price
                     FROM users u 
                     LEFT JOIN products p ON u.id = p.vendor_id AND p.is_available = 1
                     WHERE u.role = 'vendor' AND u.status = 'active'
-                    GROUP BY u.id, u.name, u.address, u.phone
+                    GROUP BY u.id, u.name, u.avatar, u.cover_photo
                     HAVING product_count > 0
                     ORDER BY avg_rating DESC, product_count DESC
                     LIMIT 20
                 ");
                 
+                // Check if we got any results
+                if (empty($restaurants)) {
+                    echo json_encode([]);
+                    exit;
+                }
+                
                 // Format for frontend
                 $deliveryRestaurants = array_map(function($restaurant) {
+                    // Use cover photo if available, otherwise use avatar, otherwise use placeholder
+                    $image = 'https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?w=400&h=300&fit=crop';
+                    if (!empty($restaurant['cover_photo'])) {
+                        $image = '../' . $restaurant['cover_photo'];
+                    } elseif (!empty($restaurant['avatar'])) {
+                        $image = '../' . $restaurant['avatar'];
+                    }
+                    
                     return [
                         'id' => $restaurant['id'],
                         'name' => $restaurant['vendor_name'],
-                        'address' => $restaurant['address'] ?? 'Dhaka, Bangladesh',
+                        'address' => 'Dhaka, Bangladesh',
                         'rating' => round((float)($restaurant['avg_rating'] ?? 4.0) + (rand(1, 9) / 10), 1),
                         'reviews' => rand(100, 2000),
                         'delivery_time' => rand(15, 45) . '-' . rand(45, 60) . ' min',
                         'delivery_fee' => rand(0, 50),
                         'min_order' => rand(100, 300),
-                        'image' => 'https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?w=400&h=300&fit=crop',
+                        'image' => $image,
                         'badge' => rand(0, 1) ? 'Free Delivery' : 'Fast Delivery',
                         'cuisine_types' => ['Fast Food', 'Asian', 'Italian', 'Bangladeshi'][rand(0, 3)],
                         'product_count' => (int)$restaurant['product_count']
@@ -73,6 +87,7 @@ if (isset($_GET['ajax'])) {
                 
                 echo json_encode($deliveryRestaurants);
             } catch (Exception $e) {
+                error_log("Delivery restaurants error: " . $e->getMessage());
                 echo json_encode(['error' => $e->getMessage()]);
             }
             exit;
@@ -281,6 +296,210 @@ if (isset($_GET['ajax'])) {
             color: white;
         }
 
+        /* Mobile Header Styles */
+        .mobile-only {
+            display: none;
+        }
+
+        .desktop-only {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-only {
+                display: block;
+            }
+
+            .desktop-only {
+                display: none !important;
+            }
+
+            .header {
+                height: auto;
+                min-height: auto;
+                padding: 0;
+            }
+
+            /* Row 1: Top Utility Bar */
+            .mobile-header-top {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                height: 44px;
+                padding: 0 0.75rem;
+                background: #f8f9fa;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .mobile-header-top .location-display {
+                flex: 1;
+                font-size: 0.75rem;
+                padding: 0.4rem 0.75rem;
+                border-radius: 20px;
+                background: white;
+                border: 1px solid #e5e7eb;
+                max-width: calc(100% - 60px);
+                height: 32px;
+                display: flex;
+                align-items: center;
+            }
+
+            .mobile-header-top .location-display i {
+                font-size: 0.7rem;
+                flex-shrink: 0;
+            }
+
+            .mobile-header-top .location-display span {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                flex: 1;
+                font-size: 0.7rem;
+            }
+
+            .mobile-header-top .location-display:hover {
+                background: #f8f9fa;
+                border-color: #10b981;
+            }
+
+            .mobile-login-btn {
+                flex-shrink: 0;
+                margin-left: 0.5rem;
+            }
+
+            .mobile-login-btn .btn-user {
+                padding: 0.4rem 0.75rem;
+                height: 32px;
+                min-width: 40px;
+                border-radius: 20px;
+                font-size: 0.75rem;
+            }
+
+            /* Row 2: Logo + Hamburger + Filters + Action Icons */
+            .mobile-header-middle {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                height: 70px;
+                padding: 0 0.75rem;
+                background: white;
+                border-bottom: 2px solid #10b981;
+            }
+
+            .mobile-header-left {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                flex: 1;
+                min-width: 0;
+            }
+
+            .mobile-header-middle .navbar-brand {
+                margin: 0;
+                padding: 0;
+                flex: 0 0 auto;
+                order: 1;
+            }
+
+            .mobile-header-middle .navbar-brand img {
+                height: 100px;
+            }
+
+            .mobile-header-middle .navbar-brand i.fa-motorcycle {
+                font-size: 3rem !important;
+            }
+
+            .mobile-header-middle .mobile-nav-toggle {
+                display: block;
+                margin: 0;
+                background: white;
+                border: 2px solid #10b981;
+                color: #10b981;
+                flex-shrink: 0;
+                order: 2;
+            }
+
+            .mobile-header-middle .mobile-nav-toggle:hover {
+                background: #10b981;
+                color: white;
+            }
+
+            .mobile-header-right {
+                display: flex !important;
+                align-items: center;
+                gap: 0.5rem;
+                flex-shrink: 0;
+            }
+
+            .mobile-header-right .btn-user,
+            .mobile-header-right .dropdown button {
+                width: 40px;
+                height: 40px;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 8px;
+                flex-shrink: 0;
+                position: relative;
+            }
+
+            .mobile-header-right .btn-user i,
+            .mobile-header-right .dropdown button i {
+                font-size: 1.1rem;
+                margin: 0;
+            }
+
+            .mobile-header-right .dropdown-toggle::after {
+                display: none;
+            }
+
+            .cart-badge {
+                position: absolute;
+                top: -4px;
+                right: -4px;
+                background: #dc3545;
+                color: white;
+                font-size: 0.65rem;
+                font-weight: 700;
+                padding: 0.15rem 0.35rem;
+                border-radius: 10px;
+                min-width: 18px;
+                height: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid white;
+            }
+
+            body {
+                padding-top: 174px; /* Row1(44px) + Row2(70px) + Nav(60px) */
+            }
+        }
+
+        /* Mobile Menu Toggle Button */
+        .mobile-nav-toggle {
+            background: white;
+            border: 2px solid #10b981;
+            border-radius: 8px;
+            color: #10b981;
+            width: 40px;
+            height: 40px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            display: none;
+        }
+
+        .mobile-nav-toggle:hover {
+            background: #10b981;
+            color: white;
+            transform: scale(1.05);
+        }
+
         /* Navigation Tabs */
         .nav-tabs-container {
             background: white;
@@ -299,6 +518,14 @@ if (isset($_GET['ajax'])) {
             background-origin: border-box;
             background-clip: padding-box, border-box;
             animation: navbarBorderPulse 3s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-tabs-container .container-fluid {
+            display: flex;
+            align-items: center;
+            width: 100%;
         }
 
         @keyframes navbarBorderPulse {
@@ -316,6 +543,8 @@ if (isset($_GET['ajax'])) {
 
         .nav-tabs {
             border-bottom: none;
+            display: flex;
+            flex-wrap: wrap;
         }
 
         .nav-tabs .nav-link {
@@ -553,11 +782,100 @@ if (isset($_GET['ajax'])) {
         /* Responsive */
         @media (max-width: 768px) {
             body {
-                padding-top: 140px;
+                padding-top: 114px; /* Row1(44px) + Row2(70px) only, no nav bar */
             }
             
+            /* Hide the green navigation bar on mobile but keep it in DOM */
             .nav-tabs-container {
-                height: 70px;
+                display: block !important;
+                position: fixed;
+                top: 114px;
+                left: 0;
+                right: 0;
+                height: 0;
+                overflow: visible;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                z-index: 9999;
+            }
+
+            .nav-tabs-container .container-fluid {
+                width: 100%;
+                display: block !important;
+                height: 0;
+                overflow: visible;
+            }
+
+            /* Sliding Sidebar Menu */
+            .nav-tabs {
+                display: flex !important;
+                position: fixed;
+                top: 114px;
+                left: -280px;
+                width: 280px;
+                height: calc(100vh - 114px);
+                background: #10b981;
+                flex-direction: column;
+                padding: 1.5rem 1rem;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+                overflow-y: auto;
+                z-index: 10000;
+                transition: left 0.3s ease-in-out;
+                border: none;
+            }
+
+            .nav-tabs.show {
+                left: 0 !important;
+            }
+
+            /* Overlay backdrop */
+            .nav-tabs::before {
+                content: '';
+                position: fixed;
+                top: 114px;
+                left: 280px;
+                width: 0;
+                height: calc(100vh - 114px);
+                background: rgba(0, 0, 0, 0);
+                transition: all 0.3s ease-in-out;
+                pointer-events: none;
+                z-index: -1;
+            }
+
+            .nav-tabs.show::before {
+                width: calc(100vw - 280px);
+                background: rgba(0, 0, 0, 0.5);
+                pointer-events: auto;
+            }
+
+            .nav-tabs .nav-item:first-child {
+                margin-top: 0;
+            }
+
+            .nav-tabs .nav-item {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+
+            .nav-tabs .nav-link {
+                width: 100%;
+                margin-right: 0;
+                text-align: left;
+                padding: 1rem;
+                border-radius: 8px;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+            }
+
+            .nav-tabs .nav-link:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateX(5px);
+            }
+
+            .nav-tabs .nav-link.active {
+                background: rgba(255, 255, 255, 0.3);
             }
             
             .hero-section {
@@ -571,8 +889,79 @@ if (isset($_GET['ajax'])) {
             }
             
             .featured-grid {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                gap: 1rem;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+            
+            .featured-card {
+                width: 100%;
+            }
+            
+            .featured-image {
+                height: 120px;
+            }
+            
+            .featured-info {
+                padding: 0.75rem;
+            }
+            
+            .featured-name {
+                font-size: 0.9rem;
+                margin-bottom: 0.4rem;
+            }
+            
+            .featured-price {
+                font-size: 0.95rem;
+            }
+            
+            /* Restaurant cards mobile */
+            .restaurant-card {
+                height: auto;
+            }
+            
+            .restaurant-image {
+                height: 120px;
+            }
+            
+            .restaurant-info {
+                padding: 0.75rem;
+            }
+            
+            .restaurant-name {
+                font-size: 0.9rem;
+                margin-bottom: 0.4rem;
+            }
+            
+            .restaurant-details {
+                font-size: 0.75rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .delivery-info {
+                font-size: 0.7rem;
+                gap: 0.5rem;
+            }
+            
+            .delivery-info span {
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
+            }
+            
+            .restaurant-badge {
+                font-size: 0.65rem;
+                padding: 0.25rem 0.5rem;
+            }
+            
+            /* Pagination mobile */
+            .pagination {
+                flex-wrap: wrap;
+                gap: 0.25rem;
+            }
+            
+            .page-link {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.875rem;
             }
         }
 
@@ -628,7 +1017,8 @@ if (isset($_GET['ajax'])) {
 <body>
     <!-- Header -->
     <header class="header">
-        <div class="container-fluid">
+        <!-- Desktop Header -->
+        <div class="container-fluid desktop-only">
             <nav class="navbar navbar-expand-lg d-flex justify-content-between align-items-center">
                 <a class="navbar-brand" href="index.php">
                     <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
@@ -638,7 +1028,6 @@ if (isset($_GET['ajax'])) {
                     <?php else: ?>
                         <i class="fas fa-motorcycle"></i>
                     <?php endif; ?>
-                    
                 </a>
                 
                 <div class="location-display" data-bs-toggle="modal" data-bs-target="#locationModal">
@@ -686,12 +1075,81 @@ if (isset($_GET['ajax'])) {
                 </div>
             </nav>
         </div>
+
+        <!-- Mobile Header -->
+        <div class="mobile-only">
+            <!-- Row 1: Top Utility Bar - Address + Login -->
+            <div class="mobile-header-top">
+                <div class="location-display" data-bs-toggle="modal" data-bs-target="#locationModal">
+                    <i class="fas fa-map-marker-alt me-1"></i>
+                    <span id="currentLocationMobile">Dhaka, Bangladesh</span>
+                </div>
+                <div class="mobile-login-btn">
+                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
+                        <a href="profile.php" class="btn-user" title="Profile">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    <?php else: ?>
+                        <a href="../auth/login.php" class="btn-user" title="Login">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Row 2: Logo + Hamburger + Filters + Action Icons -->
+            <div class="mobile-header-middle">
+                <!-- Left Side: Logo + Hamburger + Filters -->
+                <div class="mobile-header-left">
+                    <a class="navbar-brand" href="index.php">
+                        <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
+                            <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" 
+                                 class="logo-img logo-sparkle"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                            <i class="fas fa-motorcycle logo-icon" style="display: none; color: var(--foodpanda-pink);"></i>
+                        <?php else: ?>
+                            <i class="fas fa-motorcycle logo-icon" style="color: var(--foodpanda-pink);"></i>
+                        <?php endif; ?>
+                    </a>
+                    
+                    <!-- Hamburger Icon -->
+                    <button class="mobile-nav-toggle" id="navHamburgerMobile">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <!-- Filters Button -->
+                    <button class="mobile-nav-toggle" id="navFiltersMobile">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                </div>
+
+                <!-- Right Side: Action Icons -->
+                <div class="mobile-header-right">
+                    <div class="dropdown">
+                        <button class="btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown" title="Language">
+                            <i class="fas fa-globe"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-check me-2 text-success"></i>English</a></li>
+                            <li><a class="dropdown-item" href="#">বাংলা</a></li>
+                        </ul>
+                    </div>
+                    <a href="favorites.php" class="btn-user" title="Favorites">
+                        <i class="fas fa-heart"></i>
+                    </a>
+                    <a href="cart.php" class="btn-user" title="Cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge" id="cartBadgeMobile" style="display: none;">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
     </header>
 
     <!-- Navigation Tabs -->
     <div class="nav-tabs-container">
         <div class="container-fluid">
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs" id="navTabs">
                 <li class="nav-item">
                     <a class="nav-link" href="index.php">
                         <i class="fas fa-home me-2"></i>Home
@@ -804,6 +1262,12 @@ if (isset($_GET['ajax'])) {
                                 <p>Loading restaurants...</p>
                             </div>
                         </div>
+                    </div>
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-center mt-4" id="restaurantsPagination" style="display: none !important;">
+                        <nav>
+                            <ul class="pagination" id="paginationList"></ul>
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -930,50 +1394,126 @@ if (isset($_GET['ajax'])) {
                 });
         }
 
-        // Load delivery restaurants
+        // Load delivery restaurants with pagination
+        let allRestaurants = [];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
         function loadDeliveryRestaurants() {
             fetch('delivery.php?ajax=delivery_restaurants')
                 .then(response => response.json())
                 .then(data => {
+                    console.log('Delivery restaurants response:', data);
                     const grid = document.getElementById('restaurantsGrid');
+                    
                     if (data.error) {
-                        grid.innerHTML = '<div class="col-12 text-center"><p class="text-muted">Unable to load restaurants</p></div>';
+                        console.error('Error from server:', data.error);
+                        grid.innerHTML = '<div class="col-12 text-center"><p class="text-muted">Error: ' + data.error + '</p></div>';
                         return;
                     }
                     
-                    grid.innerHTML = data.map(restaurant => `
-                        <div class="col-lg-4 col-md-6 mb-4">
-                            <div class="restaurant-card">
-                                <div class="restaurant-image" style="background-image: url('${restaurant.image}')">
-                                    <div class="restaurant-badge">${restaurant.badge}</div>
-                                </div>
-                                <div class="restaurant-info">
-                                    <div class="restaurant-name">${restaurant.name}</div>
-                                    <div class="restaurant-details">
-                                        <div class="rating">
-                                            <i class="fas fa-star"></i>
-                                            <span>${restaurant.rating}</span>
-                                            <span class="text-muted">(${restaurant.reviews})</span>
-                                        </div>
-                                        <div class="text-muted">${restaurant.cuisine_types}</div>
-                                    </div>
-                                    <div class="delivery-info">
-                                        <span><i class="fas fa-clock"></i> ${restaurant.delivery_time}</span>
-                                        <span><i class="fas fa-motorcycle"></i> ৳${restaurant.delivery_fee} delivery</span>
-                                    </div>
-                                    <div class="delivery-info mt-1">
-                                        <span><i class="fas fa-shopping-bag"></i> Min order ৳${restaurant.min_order}</span>
-                                        <span class="text-muted">${restaurant.product_count} items</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('');
+                    if (!Array.isArray(data) || data.length === 0) {
+                        console.warn('No restaurants found');
+                        grid.innerHTML = '<div class="col-12 text-center"><p class="text-muted">No restaurants available at the moment</p></div>';
+                        return;
+                    }
+                    
+                    allRestaurants = data;
+                    displayRestaurants(1);
+                    setupPagination();
                 })
                 .catch(error => {
                     console.error('Error loading restaurants:', error);
                     document.getElementById('restaurantsGrid').innerHTML = '<div class="col-12 text-center"><p class="text-muted">Unable to load restaurants</p></div>';
                 });
+        }
+
+        function displayRestaurants(page) {
+            currentPage = page;
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const restaurantsToShow = allRestaurants.slice(startIndex, endIndex);
+            
+            const grid = document.getElementById('restaurantsGrid');
+            grid.innerHTML = restaurantsToShow.map(restaurant => `
+                <div class="col-lg-4 col-md-6 col-6 mb-4">
+                    <div class="restaurant-card">
+                        <div class="restaurant-image" style="background-image: url('${restaurant.image}')">
+                            <div class="restaurant-badge">${restaurant.badge}</div>
+                        </div>
+                        <div class="restaurant-info">
+                            <div class="restaurant-name">${restaurant.name}</div>
+                            <div class="restaurant-details">
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <span>${restaurant.rating}</span>
+                                    <span class="text-muted">(${restaurant.reviews})</span>
+                                </div>
+                                <div class="text-muted">${restaurant.cuisine_types}</div>
+                            </div>
+                            <div class="delivery-info">
+                                <span><i class="fas fa-clock"></i> ${restaurant.delivery_time}</span>
+                                <span><i class="fas fa-motorcycle"></i> ৳${restaurant.delivery_fee} delivery</span>
+                            </div>
+                            <div class="delivery-info mt-1">
+                                <span><i class="fas fa-shopping-bag"></i> Min order ৳${restaurant.min_order}</span>
+                                <span class="text-muted">${restaurant.product_count} items</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function setupPagination() {
+            const totalPages = Math.ceil(allRestaurants.length / itemsPerPage);
+            const paginationContainer = document.getElementById('restaurantsPagination');
+            const paginationList = document.getElementById('paginationList');
+            
+            if (totalPages <= 1) {
+                paginationContainer.style.display = 'none';
+                return;
+            }
+            
+            paginationContainer.style.display = 'flex';
+            
+            let paginationHTML = '';
+            
+            // Previous button
+            paginationHTML += `
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${currentPage - 1}); return false;">Previous</a>
+                </li>
+            `;
+            
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                paginationHTML += `
+                    <li class="page-item ${currentPage === i ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="changePage(${i}); return false;">${i}</a>
+                    </li>
+                `;
+            }
+            
+            // Next button
+            paginationHTML += `
+                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${currentPage + 1}); return false;">Next</a>
+                </li>
+            `;
+            
+            paginationList.innerHTML = paginationHTML;
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil(allRestaurants.length / itemsPerPage);
+            if (page < 1 || page > totalPages) return;
+            
+            displayRestaurants(page);
+            setupPagination();
+            
+            // Scroll to top of restaurants section
+            document.querySelector('.restaurants-section').scrollIntoView({ behavior: 'smooth' });
         }
 
         // Search restaurants
@@ -986,24 +1526,157 @@ if (isset($_GET['ajax'])) {
             }
         }
 
+        // Remove invalid notifications
+        function removeInvalidNotifications() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                if (alert.textContent.includes('${message}')) {
+                    console.warn('Removing invalid notification');
+                    alert.closest('.toast-notification')?.remove() || alert.remove();
+                }
+            });
+        }
+
+        // Watch for new notifications and remove invalid ones
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.addedNodes.length) {
+                    removeInvalidNotifications();
+                }
+            });
+        });
+
+        // Start observing
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+
         // Load cart count
         function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            document.getElementById('cartCount').textContent = cart.length;
+            try {
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                const cartCountEl = document.getElementById('cartCount');
+                if (cartCountEl) {
+                    cartCountEl.textContent = cart.length;
+                }
+            } catch (e) {
+                console.error('Error updating cart count:', e);
+            }
         }
 
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded');
+            
             loadFeaturedDelivery();
             loadDeliveryRestaurants();
             updateCartCount();
             
             // Search on Enter key
-            document.getElementById('searchInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    searchRestaurants();
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        searchRestaurants();
+                    }
+                });
+            }
+
+            // Mobile navigation toggle - Hamburger in header
+            setTimeout(function() {
+                const navHamburgerCenter = document.getElementById('navHamburgerMobile');
+                const navTabs = document.getElementById('navTabs');
+                
+                console.log('=== Hamburger Menu Debug ===');
+                console.log('Hamburger button:', navHamburgerCenter);
+                console.log('Nav tabs:', navTabs);
+                console.log('Window width:', window.innerWidth);
+                
+                if (navHamburgerCenter && navTabs) {
+                    console.log('✓ Hamburger menu elements found');
+                    console.log('Nav tabs initial classes:', navTabs.className);
+                    console.log('Nav tabs computed style display:', window.getComputedStyle(navTabs).display);
+                    console.log('Nav tabs computed style left:', window.getComputedStyle(navTabs).left);
+                    
+                    // Toggle menu
+                    navHamburgerCenter.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('>>> Hamburger clicked!');
+                        
+                        const wasShown = navTabs.classList.contains('show');
+                        navTabs.classList.toggle('show');
+                        
+                        console.log('Was shown:', wasShown);
+                        console.log('Now has show class:', navTabs.classList.contains('show'));
+                        console.log('Nav tabs classes after toggle:', navTabs.className);
+                        console.log('Nav tabs computed left after toggle:', window.getComputedStyle(navTabs).left);
+                        
+                        // Lock/unlock body scroll
+                        if (navTabs.classList.contains('show')) {
+                            document.body.style.overflow = 'hidden';
+                            console.log('Body scroll locked');
+                        } else {
+                            document.body.style.overflow = '';
+                            console.log('Body scroll unlocked');
+                        }
+                        
+                        // Change icon
+                        const icon = this.querySelector('i');
+                        if (icon) {
+                            if (navTabs.classList.contains('show')) {
+                                icon.classList.remove('fa-bars');
+                                icon.classList.add('fa-times');
+                            } else {
+                                icon.classList.remove('fa-times');
+                                icon.classList.add('fa-bars');
+                            }
+                        }
+                    });
+                    
+                    // Close menu when clicking on a nav link
+                    const navLinks = navTabs.querySelectorAll('.nav-link');
+                    console.log('Found', navLinks.length, 'nav links');
+                    navLinks.forEach(link => {
+                        link.addEventListener('click', function() {
+                            if (window.innerWidth <= 768) {
+                                navTabs.classList.remove('show');
+                                document.body.style.overflow = '';
+                                const icon = navHamburgerCenter.querySelector('i');
+                                if (icon) {
+                                    icon.classList.remove('fa-times');
+                                    icon.classList.add('fa-bars');
+                                }
+                            }
+                        });
+                    });
+                    
+                    // Close menu when clicking on backdrop
+                    document.addEventListener('click', function(e) {
+                        if (navTabs.classList.contains('show')) {
+                            const rect = navTabs.getBoundingClientRect();
+                            // Check if click is outside the sidebar
+                            if (e.clientX > rect.right || e.clientX < rect.left) {
+                                console.log('Clicked outside sidebar, closing');
+                                navTabs.classList.remove('show');
+                                document.body.style.overflow = '';
+                                const icon = navHamburgerCenter.querySelector('i');
+                                if (icon) {
+                                    icon.classList.remove('fa-times');
+                                    icon.classList.add('fa-bars');
+                                }
+                            }
+                        }
+                    });
+                    
+                    console.log('✓ Hamburger menu initialized successfully');
+                } else {
+                    console.error('✗ Hamburger menu elements NOT found!');
+                    console.error('navHamburgerCenter:', navHamburgerCenter);
+                    console.error('navTabs:', navTabs);
                 }
-            });
+            }, 100);
         });
 
         // Location functionality

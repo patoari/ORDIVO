@@ -454,12 +454,370 @@ try {
         .modal-footer {
             border-top: 2px solid #f0fdf4;
         }
+
+        /* Mobile Header Styles */
+        .mobile-only {
+            display: none;
+        }
+
+        .desktop-only {
+            display: block;
+        }
+
+        /* Mobile Menu Toggle Button */
+        .mobile-nav-toggle {
+            background: white;
+            border: 2px solid #10b981;
+            border-radius: 8px;
+            color: #10b981;
+            width: 40px;
+            height: 40px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            display: none;
+        }
+
+        .mobile-nav-toggle:hover {
+            background: #10b981;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .mobile-only {
+                display: block;
+            }
+
+            .desktop-only {
+                display: none !important;
+            }
+
+            body {
+                padding-top: 114px;
+            }
+
+            .header {
+                height: auto;
+                min-height: auto;
+                padding: 0;
+            }
+
+            .mobile-header-top {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                height: 44px;
+                padding: 0 0.75rem;
+                background: #f8f9fa;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .mobile-header-top .location-display {
+                flex: 1;
+                font-size: 0.75rem;
+                padding: 0.4rem 0.75rem;
+                border-radius: 20px;
+                background: white;
+                border: 1px solid #e5e7eb;
+                max-width: calc(100% - 60px);
+                height: 32px;
+                display: flex;
+                align-items: center;
+            }
+
+            .mobile-header-top .location-display i {
+                font-size: 0.7rem;
+                flex-shrink: 0;
+            }
+
+            .mobile-header-top .location-display span {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                flex: 1;
+                font-size: 0.7rem;
+            }
+
+            .mobile-header-top .location-display:hover {
+                background: #f8f9fa;
+                border-color: #10b981;
+            }
+
+            .mobile-login-btn {
+                flex-shrink: 0;
+                margin-left: 0.5rem;
+            }
+
+            .mobile-login-btn .btn-user {
+                padding: 0.4rem 0.75rem;
+                height: 32px;
+                min-width: 40px;
+                border-radius: 20px;
+                font-size: 0.75rem;
+            }
+
+            .mobile-header-middle {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                height: 70px;
+                padding: 0 0.75rem;
+                background: white;
+                border-bottom: 2px solid #10b981;
+            }
+
+            .mobile-header-left {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                flex: 1;
+                min-width: 0;
+            }
+
+            .mobile-header-middle .navbar-brand {
+                margin: 0;
+                padding: 0;
+                flex: 0 0 auto;
+                order: 1;
+            }
+
+            .mobile-header-middle .navbar-brand img {
+                height: 100px;
+            }
+
+            .mobile-header-middle .navbar-brand i.fa-shopping-bag {
+                font-size: 3rem !important;
+            }
+
+            .mobile-header-middle .mobile-nav-toggle {
+                display: block;
+                margin: 0;
+                background: white;
+                border: 2px solid #10b981;
+                color: #10b981;
+                flex-shrink: 0;
+                order: 2;
+            }
+
+            .mobile-header-middle .mobile-nav-toggle:hover {
+                background: #10b981;
+                color: white;
+            }
+
+            .mobile-header-right {
+                display: flex !important;
+                align-items: center;
+                gap: 0.5rem;
+                flex-shrink: 0;
+            }
+
+            .mobile-header-right .btn-user,
+            .mobile-header-right .dropdown button {
+                width: 40px;
+                height: 40px;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 8px;
+                flex-shrink: 0;
+                position: relative;
+            }
+
+            .mobile-header-right .btn-user i,
+            .mobile-header-right .dropdown button i {
+                font-size: 1.1rem;
+                margin: 0;
+            }
+
+            .mobile-header-right .dropdown-toggle::after {
+                display: none;
+            }
+
+            .cart-badge {
+                position: absolute;
+                top: -4px;
+                right: -4px;
+                background: #dc3545;
+                color: white;
+                font-size: 0.65rem;
+                font-weight: 700;
+                padding: 0.15rem 0.35rem;
+                border-radius: 10px;
+                min-width: 18px;
+                height: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid white;
+            }
+
+            .nav-tabs-container {
+                display: block !important;
+                position: fixed;
+                top: 114px;
+                left: 0;
+                right: 0;
+                height: 0;
+                overflow: visible;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                z-index: 9999;
+            }
+
+            .nav-tabs-container .container-fluid {
+                width: 100%;
+                display: block !important;
+                height: 0;
+                overflow: visible;
+            }
+
+            .nav-tabs {
+                display: flex !important;
+                position: fixed;
+                top: 114px;
+                left: -280px;
+                width: 280px;
+                height: calc(100vh - 114px);
+                background: #10b981;
+                flex-direction: column;
+                padding: 1.5rem 1rem;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+                overflow-y: auto;
+                z-index: 10000;
+                transition: left 0.3s ease-in-out;
+                border: none;
+            }
+
+            .nav-tabs.show {
+                left: 0 !important;
+            }
+
+            .nav-tabs::before {
+                content: '';
+                position: fixed;
+                top: 114px;
+                left: 280px;
+                width: 0;
+                height: calc(100vh - 114px);
+                background: rgba(0, 0, 0, 0);
+                transition: all 0.3s ease-in-out;
+                pointer-events: none;
+                z-index: -1;
+            }
+
+            .nav-tabs.show::before {
+                width: calc(100vw - 280px);
+                background: rgba(0, 0, 0, 0.5);
+                pointer-events: auto;
+            }
+
+            .nav-tabs .nav-item:first-child {
+                margin-top: 0;
+            }
+
+            .nav-tabs .nav-item {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+
+            .nav-tabs .nav-link {
+                width: 100%;
+                margin-right: 0;
+                text-align: left;
+                padding: 1rem;
+                border-radius: 8px;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+            }
+
+            .nav-tabs .nav-link:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateX(5px);
+            }
+
+            .nav-tabs .nav-link.active {
+                background: rgba(255, 255, 255, 0.3);
+            }
+
+            .shops-hero {
+                padding: 2rem 0;
+                margin-top: 1rem;
+            }
+
+            .shops-hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .shops-hero p {
+                font-size: 1rem;
+            }
+
+            /* Shop Categories - 2 per line */
+            .shop-category {
+                padding: 1.25rem;
+                margin-bottom: 1rem;
+            }
+
+            .category-icon {
+                font-size: 2.2rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .category-name {
+                font-size: 1rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .category-desc {
+                font-size: 0.8rem;
+            }
+
+            /* Shop Cards - 2 per line */
+            .shop-card {
+                margin-bottom: 1rem;
+            }
+
+            .shop-image {
+                height: 120px;
+            }
+
+            .shop-badge {
+                font-size: 0.75rem;
+                padding: 0.35rem 0.75rem;
+                top: 10px;
+                left: 10px;
+            }
+
+            .shop-info {
+                padding: 1rem;
+            }
+
+            .shop-name {
+                font-size: 1rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .shop-meta {
+                font-size: 0.8rem;
+                gap: 0.5rem;
+                margin-bottom: 0.75rem;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Header -->
     <header class="header">
-        <div class="container-fluid">
+        <!-- Desktop Header -->
+        <div class="container-fluid desktop-only">
             <nav class="navbar navbar-expand-lg d-flex justify-content-between align-items-center">
                 <a class="navbar-brand" href="index.php">
                     <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
@@ -469,7 +827,6 @@ try {
                     <?php else: ?>
                         <i class="fas fa-shopping-bag"></i>
                     <?php endif; ?>
-                   
                 </a>
                 
                 <div class="location-display" data-bs-toggle="modal" data-bs-target="#locationModal">
@@ -517,12 +874,81 @@ try {
                 </div>
             </nav>
         </div>
+
+        <!-- Mobile Header -->
+        <div class="mobile-only">
+            <!-- Row 1: Top Utility Bar - Address + Login -->
+            <div class="mobile-header-top">
+                <div class="location-display" data-bs-toggle="modal" data-bs-target="#locationModal">
+                    <i class="fas fa-map-marker-alt me-1"></i>
+                    <span id="currentLocationMobile">Dhaka, Bangladesh</span>
+                </div>
+                <div class="mobile-login-btn">
+                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
+                        <a href="profile.php" class="btn-user" title="Profile">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    <?php else: ?>
+                        <a href="../auth/login.php" class="btn-user" title="Login">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Row 2: Logo + Hamburger + Filters + Action Icons -->
+            <div class="mobile-header-middle">
+                <!-- Left Side: Logo + Hamburger + Filters -->
+                <div class="mobile-header-left">
+                    <a class="navbar-brand" href="index.php">
+                        <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
+                            <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" 
+                                 class="logo-img logo-sparkle"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                            <i class="fas fa-shopping-bag logo-icon" style="display: none; color: var(--shops-purple);"></i>
+                        <?php else: ?>
+                            <i class="fas fa-shopping-bag logo-icon" style="color: var(--shops-purple);"></i>
+                        <?php endif; ?>
+                    </a>
+                    
+                    <!-- Hamburger Icon -->
+                    <button class="mobile-nav-toggle" id="navHamburgerMobile">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <!-- Filters Button -->
+                    <button class="mobile-nav-toggle" id="navFiltersMobile">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                </div>
+
+                <!-- Right Side: Action Icons -->
+                <div class="mobile-header-right">
+                    <div class="dropdown">
+                        <button class="btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown" title="Language">
+                            <i class="fas fa-globe"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-check me-2 text-success"></i>English</a></li>
+                            <li><a class="dropdown-item" href="#">বাংলা</a></li>
+                        </ul>
+                    </div>
+                    <a href="favorites.php" class="btn-user" title="Favorites">
+                        <i class="fas fa-heart"></i>
+                    </a>
+                    <a href="cart.php" class="btn-user" title="Cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge" id="cartBadgeMobile" style="display: none;">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
     </header>
 
     <!-- Navigation Tabs -->
     <div class="nav-tabs-container">
         <div class="container-fluid">
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs" id="navTabs">
                 <li class="nav-item">
                     <a class="nav-link" href="index.php">
                         <i class="fas fa-home me-2"></i>Home
@@ -570,7 +996,7 @@ try {
         <div class="container">
             <h2 class="mb-4">Shop Categories</h2>
             <div class="row">
-                <div class="col-lg-3 col-md-6 mb-4">
+                <div class="col-lg-3 col-md-6 col-6 mb-4">
                     <div class="shop-category">
                         <div class="category-icon">
                             <i class="fas fa-utensils"></i>
@@ -579,7 +1005,7 @@ try {
                         <div class="category-count">50+ shops</div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 mb-4">
+                <div class="col-lg-3 col-md-6 col-6 mb-4">
                     <div class="shop-category">
                         <div class="category-icon">
                             <i class="fas fa-store"></i>
@@ -588,7 +1014,7 @@ try {
                         <div class="category-count">25+ shops</div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 mb-4">
+                <div class="col-lg-3 col-md-6 col-6 mb-4">
                     <div class="shop-category">
                         <div class="category-icon">
                             <i class="fas fa-coffee"></i>
@@ -597,7 +1023,7 @@ try {
                         <div class="category-count">30+ shops</div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 mb-4">
+                <div class="col-lg-3 col-md-6 col-6 mb-4">
                     <div class="shop-category">
                         <div class="category-icon">
                             <i class="fas fa-birthday-cake"></i>
@@ -724,7 +1150,7 @@ try {
                 }
                 
                 const shopCards = shops.map(shop => `
-                    <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="col-lg-4 col-md-6 col-6 mb-4">
                         <div class="shop-card" onclick="window.location.href='vendor_profile.php?id=${shop.id}'">
                             <div class="shop-image" style="background-image: url('${shop.image}')">
                                 <div class="shop-badge">${shop.badge}</div>
@@ -859,6 +1285,74 @@ try {
                     selectedLocation = this.value;
                 });
             }
+
+            // Mobile navigation toggle - Hamburger menu
+            setTimeout(function() {
+                const navHamburgerMobile = document.getElementById('navHamburgerMobile');
+                const navTabs = document.getElementById('navTabs');
+                
+                if (navHamburgerMobile && navTabs) {
+                    // Toggle menu
+                    navHamburgerMobile.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        navTabs.classList.toggle('show');
+                        
+                        // Lock/unlock body scroll
+                        if (navTabs.classList.contains('show')) {
+                            document.body.style.overflow = 'hidden';
+                        } else {
+                            document.body.style.overflow = '';
+                        }
+                        
+                        // Change icon
+                        const icon = this.querySelector('i');
+                        if (icon) {
+                            if (navTabs.classList.contains('show')) {
+                                icon.classList.remove('fa-bars');
+                                icon.classList.add('fa-times');
+                            } else {
+                                icon.classList.remove('fa-times');
+                                icon.classList.add('fa-bars');
+                            }
+                        }
+                    });
+                    
+                    // Close menu when clicking on a nav link
+                    const navLinks = navTabs.querySelectorAll('.nav-link');
+                    navLinks.forEach(link => {
+                        link.addEventListener('click', function() {
+                            if (window.innerWidth <= 768) {
+                                navTabs.classList.remove('show');
+                                document.body.style.overflow = '';
+                                const icon = navHamburgerMobile.querySelector('i');
+                                if (icon) {
+                                    icon.classList.remove('fa-times');
+                                    icon.classList.add('fa-bars');
+                                }
+                            }
+                        });
+                    });
+                    
+                    // Close menu when clicking on backdrop
+                    document.addEventListener('click', function(e) {
+                        if (navTabs.classList.contains('show')) {
+                            const rect = navTabs.getBoundingClientRect();
+                            // Check if click is outside the sidebar
+                            if (e.clientX > rect.right || e.clientX < rect.left) {
+                                navTabs.classList.remove('show');
+                                document.body.style.overflow = '';
+                                const icon = navHamburgerMobile.querySelector('i');
+                                if (icon) {
+                                    icon.classList.remove('fa-times');
+                                    icon.classList.add('fa-bars');
+                                }
+                            }
+                        }
+                    });
+                }
+            }, 100);
         });
     </script>
 </body>

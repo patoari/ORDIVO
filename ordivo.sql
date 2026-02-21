@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 14, 2026 at 09:00 AM
+-- Generation Time: Feb 21, 2026 at 01:35 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -2425,7 +2425,8 @@ INSERT INTO `users` (`id`, `role`, `name`, `email`, `phone`, `password`, `avatar
 (5, 'vendor', 'রাশিদা বেগম', 'rashida.begum@ordivo.com', '+8801712345004', '$2y$10$DW.Hw41nqHCMVFxcQILnVud.Td6KAUS1JQh2NVTBYS91vdL9IPF86', 'uploads/vendors/profile_5_1770483357.png', NULL, NULL, NULL, NULL, NULL, 'active', 'auto_approved', NULL, NULL, NULL, 0, 1, NULL, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-04 13:13:59', '2026-02-07 16:55:57'),
 (6, 'vendor', 'করিম উদ্দিন', 'karim.uddin@ordivo.com', '+8801712345005', '$2y$10$DW.Hw41nqHCMVFxcQILnVud.Td6KAUS1JQh2NVTBYS91vdL9IPF86', 'uploads/vendors/profile_6_1770839073.png', NULL, NULL, NULL, NULL, NULL, 'active', 'auto_approved', NULL, NULL, NULL, 0, 1, NULL, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-04 13:13:59', '2026-02-11 19:44:33'),
 (22, 'customer', 'customar', 'customar@ordivo.com', '01685158766', '$2y$10$gQ/6WwrBWMDNqyYcHSzhQuANafRf65o/ma.z2AORGhXWyRhvuxfVu', NULL, NULL, NULL, NULL, NULL, NULL, 'active', 'auto_approved', NULL, NULL, NULL, 0, 1, NULL, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-10 05:34:35', '2026-02-10 05:34:35'),
-(23, 'super_admin', 'Admin', 'admin@ordivo.com', '01648872255', '$2y$10$tmU5jTYUk7/LsOtMFF3ILOAJMYzj6evYfSsmzWd3UuA4GNy15N8bu', NULL, NULL, NULL, NULL, NULL, NULL, 'active', 'auto_approved', NULL, NULL, NULL, 0, 1, NULL, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-14 06:59:13', '2026-02-14 07:00:07');
+(23, 'super_admin', 'Admin', 'admin@ordivo.com', '01648872255', '$2y$10$tmU5jTYUk7/LsOtMFF3ILOAJMYzj6evYfSsmzWd3UuA4GNy15N8bu', NULL, NULL, NULL, NULL, NULL, NULL, 'active', 'auto_approved', NULL, NULL, NULL, 0, 1, NULL, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-14 06:59:13', '2026-02-14 07:00:07'),
+(24, 'kitchen_manager', 'KITCHEN MANAGER', 'kitchen@ordivo.com', '01648876633', '$2y$10$pwwdFg2NNru/S2jMNpVCkes0XpmM1kUI1IS4PsnzoUqAbX5fwxSq.', NULL, NULL, NULL, NULL, NULL, NULL, 'active', 'auto_approved', NULL, NULL, NULL, 0, 1, NULL, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-16 11:22:46', '2026-02-16 16:22:46');
 
 -- --------------------------------------------------------
 
@@ -4163,7 +4164,7 @@ ALTER TABLE `typography_settings`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `user_activity_logs`

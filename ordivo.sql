@@ -578,7 +578,7 @@ CREATE TABLE `color_palettes` (
 --
 
 INSERT INTO `color_palettes` (`id`, `name`, `description`, `palette_type`, `primary_color`, `secondary_color`, `accent_color`, `background_color`, `text_color`, `success_color`, `warning_color`, `error_color`, `info_color`, `additional_colors`, `is_active`, `is_default`, `usage_count`, `preview_image`, `created_by`, `created_at`, `updated_at`) VALUES
-(1, 'foodpanda_original', 'Original Foodpanda color scheme', 'brand', '#e21b70', '#ff6b9d', '#ff5722', '#ffffff', '#333333', '#28a745', '#ffc107', '#dc3545', '#17a2b8', NULL, 1, 1, 0, NULL, NULL, '2026-02-04 13:13:59', '2026-02-04 13:13:59'),
+(1, 'ordivo_original', 'Original ORDIVO color scheme', 'brand', '#e21b70', '#ff6b9d', '#ff5722', '#ffffff', '#333333', '#28a745', '#ffc107', '#dc3545', '#17a2b8', NULL, 1, 1, 0, NULL, NULL, '2026-02-04 13:13:59', '2026-02-04 13:13:59'),
 (2, 'eid_golden', 'Golden theme for Eid celebrations', 'festival', '#d4af37', '#ffd700', '#ff6347', '#f8f8ff', '#2f4f4f', '#28a745', '#ffc107', '#dc3545', '#17a2b8', NULL, 1, 0, 0, NULL, NULL, '2026-02-04 13:13:59', '2026-02-04 13:13:59'),
 (3, 'boishakh_traditional', 'Traditional Bengali colors for Pohela Boishakh', 'festival', '#ff6b35', '#f7931e', '#ffcc02', '#fff8dc', '#8b4513', '#28a745', '#ffc107', '#dc3545', '#17a2b8', NULL, 1, 0, 0, NULL, NULL, '2026-02-04 13:13:59', '2026-02-04 13:13:59'),
 (4, 'durga_vibrant', 'Vibrant colors for Durga Puja', 'festival', '#ff1744', '#ffc107', '#4caf50', '#fff3e0', '#d32f2f', '#28a745', '#ffc107', '#dc3545', '#17a2b8', NULL, 1, 0, 0, NULL, NULL, '2026-02-04 13:13:59', '2026-02-04 13:13:59'),
@@ -1426,7 +1426,7 @@ CREATE TABLE `page_layouts` (
 --
 
 INSERT INTO `page_layouts` (`id`, `page_name`, `layout_name`, `display_name`, `description`, `layout_type`, `is_active`, `is_default`, `layout_config`, `css_classes`, `custom_css`, `custom_js`, `responsive_config`, `preview_image`, `created_by`, `created_at`, `updated_at`) VALUES
-(1, 'homepage', 'foodpanda_style', 'Foodpanda Style Layout', 'Clean layout with sidebar filters and main content area', 'custom', 1, 1, '{\"sidebar_width\": \"300px\", \"main_content_padding\": \"20px\", \"card_spacing\": \"16px\", \"grid_columns\": 3}', NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-04 13:13:59', '2026-02-04 13:13:59'),
+(1, 'homepage', 'ordivo_style', 'ORDIVO Style Layout', 'Clean layout with sidebar filters and main content area', 'custom', 1, 1, '{\"sidebar_width\": \"300px\", \"main_content_padding\": \"20px\", \"card_spacing\": \"16px\", \"grid_columns\": 3}', NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-04 13:13:59', '2026-02-04 13:13:59'),
 (2, 'homepage', 'festival_special', 'Festival Special Layout', 'Colorful layout for festival celebrations', 'custom', 1, 0, '{\"sidebar_width\": \"280px\", \"main_content_padding\": \"24px\", \"card_spacing\": \"20px\", \"grid_columns\": 2, \"banner_height\": \"200px\"}', NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-04 13:13:59', '2026-02-04 13:13:59'),
 (3, 'product_page', 'detailed_view', 'Detailed Product View', 'Comprehensive product display with large images', 'grid', 1, 1, '{\"image_gallery_size\": \"large\", \"description_layout\": \"tabs\", \"related_products\": 4}', NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-04 13:13:59', '2026-02-04 13:13:59'),
 (4, 'vendor_page', 'restaurant_style', 'Restaurant Style Layout', 'Layout optimized for restaurant/vendor pages', 'card', 1, 1, '{\"header_style\": \"banner\", \"menu_layout\": \"categories\", \"product_grid\": 3}', NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-04 13:13:59', '2026-02-04 13:13:59');
@@ -2034,7 +2034,7 @@ CREATE TABLE `site_settings` (
   `secondary_color` varchar(7) DEFAULT '#ff6b9d',
   `accent_color` varchar(7) DEFAULT '#ff5722',
   `theme_mode` enum('light','dark','auto') DEFAULT 'light',
-  `current_theme` varchar(50) DEFAULT 'foodpanda',
+  `current_theme` varchar(50) DEFAULT 'ordivo',
   `theme_start_date` date DEFAULT NULL,
   `theme_end_date` date DEFAULT NULL,
   `navbar_bg` varchar(7) DEFAULT '#ffffff',
@@ -2053,7 +2053,7 @@ CREATE TABLE `site_settings` (
 --
 
 INSERT INTO `site_settings` (`id`, `site_name`, `site_tagline`, `logo_url`, `hero_background_image`, `hero_title`, `hero_subtitle`, `hero_button_text`, `hero_button_link`, `favicon_url`, `background_pattern`, `primary_color`, `secondary_color`, `accent_color`, `theme_mode`, `current_theme`, `theme_start_date`, `theme_end_date`, `navbar_bg`, `navbar_text`, `footer_bg`, `footer_text`, `card_style`, `card_shadow`, `card_border_radius`, `created_at`, `updated_at`) VALUES
-(1, 'ORDIVO', 'দ্রুত ডেলিভারি • তাজা পণ্য • সেরা দাম', 'uploads/settings/logo_1770475038_69874e1e48045.png', NULL, 'Welcome to ORDIVO', 'Fast Delivery • Fresh Products • Best Prices', 'Order Now', '#', '', 'none', '#e21b70', '#ff6b9d', '#ff5722', 'light', 'foodpanda', NULL, NULL, '#ffffff', '#333333', '#1a1a2e', '#aaaaaa', 'elevated', 'light', '10px', '2026-02-04 13:13:58', '2026-02-07 09:37:18');
+(1, 'ORDIVO', 'দ্রুত ডেলিভারি • তাজা পণ্য • সেরা দাম', 'uploads/settings/logo_1770475038_69874e1e48045.png', NULL, 'Welcome to ORDIVO', 'Fast Delivery • Fresh Products • Best Prices', 'Order Now', '#', '', 'none', '#e21b70', '#ff6b9d', '#ff5722', 'light', 'ordivo', NULL, NULL, '#ffffff', '#333333', '#1a1a2e', '#aaaaaa', 'elevated', 'light', '10px', '2026-02-04 13:13:58', '2026-02-07 09:37:18');
 
 -- --------------------------------------------------------
 
@@ -2085,7 +2085,7 @@ CREATE TABLE `site_themes` (
 --
 
 INSERT INTO `site_themes` (`id`, `name`, `display_name`, `description`, `theme_type`, `festival_name`, `is_active`, `is_default`, `start_date`, `end_date`, `auto_activate`, `priority`, `preview_image`, `created_by`, `created_at`, `updated_at`) VALUES
-(1, 'default_foodpanda', 'Default Foodpanda Style', 'Clean and modern design inspired by Foodpanda', 'default', NULL, 1, 1, NULL, NULL, 0, 1, NULL, NULL, '2026-02-04 13:13:59', '2026-02-04 13:13:59'),
+(1, 'default_ordivo', 'Default ORDIVO Style', 'Clean and modern design inspired by ORDIVO', 'default', NULL, 1, 1, NULL, NULL, 0, 1, NULL, NULL, '2026-02-04 13:13:59', '2026-02-04 13:13:59'),
 (2, 'eid_celebration', 'Eid Mubarak Theme', 'Special theme for Eid celebrations with Islamic patterns', 'festival', 'Eid ul-Fitr', 0, 0, '2024-04-10', '2024-04-12', 1, 10, NULL, NULL, '2026-02-04 13:13:59', '2026-02-04 13:13:59'),
 (3, 'pohela_boishakh', 'Pohela Boishakh Theme', 'Bengali New Year celebration theme with traditional colors', 'festival', 'Pohela Boishakh', 0, 0, '2024-04-14', '2024-04-14', 1, 10, NULL, NULL, '2026-02-04 13:13:59', '2026-02-04 13:13:59'),
 (4, 'durga_puja', 'Durga Puja Theme', 'Colorful theme for Durga Puja celebrations', 'festival', 'Durga Puja', 0, 0, '2024-10-09', '2024-10-13', 1, 10, NULL, NULL, '2026-02-04 13:13:59', '2026-02-04 13:13:59'),

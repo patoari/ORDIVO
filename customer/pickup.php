@@ -92,7 +92,7 @@ if (isset($_GET['ajax'])) {
             --ordivo-secondary: #059669;
             --ordivo-light: #f0fdf4;
             --ordivo-dark: #1a1a1a;
-            --foodpanda-pink: #f97316;
+            --ordivo-pink: #f97316;
         }
 
         body {
@@ -176,7 +176,7 @@ if (isset($_GET['ajax'])) {
         .navbar-brand i.fa-walking {
             animation: logoPulse 2s ease-in-out infinite, logoColorShift 6s ease-in-out infinite;
             font-size: 2.5rem !important;
-            color: var(--foodpanda-pink);
+            color: var(--ordivo-pink);
         }
 
         @keyframes logoPulse {
@@ -316,7 +316,7 @@ if (isset($_GET['ajax'])) {
         .restaurant-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 30px #e5e7eb;
-            border-color: var(--foodpanda-pink);
+            border-color: var(--ordivo-pink);
         }
 
         .restaurant-image {
@@ -330,7 +330,7 @@ if (isset($_GET['ajax'])) {
             position: absolute;
             top: 10px;
             left: 10px;
-            background: var(--foodpanda-pink);
+            background: var(--ordivo-pink);
             color: white;
             padding: 0.25rem 0.75rem;
             border-radius: 15px;
@@ -367,7 +367,7 @@ if (isset($_GET['ajax'])) {
         }
 
         .rating {
-            color: var(--foodpanda-pink);
+            color: var(--ordivo-pink);
         }
 
         /* Page Header */
@@ -875,9 +875,9 @@ if (isset($_GET['ajax'])) {
                             <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" 
                                  class="logo-img logo-sparkle"
                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                            <i class="fas fa-walking logo-icon" style="display: none; color: var(--foodpanda-pink);"></i>
+                            <i class="fas fa-walking logo-icon" style="display: none; color: var(--ordivo-pink);"></i>
                         <?php else: ?>
-                            <i class="fas fa-walking logo-icon" style="color: var(--foodpanda-pink);"></i>
+                            <i class="fas fa-walking logo-icon" style="color: var(--ordivo-pink);"></i>
                         <?php endif; ?>
                     </a>
                     

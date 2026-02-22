@@ -119,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         :root {
             --ordivo-primary: #10b981;
             --ordivo-secondary: #059669;
-            --foodpanda-pink: #f97316;
+            --ordivo-pink: #f97316;
         }
 
         body {

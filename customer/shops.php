@@ -1049,88 +1049,11 @@ try {
         </div>
     </section>
 
-    <!-- Location Selection Modal -->
-    <div class="modal fade" id="locationModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="fas fa-map-marker-alt me-2 text-primary"></i>
-                        Select Your Location
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Search for your location</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="fas fa-search"></i>
-                            </span>
-                            <input type="text" class="form-control" id="locationSearch" 
-                                   placeholder="Enter your address, area, or landmark">
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <button class="btn btn-outline-primary btn-sm" onclick="getCurrentLocation()">
-                            <i class="fas fa-crosshairs me-1"></i>
-                            Use Current Location
-                        </button>
-                    </div>
-                    
-                    <div class="popular-locations">
-                        <h6 class="fw-bold mb-3">Popular Locations</h6>
-                        <div class="row">
-                            <div class="col-12 mb-2">
-                                <div class="location-option" onclick="selectLocation('Dhanmondi, Dhaka, Bangladesh')">
-                                    <i class="fas fa-map-marker-alt me-2 text-muted"></i>
-                                    <span>Dhanmondi, Dhaka, Bangladesh</span>
-                                </div>
-                            </div>
-                            <div class="col-12 mb-2">
-                                <div class="location-option" onclick="selectLocation('Gulshan, Dhaka, Bangladesh')">
-                                    <i class="fas fa-map-marker-alt me-2 text-muted"></i>
-                                    <span>Gulshan, Dhaka, Bangladesh</span>
-                                </div>
-                            </div>
-                            <div class="col-12 mb-2">
-                                <div class="location-option" onclick="selectLocation('Banani, Dhaka, Bangladesh')">
-                                    <i class="fas fa-map-marker-alt me-2 text-muted"></i>
-                                    <span>Banani, Dhaka, Bangladesh</span>
-                                </div>
-                            </div>
-                            <div class="col-12 mb-2">
-                                <div class="location-option" onclick="selectLocation('Uttara, Dhaka, Bangladesh')">
-                                    <i class="fas fa-map-marker-alt me-2 text-muted"></i>
-                                    <span>Uttara, Dhaka, Bangladesh</span>
-                                </div>
-                            </div>
-                            <div class="col-12 mb-2">
-                                <div class="location-option" onclick="selectLocation('Mirpur, Dhaka, Bangladesh')">
-                                    <i class="fas fa-map-marker-alt me-2 text-muted"></i>
-                                    <span>Mirpur, Dhaka, Bangladesh</span>
-                                </div>
-                            </div>
-                            <div class="col-12 mb-2">
-                                <div class="location-option" onclick="selectLocation('Wari, Dhaka, Bangladesh')">
-                                    <i class="fas fa-map-marker-alt me-2 text-muted"></i>
-                                    <span>Wari, Dhaka, Bangladesh</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="confirmLocation()">Confirm Location</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <?php include 'includes/modals.php'; ?>
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/location-tracker.js"></script>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -1180,114 +1103,8 @@ try {
             }
         }
 
-        // Location functionality
-        let selectedLocation = '';
-
-        function loadSavedLocation() {
-            const savedLocation = localStorage.getItem('ordivo_location');
-            if (savedLocation) {
-                document.getElementById('currentLocation').textContent = savedLocation;
-            }
-        }
-
-        function selectLocation(location) {
-            selectedLocation = location;
-            document.getElementById('locationSearch').value = location;
-            
-            // Highlight selected option
-            document.querySelectorAll('.location-option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            event.target.closest('.location-option').classList.add('selected');
-        }
-
-        function getCurrentLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        const lat = position.coords.latitude;
-                        const lng = position.coords.longitude;
-                        
-                        // For demo purposes, we'll use a mock location
-                        // In a real app, you'd use reverse geocoding API
-                        const mockLocation = 'Current Location, Dhaka, Bangladesh';
-                        selectedLocation = mockLocation;
-                        document.getElementById('locationSearch').value = mockLocation;
-                        
-                        // Show success message
-                        showLocationMessage('Location detected successfully!', 'success');
-                    },
-                    function(error) {
-                        showLocationMessage('Unable to detect location. Please enter manually.', 'error');
-                    }
-                );
-            } else {
-                showLocationMessage('Geolocation is not supported by this browser.', 'error');
-            }
-        }
-
-        function confirmLocation() {
-            const locationInput = document.getElementById('locationSearch').value.trim();
-            const finalLocation = selectedLocation || locationInput;
-            
-            if (!finalLocation) {
-                showLocationMessage('Please select or enter a location.', 'error');
-                return;
-            }
-            
-            // Update the display
-            document.getElementById('currentLocation').textContent = finalLocation;
-            
-            // Save to localStorage
-            localStorage.setItem('ordivo_location', finalLocation);
-            
-            // Close modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('locationModal'));
-            modal.hide();
-            
-            // Show success message
-            showLocationMessage('Location updated successfully!', 'success');
-            
-            // Reset form
-            selectedLocation = '';
-            document.getElementById('locationSearch').value = '';
-            document.querySelectorAll('.location-option').forEach(option => {
-                option.classList.remove('selected');
-            });
-        }
-
-        function showLocationMessage(message, type) {
-            const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
-            const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
-            
-            const toast = document.createElement('div');
-            toast.className = 'toast-notification';
-            toast.innerHTML = `
-                <div class="alert ${alertClass} alert-dismissible fade show position-fixed" style="top: 120px; right: 20px; z-index: 9999; min-width: 300px;">
-                    <i class="fas ${iconClass} me-2"></i>${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            `;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.remove();
-            }, 4000);
-        }
-
-        // Load saved location on page load
+        // Mobile navigation toggle - Hamburger menu
         document.addEventListener('DOMContentLoaded', function() {
-            loadSavedLocation();
-            
-            const locationSearch = document.getElementById('locationSearch');
-            if (locationSearch) {
-                locationSearch.addEventListener('input', function() {
-                    selectedLocation = this.value;
-                });
-            }
-
-            // Mobile navigation toggle - Hamburger menu
-            setTimeout(function() {
                 const navHamburgerMobile = document.getElementById('navHamburgerMobile');
                 const navTabs = document.getElementById('navTabs');
                 

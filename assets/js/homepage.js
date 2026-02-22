@@ -16,7 +16,7 @@ function initializeHomepage() {
     initializeSearch();
     initializeMobileMenu();
     initializeFilters();
-    initializeLocationModal();
+    // initializeLocationModal(); // Now handled by location-tracker.js
     initializeSwipers();
 }
 
@@ -379,26 +379,7 @@ function initializeFilters() {
     });
 }
 
-// Initialize Location Modal
-function initializeLocationModal() {
-    const locationOptions = document.querySelectorAll('.location-option');
-    const confirmBtn = document.getElementById('confirmLocation');
-    let selectedLocation = 'Dhaka, Bangladesh';
-    
-    locationOptions.forEach(option => {
-        option.addEventListener('click', function() {
-            locationOptions.forEach(opt => opt.classList.remove('selected'));
-            this.classList.add('selected');
-            selectedLocation = this.dataset.location;
-        });
-    });
-    
-    confirmBtn?.addEventListener('click', function() {
-        document.getElementById('currentLocation').textContent = selectedLocation;
-        document.getElementById('currentLocationMobile').textContent = selectedLocation;
-        bootstrap.Modal.getInstance(document.getElementById('locationModal'))?.hide();
-    });
-}
+// Note: Location modal initialization is now handled by location-tracker.js
 
 // Initialize Swipers
 function initializeSwipers() {

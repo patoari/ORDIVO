@@ -130,6 +130,7 @@ switch ($_GET['ajax']) {
         try {
             $filter = sanitizeInput($_GET['filter'] ?? '');
             $sort = sanitizeInput($_GET['sort'] ?? 'relevance');
+<<<<<<< HEAD
             $freeDelivery = isset($_GET['free_delivery']) && $_GET['free_delivery'] == '1';
             $fastDelivery = isset($_GET['fast_delivery']) && $_GET['fast_delivery'] == '1';
             $priceBudget = isset($_GET['price_budget']) && $_GET['price_budget'] == '1';
@@ -137,11 +138,19 @@ switch ($_GET['ajax']) {
             $pricePremium = isset($_GET['price_premium']) && $_GET['price_premium'] == '1';
             $cuisines = isset($_GET['cuisines']) ? explode(',', sanitizeInput($_GET['cuisines'])) : [];
             $dietary = isset($_GET['dietary']) ? explode(',', sanitizeInput($_GET['dietary'])) : [];
+=======
+            $freeDelivery = isset($_GET['free_delivery']) && $_GET['free_delivery'] === '1';
+            $fastDelivery = isset($_GET['fast_delivery']) && $_GET['fast_delivery'] === '1';
+            $priceRange = !empty($_GET['price_range']) ? explode(',', sanitizeInput($_GET['price_range'])) : [];
+            $cuisines = !empty($_GET['cuisines']) ? explode(',', sanitizeInput($_GET['cuisines'])) : [];
+            $dietary = !empty($_GET['dietary']) ? explode(',', sanitizeInput($_GET['dietary'])) : [];
+>>>>>>> d6bb645adf5c01d0c537147371ede73e06f8c464
             
             $whereClause = "WHERE u.role = 'vendor' AND u.status = 'active'";
             $havingClause = "";
             $orderClause = "ORDER BY p.created_at DESC";
             
+<<<<<<< HEAD
             // Filter by category/cuisine
             if (!empty($cuisines)) {
                 $cuisineConditions = [];
@@ -171,11 +180,44 @@ switch ($_GET['ajax']) {
                 if ($priceBudget) $priceConditions[] = "p.price <= 200";
                 if ($priceMid) $priceConditions[] = "(p.price > 200 AND p.price <= 500)";
                 if ($pricePremium) $priceConditions[] = "p.price > 500";
+=======
+            // Apply filter type
+            switch ($filter) {
+                case 'grocery':
+                    $whereClause .= " AND (c.name LIKE '%grocery%' OR c.name LIKE '%mart%' OR c.name LIKE '%store%')";
+                    break;
+            }
+            
+            // Apply cuisine filters
+            if (!empty($cuisines)) {
+                $cuisineConditions = [];
+                foreach ($cuisines as $cuisine) {
+                    $cuisineConditions[] = "c.name LIKE '%" . $pdo->quote($cuisine) . "%'";
+                }
+                if (!empty($cuisineConditions)) {
+                    $whereClause .= " AND (" . implode(' OR ', $cuisineConditions) . ")";
+                }
+            }
+            
+            // Apply price range filters
+            if (!empty($priceRange)) {
+                $priceConditions = [];
+                if (in_array('budget', $priceRange)) {
+                    $priceConditions[] = "p.price < 200";
+                }
+                if (in_array('mid', $priceRange)) {
+                    $priceConditions[] = "(p.price >= 200 AND p.price < 500)";
+                }
+                if (in_array('premium', $priceRange)) {
+                    $priceConditions[] = "p.price >= 500";
+                }
+>>>>>>> d6bb645adf5c01d0c537147371ede73e06f8c464
                 if (!empty($priceConditions)) {
                     $whereClause .= " AND (" . implode(' OR ', $priceConditions) . ")";
                 }
             }
             
+<<<<<<< HEAD
             // Sorting
             switch ($sort) {
                 case 'fastest':
@@ -183,12 +225,21 @@ switch ($_GET['ajax']) {
                     break;
                 case 'distance':
                     $orderClause = "ORDER BY RAND()"; // Simulated - would need distance calculation
+=======
+            // Apply sorting
+            switch ($sort) {
+                case 'fastest':
+                    $orderClause = "ORDER BY RAND()"; // Simulated fastest delivery
+                    break;
+                case 'distance':
+                    $orderClause = "ORDER BY RAND()"; // Simulated distance
+>>>>>>> d6bb645adf5c01d0c537147371ede73e06f8c464
                     break;
                 case 'top-rated':
-                    $orderClause = "ORDER BY p.rating DESC";
+                    $orderClause = "ORDER BY p.rating DESC, p.created_at DESC";
                     break;
                 default:
-                    $orderClause = "ORDER BY p.is_featured DESC, p.rating DESC";
+                    $orderClause = "ORDER BY p.is_featured DESC, p.rating DESC, p.created_at DESC";
                     break;
             }
             
@@ -216,31 +267,56 @@ switch ($_GET['ajax']) {
             foreach ($products as $product) {
                 $vendorId = $product['vendor_id'];
                 if (!isset($vendorGroups[$vendorId])) {
+<<<<<<< HEAD
                     // Determine badge based on filters
                     $badge = $freeDelivery ? '🚚 Free Delivery' : 
                             ($fastDelivery ? '⚡ Fast Delivery' : 
                             ($filter === 'pickup' ? '🚶 Pickup Available' : 
+=======
+                    // Determine delivery time
+                    $deliveryTime = $fastDelivery ? rand(10, 25) . '-' . rand(20, 30) . ' min' : rand(15, 45) . '-' . rand(30, 60) . ' min';
+                    
+                    // Determine badge
+                    $badge = $filter === 'pickup' ? '🚶 Pickup Available' : 
+>>>>>>> d6bb645adf5c01d0c537147371ede73e06f8c464
                             ($filter === 'grocery' ? '🛒 Fresh & Fast' : 
                             ($filter === 'shops' ? '🏪 Shop Now' : 'Flat 15% off'))));
+                    
+                    // Determine price range
+                    $avgPrice = (float)$product['price'];
+                    $priceRangeDisplay = $avgPrice < 200 ? '৳' : ($avgPrice < 500 ? '৳৳' : '৳৳৳');
                     
                     $vendorGroups[$vendorId] = [
                         'id' => $vendorId,
                         'name' => $product['vendor_name'] ?? 'Restaurant',
                         'rating' => 4.0 + (rand(1, 9) / 10),
                         'reviews' => rand(500, 2500),
+<<<<<<< HEAD
                         'time' => $fastDelivery ? rand(10, 25) . '-' . rand(20, 30) . ' min' : 
                                  ($filter === 'pickup' ? 'Ready in ' . rand(10, 30) . ' min' : 
                                  rand(10, 45) . '-' . rand(30, 60) . ' min'),
+=======
+                        'time' => $deliveryTime,
+>>>>>>> d6bb645adf5c01d0c537147371ede73e06f8c464
                         'category' => $product['category_name'] ?? 'Food',
                         'image' => !empty($product['vendor_banner']) ? '../' . $product['vendor_banner'] : 
                                   (!empty($product['image']) ? '../uploads/images/' . $product['image'] : '../uploads/images/placeholder-food.svg'),
                         'logo' => !empty($product['vendor_logo']) ? '../' . $product['vendor_logo'] : null,
                         'badge' => $badge,
                         'offer' => 'Valid for first order',
+                        'freeDelivery' => $freeDelivery || rand(0, 1) === 1,
+                        'priceRange' => $priceRangeDisplay,
                         'products' => []
                     ];
                 }
                 $vendorGroups[$vendorId]['products'][] = $product;
+            }
+            
+            // Apply free delivery filter
+            if ($freeDelivery) {
+                $vendorGroups = array_filter($vendorGroups, function($vendor) {
+                    return $vendor['freeDelivery'] === true;
+                });
             }
             
             echo json_encode(array_values($vendorGroups));

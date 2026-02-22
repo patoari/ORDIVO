@@ -40,7 +40,7 @@
 ## 🌟 Features
 
 ### 🛒 **Customer Experience**
-- **Modern Homepage**: Foodpanda-inspired design with animated logo and smooth interactions
+- **Modern Homepage**: ORDIVO-inspired design with animated logo and smooth interactions
 - **Smart Search**: Real-time autocomplete with product, vendor, and category suggestions
 - **Product Discovery**: Featured products, top choices, and category-based browsing
 - **Detailed Product Pages**: Comprehensive product information with image galleries
@@ -723,7 +723,7 @@ SOFTWARE.
 - **Quality Assurance**: [QA Team]
 
 ### 🎨 **Design Inspiration**
-- **Foodpanda**: UI/UX inspiration for customer interface
+- **ORDIVO**: UI/UX inspiration for customer interface
 - **Material Design**: Google's design system principles
 - **Bootstrap**: Responsive framework foundation
 

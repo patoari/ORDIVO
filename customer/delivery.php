@@ -147,7 +147,7 @@ if (isset($_GET['ajax'])) {
         :root {
             --ordivo-primary: #10b981;
             --ordivo-secondary: #059669;
-            --foodpanda-pink: #f97316;
+            --ordivo-pink: #f97316;
         }
 
         body {
@@ -188,7 +188,7 @@ if (isset($_GET['ajax'])) {
         .navbar-brand {
             font-size: 1.8rem;
             font-weight: 700;
-            color: var(--foodpanda-pink) !important;
+            color: var(--ordivo-pink) !important;
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -197,7 +197,7 @@ if (isset($_GET['ajax'])) {
         }
 
         .navbar-brand:hover {
-            color: var(--foodpanda-pink) !important;
+            color: var(--ordivo-pink) !important;
             text-decoration: none;
         }
 
@@ -231,7 +231,7 @@ if (isset($_GET['ajax'])) {
         .navbar-brand i.fa-motorcycle {
             animation: logoPulse 2s ease-in-out infinite, logoColorShift 6s ease-in-out infinite;
             font-size: 2.5rem !important;
-            color: var(--foodpanda-pink);
+            color: var(--ordivo-pink);
         }
 
         @keyframes logoPulse {
@@ -1104,9 +1104,9 @@ if (isset($_GET['ajax'])) {
                             <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" 
                                  class="logo-img logo-sparkle"
                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                            <i class="fas fa-motorcycle logo-icon" style="display: none; color: var(--foodpanda-pink);"></i>
+                            <i class="fas fa-motorcycle logo-icon" style="display: none; color: var(--ordivo-pink);"></i>
                         <?php else: ?>
-                            <i class="fas fa-motorcycle logo-icon" style="color: var(--foodpanda-pink);"></i>
+                            <i class="fas fa-motorcycle logo-icon" style="color: var(--ordivo-pink);"></i>
                         <?php endif; ?>
                     </a>
                     

@@ -49,13 +49,13 @@ try {
             --white: #ffffff;
             
             /* Legacy compatibility */
-            --foodpanda-pink: #10b981;
-            --foodpanda-primary: #10b981;
-            --foodpanda-light-pink: #f0fdf4;
-            --foodpanda-dark: #374151;
-            --foodpanda-gray: #6b7280;
-            --foodpanda-light-gray: #f3f4f6;
-            --foodpanda-border: #e5e7eb;
+            --ordivo-pink: #10b981;
+            --ordivo-primary: #10b981;
+            --ordivo-light-pink: #f0fdf4;
+            --ordivo-dark: #374151;
+            --ordivo-gray: #6b7280;
+            --ordivo-light-gray: #f3f4f6;
+            --ordivo-border: #e5e7eb;
             --shops-purple: #10b981;
         }
 
@@ -103,7 +103,7 @@ try {
         .navbar-brand {
             font-size: 1.8rem;
             font-weight: 700;
-            color: var(--foodpanda-pink) !important;
+            color: var(--ordivo-pink) !important;
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -112,7 +112,7 @@ try {
         }
 
         .navbar-brand:hover {
-            color: var(--foodpanda-pink) !important;
+            color: var(--ordivo-pink) !important;
             text-decoration: none;
         }
 
@@ -159,7 +159,7 @@ try {
         .location-display {
             display: flex;
             align-items: center;
-            color: var(--foodpanda-gray);
+            color: var(--ordivo-gray);
             font-size: 0.9rem;
             cursor: pointer;
             padding: 0.75rem 1rem;
@@ -190,7 +190,7 @@ try {
         .btn-user {
             background: white;
             border: 2px solid #10b981;
-            color: var(--foodpanda-dark);
+            color: var(--ordivo-dark);
             padding: 0.75rem 1rem;
             border-radius: 8px;
             text-decoration: none;
@@ -214,7 +214,7 @@ try {
         /* Navigation Tabs */
         .nav-tabs-container {
             background: white;
-            border-bottom: 1px solid var(--foodpanda-border);
+            border-bottom: 1px solid var(--ordivo-border);
             padding: 0 1rem;
             height: 60px;
             position: fixed;

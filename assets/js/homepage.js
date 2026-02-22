@@ -32,7 +32,7 @@ function loadFeaturedRestaurants() {
             }
             
             container.innerHTML = data.map(restaurant => `
-                <div class="restaurant-card" onclick="window.location.href='vendor_profile.php?id=${restaurant.id}'">
+                <div class="restaurant-card" onclick="window.location.href='vendor_profile.php?id=${restaurant.id}'" style="cursor: pointer;" title="Click to view ${restaurant.name}">
                     <div class="restaurant-image" style="background-image: url('${restaurant.image}')">
                         <div class="restaurant-badge">${restaurant.badge}</div>
                     </div>
@@ -73,32 +73,62 @@ function loadCuisines() {
             
             container.innerHTML = data.map(cuisine => `
                 <div class="swiper-slide">
-                    <div class="cuisine-card" onclick="filterByCuisine('${cuisine.name}')">
-                        <div class="cuisine-icon">
-                            ${cuisine.image ? 
-                                `<img src="${cuisine.image}" alt="${cuisine.name}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">` : 
-                                (cuisine.icon ? `<i class="${cuisine.icon}"></i>` : '<i class="fas fa-utensils"></i>')
-                            }
+                    <a href="products.php?category_id=${cuisine.id}&category_name=${encodeURIComponent(cuisine.name)}" class="cuisine-card-link" title="Browse ${cuisine.name}">
+                        <div class="cuisine-card">
+                            <div class="cuisine-icon">
+                                ${cuisine.image ? 
+                                    `<img src="${cuisine.image}" alt="${cuisine.name}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">` : 
+                                    (cuisine.icon ? `<i class="${cuisine.icon}"></i>` : '<i class="fas fa-utensils"></i>')
+                                }
+                            </div>
+                            <div class="cuisine-name">${cuisine.name}</div>
                         </div>
-                        <div class="cuisine-name">${cuisine.name}</div>
-                    </div>
+                    </a>
                 </div>
             `).join('');
+            
+            // Re-initialize Swiper after content is loaded
+            setTimeout(() => {
+                new Swiper('.cuisinesSwiper', {
+                    slidesPerView: 'auto',
+                    spaceBetween: 15,
+                    freeMode: true,
+                    allowTouchMove: true,
+                    simulateTouch: true,
+                    touchRatio: 1,
+                    touchAngle: 45,
+                    shortSwipes: true,
+                    longSwipes: true,
+                    longSwipesRatio: 0.5,
+                    longSwipesMs: 300,
+                    followFinger: true,
+                    threshold: 5,
+                    preventClicks: false,
+                    preventClicksPropagation: false,
+                    navigation: {
+                        nextEl: '.cuisinesSwiper .swiper-button-next',
+                        prevEl: '.cuisinesSwiper .swiper-button-prev',
+                    },
+                    breakpoints: {
+                        320: { slidesPerView: 4 },
+                        769: { slidesPerView: 'auto' }
+                    }
+                });
+            }, 100);
         })
         .catch(error => console.error('Error loading cuisines:', error));
 }
 
 // Load Featured Products
 function loadFeaturedProducts() {
+    // Load Featured Products
     fetch('index.php?ajax=featured_products')
         .then(response => response.json())
         .then(data => {
             const container = document.getElementById('featuredProductsContainer');
-            const topChoiceContainer = document.getElementById('topChoiceProductsContainer');
             
             if (data.error || data.length === 0) {
-                container.innerHTML = '<p class="text-center text-muted">No products available</p>';
-                topChoiceContainer.innerHTML = '<p class="text-center text-muted">No products available</p>';
+                container.innerHTML = '<p class="text-center text-muted">No featured products available</p>';
                 return;
             }
             
@@ -121,21 +151,87 @@ function loadFeaturedProducts() {
             `).join('');
             
             container.innerHTML = productHTML;
+        })
+        .catch(error => console.error('Error loading featured products:', error));
+    
+    // Load Top Choice Products
+    fetch('index.php?ajax=top_choice_products')
+        .then(response => response.json())
+        .then(data => {
+            const topChoiceContainer = document.getElementById('topChoiceProductsContainer');
+            
+            if (data.error || data.length === 0) {
+                topChoiceContainer.innerHTML = '<p class="text-center text-muted">No top choice products available</p>';
+                return;
+            }
+            
+            const productHTML = data.map(product => `
+                <div class="swiper-slide">
+                    <div class="product-card" onclick="window.location.href='product_details.php?id=${product.id}'">
+                        <div class="product-image" style="background-image: url('${product.image}')"></div>
+                        <div class="product-info">
+                            <div class="product-name">${product.name}</div>
+                            <div class="product-vendor">${product.vendor_name}</div>
+                            <div class="product-footer">
+                                <div class="product-price">৳${product.price}</div>
+                                <div class="product-rating">
+                                    <i class="fas fa-star"></i> ${product.rating}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
             topChoiceContainer.innerHTML = productHTML;
         })
-        .catch(error => console.error('Error loading products:', error));
+        .catch(error => console.error('Error loading top choice products:', error));
 }
 
 // Load All Restaurants
 function loadAllRestaurants() {
+    // Collect all filter values
     const sort = document.querySelector('input[name="sort"]:checked')?.value || 'relevance';
+    const freeDelivery = document.getElementById('filter-free-delivery')?.checked || false;
+    const fastDelivery = document.getElementById('filter-fast-delivery')?.checked || false;
     
-    fetch(`index.php?ajax=restaurants&sort=${sort}`)
+    // Price range filters
+    const priceBudget = document.getElementById('price-budget')?.checked || false;
+    const priceMid = document.getElementById('price-mid')?.checked || false;
+    const pricePremium = document.getElementById('price-premium')?.checked || false;
+    
+    // Cuisine filters
+    const cuisines = [];
+    document.querySelectorAll('#cuisineFilters input[type="checkbox"]:checked').forEach(cb => {
+        cuisines.push(cb.id.replace('cuisine-', ''));
+    });
+    
+    // Dietary filters
+    const dietary = [];
+    if (document.getElementById('diet-vegetarian')?.checked) dietary.push('vegetarian');
+    if (document.getElementById('diet-vegan')?.checked) dietary.push('vegan');
+    if (document.getElementById('diet-halal')?.checked) dietary.push('halal');
+    
+    // Build query parameters
+    const params = new URLSearchParams({
+        ajax: 'restaurants',
+        sort: sort
+    });
+    
+    if (freeDelivery) params.append('free_delivery', '1');
+    if (fastDelivery) params.append('fast_delivery', '1');
+    if (priceBudget) params.append('price_budget', '1');
+    if (priceMid) params.append('price_mid', '1');
+    if (pricePremium) params.append('price_premium', '1');
+    if (cuisines.length > 0) params.append('cuisines', cuisines.join(','));
+    if (dietary.length > 0) params.append('dietary', dietary.join(','));
+    
+    fetch(`index.php?${params}`)
         .then(response => response.json())
         .then(data => {
             const container = document.getElementById('restaurantsGrid');
             if (data.error || data.length === 0) {
-                container.innerHTML = '<div class="col-12"><p class="text-center text-muted">No restaurants available</p></div>';
+                container.innerHTML = '<div class="col-12"><p class="text-center text-muted">No restaurants found matching your filters</p></div>';
                 return;
             }
             
@@ -227,11 +323,17 @@ function initializeMobileMenu() {
 
 // Initialize Filters
 function initializeFilters() {
-    // Desktop filters
+    // Desktop filters - Sort by radio buttons
     document.querySelectorAll('input[name="sort"]').forEach(radio => {
         radio.addEventListener('change', loadAllRestaurants);
     });
     
+    // Desktop filters - All checkboxes
+    document.querySelectorAll('.sidebar input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', loadAllRestaurants);
+    });
+    
+    // Clear filters button
     document.getElementById('clearFilters')?.addEventListener('click', function() {
         document.querySelectorAll('.sidebar input[type="checkbox"]').forEach(cb => cb.checked = false);
         document.querySelector('input[name="sort"][value="relevance"]').checked = true;
@@ -280,22 +382,17 @@ function initializeLocationModal() {
 
 // Initialize Swipers
 function initializeSwipers() {
-    // Cuisines Swiper
-    new Swiper('.cuisinesSwiper', {
-        slidesPerView: 'auto',
-        spaceBetween: 15,
-        freeMode: true,
-        breakpoints: {
-            320: { slidesPerView: 4 },
-            769: { slidesPerView: 'auto' }
-        }
-    });
+    // Cuisines Swiper - will be initialized after content loads in loadCuisines()
     
     // Products Swipers
     const productSwiperConfig = {
         slidesPerView: 'auto',
         spaceBetween: 15,
         freeMode: true,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
         breakpoints: {
             320: { slidesPerView: 2 },
             769: { slidesPerView: 'auto' }
@@ -307,9 +404,15 @@ function initializeSwipers() {
 }
 
 // Restaurant Carousel Navigation
-function scrollCarousel(direction) {
+window.scrollCarousel = function(direction) {
     const container = document.querySelector('.restaurant-cards');
+    if (!container) {
+        console.error('Restaurant cards container not found');
+        return;
+    }
+    
     const scrollAmount = 300;
+    console.log('Scrolling', direction, 'by', scrollAmount);
     
     if (direction === 'prev') {
         container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
@@ -318,10 +421,12 @@ function scrollCarousel(direction) {
     }
 }
 
-// Filter by Cuisine
-function filterByCuisine(cuisine) {
-    console.log('Filtering by cuisine:', cuisine);
-    // Implement cuisine filtering logic
+// Filter by Cuisine - Navigate to products page with category filter
+function filterByCuisine(cuisineName) {
+    // Encode the cuisine name for URL
+    const encodedCuisine = encodeURIComponent(cuisineName);
+    // Navigate to products page with category filter
+    window.location.href = `products.php?category=${encodedCuisine}`;
 }
 
 

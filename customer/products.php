@@ -34,6 +34,7 @@ try {
 $vendorId = (int)($_GET['vendor'] ?? 0);
 $searchQuery = sanitizeInput($_GET['search'] ?? '');
 $categoryFilter = sanitizeInput($_GET['category'] ?? '');
+$categoryId = (int)($_GET['category_id'] ?? 0);
 $sortBy = sanitizeInput($_GET['sort'] ?? 'popular');
 $minPrice = (float)($_GET['min_price'] ?? 0);
 $maxPrice = (float)($_GET['max_price'] ?? 1000);
@@ -68,6 +69,11 @@ if (isset($_GET['ajax'])) {
                 if ($categoryFilter) {
                     $whereConditions[] = "p.category = ?";
                     $params[] = $categoryFilter;
+                }
+                
+                if ($categoryId > 0) {
+                    $whereConditions[] = "p.category_id = ?";
+                    $params[] = $categoryId;
                 }
                 
                 if ($minPrice > 0) {
@@ -161,12 +167,12 @@ if (isset($_GET['ajax'])) {
         case 'categories':
             try {
                 $categories = fetchAll("
-                    SELECT c.name as category, COUNT(*) as product_count
+                    SELECT c.id, c.name as category, COUNT(*) as product_count
                     FROM products p
                     LEFT JOIN categories c ON p.category_id = c.id
                     WHERE p.is_available = 1
                     " . ($vendorId ? "AND p.vendor_id = $vendorId" : "") . "
-                    GROUP BY c.name
+                    GROUP BY c.id, c.name
                     ORDER BY product_count DESC, c.name ASC
                 ");
                 echo json_encode($categories);
@@ -1662,6 +1668,7 @@ if ($vendorId) {
     <script>
         let currentSort = 'popular';
         let currentCategory = '<?= htmlspecialchars($categoryFilter) ?>';
+        let currentCategoryId = <?= $categoryId > 0 ? $categoryId : 'null' ?>;
         let currentVendor = <?= $vendorId ?>;
         let currentFilter = '<?= htmlspecialchars($filterType) ?>';
         let currentPage = 1; // Add current page tracking
@@ -1709,15 +1716,15 @@ if ($vendorId) {
                 
                 const list = document.getElementById('categoriesList');
                 const categoryItems = categories.map(category => `
-                    <div class="category-item ${currentCategory === category.category ? 'active' : ''}" 
-                         onclick="filterByCategory('${category.category}')">
+                    <div class="category-item ${currentCategoryId === category.id ? 'active' : ''}" 
+                         onclick="filterByCategory('${category.category}', ${category.id})">
                         <span>${category.category}</span>
                         <span class="badge bg-light text-dark">${category.product_count}</span>
                     </div>
                 `).join('');
                 
                 list.innerHTML = `
-                    <div class="category-item ${!currentCategory ? 'active' : ''}" onclick="filterByCategory('')">
+                    <div class="category-item ${!currentCategoryId ? 'active' : ''}" onclick="filterByCategory('', null)">
                         <span>All Categories</span>
                     </div>
                     ${categoryItems}
@@ -1747,6 +1754,7 @@ if ($vendorId) {
                     page: page
                 });
                 
+                if (currentCategoryId) params.append('category_id', currentCategoryId);
                 if (currentVendor) params.append('vendor', currentVendor);
                 if (minPrice) params.append('min_price', minPrice);
                 if (maxPrice) params.append('max_price', maxPrice);
@@ -1823,8 +1831,9 @@ if ($vendorId) {
             loadProducts();
         }
 
-        function filterByCategory(category) {
+        function filterByCategory(category, categoryId = null) {
             currentCategory = category;
+            currentCategoryId = categoryId;
             currentPage = 1; // Reset to first page on filter
             document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
             event.target.closest('.category-item').classList.add('active');

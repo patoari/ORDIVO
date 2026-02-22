@@ -46,7 +46,7 @@ try {
         error_log("Vendor profile query error: " . $e->getMessage());
         $vendorProfile = [
             'logo' => $vendor['avatar'] ?? null,
-            'banner_image' => null,
+            'banner_image' => $vendor['cover_photo'] ?? null,
             'business_name' => $vendor['name'],
             'description' => null
         ];
@@ -56,10 +56,27 @@ try {
     if (!$vendorProfile) {
         $vendorProfile = [
             'logo' => $vendor['avatar'] ?? null,
-            'banner_image' => null,
+            'banner_image' => $vendor['cover_photo'] ?? null,
             'business_name' => $vendor['name'],
             'description' => null
         ];
+    }
+    
+    // Fix image paths - add ../ prefix if needed
+    if (!empty($vendorProfile['logo'])) {
+        if (strpos($vendorProfile['logo'], 'uploads/') === 0) {
+            $vendorProfile['logo'] = '../' . $vendorProfile['logo'];
+        } elseif (!preg_match('/^(https?:\/\/|\.\.\/|\/)/i', $vendorProfile['logo'])) {
+            $vendorProfile['logo'] = '../' . $vendorProfile['logo'];
+        }
+    }
+    
+    if (!empty($vendorProfile['banner_image'])) {
+        if (strpos($vendorProfile['banner_image'], 'uploads/') === 0) {
+            $vendorProfile['banner_image'] = '../' . $vendorProfile['banner_image'];
+        } elseif (!preg_match('/^(https?:\/\/|\.\.\/|\/)/i', $vendorProfile['banner_image'])) {
+            $vendorProfile['banner_image'] = '../' . $vendorProfile['banner_image'];
+        }
     }
     
     // Get vendor's products
@@ -67,8 +84,8 @@ try {
         SELECT p.*, c.name as category_name 
         FROM products p 
         LEFT JOIN categories c ON p.category_id = c.id 
-        WHERE p.vendor_id = ? 
-        ORDER BY c.name, p.name
+        WHERE p.vendor_id = ? AND p.is_available = 1
+        ORDER BY p.is_featured DESC, p.is_trending DESC, c.name, p.name
     ", [$vendorId]);
     
     // Group products by category
@@ -140,15 +157,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         /* Logo Animations */
         .logo-img {
-            height: 60px;
+            height: 100px;
+            width: auto;
             margin-right: 12px;
+            object-fit: contain;
             animation: logoFloat 3s ease-in-out infinite;
             transition: all 0.3s ease;
         }
 
         .logo-img:hover {
-            transform: scale(1.1) rotate(5deg) !important;
-            filter: brightness(1.1);
+            transform: scale(1.15) rotate(5deg);
         }
 
         @keyframes logoFloat {
@@ -200,11 +218,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
 
         .vendor-hero {
-            background: #10b981;);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             padding: 3rem 0;
             position: relative;
             overflow: hidden;
+            min-height: 250px;
         }
 
         .vendor-hero::before {
@@ -214,13 +233,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             left: 0;
             right: 0;
             bottom: 0;
-            background: #e5e7eb;
+            background: rgba(0, 0, 0, 0.3);
             z-index: 1;
         }
 
         .vendor-hero-content {
             position: relative;
             z-index: 2;
+        }
+        
+        .vendor-hero h1,
+        .vendor-hero .display-4 {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-weight: 700;
+        }
+        
+        .vendor-hero .d-flex span,
+        .vendor-hero .d-flex i {
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .vendor-cover-image {
@@ -239,7 +269,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             border-radius: 50%;
             border: 4px solid white;
             object-fit: cover;
-            box-shadow: 0 4px 15px #e5e7eb;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            background: white;
         }
 
         .vendor-profile-placeholder {
@@ -253,15 +284,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             justify-content: center;
             color: var(--ordivo-primary);
             font-size: 2.5rem;
-            box-shadow: 0 4px 15px #e5e7eb;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
         }
 
         .vendor-info {
             background: white;
             border-radius: 15px;
             padding: 2rem;
-            margin-top: -2rem;
-            box-shadow: 0 5px 15px #e5e7eb;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             position: relative;
             z-index: 10;
         }
@@ -431,9 +464,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
                             <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" class="logo-img">
                         <?php else: ?>
-                            <i class="fas fa-utensils me-2 logo-icon"></i>
+                            <i class="fas fa-utensils logo-icon"></i>
                         <?php endif; ?>
-                        <span class="brand-text"><?= htmlspecialchars($siteName) ?></span>
                     </div>
                 </a>
                 
@@ -557,10 +589,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                         <?php endif; ?>
                                         
                                         <!-- Product badges -->
-                                        <?php if (rand(1, 3) == 1): ?>
+                                        <?php if (!empty($product['is_featured']) && $product['is_featured'] == 1): ?>
                                             <div class="product-badge featured">Featured</div>
-                                        <?php elseif (rand(1, 4) == 1): ?>
-                                            <div class="product-badge new">New</div>
+                                        <?php elseif (!empty($product['is_trending']) && $product['is_trending'] == 1): ?>
+                                            <div class="product-badge new">Trending</div>
                                         <?php endif; ?>
                                     </div>
                                     
@@ -572,8 +604,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                             <span class="product-price">৳<?= number_format($product['price'], 0) ?></span>
                                             <div class="product-rating">
                                                 <i class="fas fa-star rating-star"></i>
-                                                <span><?= number_format(4.0 + (rand(1, 9) / 10), 1) ?></span>
-                                                <span>(<?= rand(50, 500) ?>+)</span>
+                                                <span><?= number_format($product['rating'] ?? 4.5, 1) ?></span>
+                                                <span>(<?= $product['total_reviews'] ?? 0 ?>)</span>
                                             </div>
                                         </div>
                                         

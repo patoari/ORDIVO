@@ -90,15 +90,16 @@ $estimatedTime = date('H:i', strtotime('+45 minutes'));
 
         /* Logo Animations */
         .logo-img {
-            height: 60px;
+            height: 100px;
+            width: auto;
             margin-right: 12px;
+            object-fit: contain;
             animation: logoFloat 3s ease-in-out infinite;
             transition: all 0.3s ease;
         }
 
         .logo-img:hover {
-            transform: scale(1.1) rotate(5deg) !important;
-            filter: brightness(1.1);
+            transform: scale(1.15) rotate(5deg) !important;
         }
 
         @keyframes logoFloat {
@@ -248,9 +249,8 @@ $estimatedTime = date('H:i', strtotime('+45 minutes'));
                         <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
                             <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" class="logo-img">
                         <?php else: ?>
-                            <i class="fas fa-utensils me-2 logo-icon"></i>
+                            <i class="fas fa-utensils logo-icon"></i>
                         <?php endif; ?>
-                        <span class="brand-text"><?= htmlspecialchars($siteName) ?></span>
                     </div>
                 </a>
                 

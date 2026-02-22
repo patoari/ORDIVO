@@ -202,18 +202,16 @@ if (isset($_GET['ajax'])) {
         }
 
         .navbar-brand img {
-            height: 80px;
+            height: 100px;
             width: auto;
             margin-right: 12px;
             object-fit: contain;
             animation: logoFloat 3s ease-in-out infinite, logoColorShift 6s ease-in-out infinite;
             transition: all 0.3s ease;
-            
         }
 
         .navbar-brand img:hover {
             transform: scale(1.15) rotate(5deg);
-            
         }
 
         @keyframes logoFloat {

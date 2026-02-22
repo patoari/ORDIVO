@@ -105,9 +105,11 @@ $userLocation = $_SESSION['user_location'] ?? 'Dhaka, Bangladesh';
                 <div class="cuisines-section">
                     <h2 class="section-title">Cuisines</h2>
                     <div class="swiper cuisinesSwiper">
+                        <div class="swiper-button-prev"></div>
                         <div class="swiper-wrapper" id="cuisinesContainer">
                             <div class="loading"><div class="spinner"></div><p>Loading cuisines...</p></div>
                         </div>
+                        <div class="swiper-button-next"></div>
                     </div>
                 </div>
 
@@ -115,9 +117,11 @@ $userLocation = $_SESSION['user_location'] ?? 'Dhaka, Bangladesh';
                 <div class="products-section">
                     <h2 class="section-title">Featured Products</h2>
                     <div class="swiper featuredProductsSwiper">
+                        <div class="swiper-button-prev"></div>
                         <div class="swiper-wrapper" id="featuredProductsContainer">
                             <div class="loading"><div class="spinner"></div><p>Loading products...</p></div>
                         </div>
+                        <div class="swiper-button-next"></div>
                     </div>
                 </div>
 
@@ -125,9 +129,11 @@ $userLocation = $_SESSION['user_location'] ?? 'Dhaka, Bangladesh';
                 <div class="products-section">
                     <h2 class="section-title">Top Choices</h2>
                     <div class="swiper topChoiceProductsSwiper">
+                        <div class="swiper-button-prev"></div>
                         <div class="swiper-wrapper" id="topChoiceProductsContainer">
                             <div class="loading"><div class="spinner"></div><p>Loading products...</p></div>
                         </div>
+                        <div class="swiper-button-next"></div>
                     </div>
                 </div>
 

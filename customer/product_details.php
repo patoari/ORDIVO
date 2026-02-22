@@ -978,7 +978,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         // Cart management functions
         function addToCart(productId, productName, price, quantity = 1, specialInstructions = '') {
             try {
-                let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                let cart = JSON.parse(localStorage.getItem('ordivo_cart') || '[]');
                 
                 // Check if product already exists in cart
                 const existingItemIndex = cart.findIndex(item => 
@@ -1001,7 +1001,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     });
                 }
                 
-                localStorage.setItem('cart', JSON.stringify(cart));
+                localStorage.setItem('ordivo_cart', JSON.stringify(cart));
                 updateCartCount();
                 
             } catch (error) {
@@ -1012,7 +1012,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         function updateCartCount() {
             try {
-                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                const cart = JSON.parse(localStorage.getItem('ordivo_cart') || '[]');
                 const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
                 document.getElementById('cartCount').textContent = totalItems;
             } catch (error) {

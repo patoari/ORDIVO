@@ -184,16 +184,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
 
         /* Logo Animations */
         .logo-img {
-            height: 80px; /* Increased from 60px */
+            height: 100px;
+            width: auto;
             margin-right: 12px;
+            object-fit: contain;
             animation: logoFloat 3s ease-in-out infinite, logoColorShift 6s ease-in-out infinite;
             transition: all 0.3s ease;
-            
         }
 
         .logo-img:hover {
             transform: scale(1.15) rotate(5deg) !important;
-            
         }
 
         @keyframes logoFloat {

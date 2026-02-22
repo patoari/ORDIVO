@@ -23,10 +23,28 @@ function initializeHomepage() {
 // Load Featured Restaurants
 function loadFeaturedRestaurants() {
     fetch('index.php?ajax=featured_restaurants')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
+            console.log('Featured restaurants data:', data);
             const container = document.getElementById('featuredRestaurants');
-            if (data.length === 0) {
+            
+            if (!container) {
+                console.error('Featured restaurants container not found');
+                return;
+            }
+            
+            if (data.error) {
+                console.error('API error:', data.error);
+                container.innerHTML = '<p class="text-center text-danger">Error: ' + data.error + '</p>';
+                return;
+            }
+            
+            if (!data || data.length === 0) {
                 container.innerHTML = '<p class="text-center text-muted">No restaurants available</p>';
                 return;
             }
@@ -54,9 +72,11 @@ function loadFeaturedRestaurants() {
             `).join('');
         })
         .catch(error => {
-            console.error('Error loading restaurants:', error);
-            document.getElementById('featuredRestaurants').innerHTML = 
-                '<p class="text-center text-danger">Failed to load restaurants</p>';
+            console.error('Error loading featured restaurants:', error);
+            const container = document.getElementById('featuredRestaurants');
+            if (container) {
+                container.innerHTML = '<p class="text-center text-danger">Failed to load restaurants. Please refresh the page.</p>';
+            }
         });
 }
 

@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
                         updateData('wallets', [
                             'balance' => $newBalance,
                             'total_spent' => $newTotalSpent
-                        ], ['id' => $walletId]);
+                        ], 'id = ?', [$walletId]);
                         
                         // Record wallet transaction
                         insertData('wallet_transactions', [
@@ -413,6 +413,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
         .payment-option.selected {
             border-color: var(--ordivo-primary);
             background: #f97316;
+        }
+        
+        /* Hide any injected filter elements */
+        [class*="filter"],
+        [id*="filter"],
+        [class*="Filter"],
+        [id*="Filter"] {
+            display: none !important;
+        }
+        
+        /* But show our payment options */
+        .payment-option,
+        .payment-options {
+            display: block !important;
         }
     </style>
 </head>

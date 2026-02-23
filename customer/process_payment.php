@@ -72,7 +72,7 @@ try {
         ]);
         
         // Update order payment status
-        updateData('orders', ['payment_status' => 'processing'], ['id' => $orderId]);
+        updateData('orders', ['payment_status' => 'processing'], 'id = ?', [$orderId]);
         
         // Redirect to payment gateway
         if (isset($result['redirect_url'])) {

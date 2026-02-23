@@ -93,16 +93,16 @@ class BkashGateway extends PaymentGateway {
     private $token;
     
     public function initiatePayment() {
-        // Demo mode - simulate successful payment for testing
+        // Demo mode - redirect to mobile banking payment page for realistic flow
         if (PAYMENT_ENVIRONMENT === 'sandbox' && (empty(BKASH_APP_KEY) || BKASH_APP_KEY === 'your_bkash_app_key')) {
             $transactionId = 'BKASH-DEMO-' . time();
             
             return [
                 'success' => true,
-                'payment_url' => '../customer/payment_success.php?order_id=' . $this->orderId . '&method=bkash&demo=1',
-                'redirect_url' => '../customer/payment_success.php?order_id=' . $this->orderId . '&method=bkash&demo=1',
+                'payment_url' => '../customer/mobile_banking_payment.php?order_id=' . $this->orderId . '&method=bkash&amount=' . $this->amount,
+                'redirect_url' => '../customer/mobile_banking_payment.php?order_id=' . $this->orderId . '&method=bkash&amount=' . $this->amount,
                 'transaction_id' => $transactionId,
-                'message' => 'Demo mode: Payment simulated successfully'
+                'message' => 'Redirecting to bKash payment gateway'
             ];
         }
         
@@ -343,6 +343,154 @@ class WalletGateway extends PaymentGateway {
 }
 
 /**
+ * Nagad Payment Gateway
+ */
+class NagadGateway extends PaymentGateway {
+    public function initiatePayment() {
+        // Demo mode - redirect to mobile banking payment page
+        if (PAYMENT_ENVIRONMENT === 'sandbox' && (empty(NAGAD_MERCHANT_ID) || NAGAD_MERCHANT_ID === 'your_nagad_merchant_id')) {
+            $transactionId = 'NAGAD-DEMO-' . time();
+            
+            return [
+                'success' => true,
+                'payment_url' => '../customer/mobile_banking_payment.php?order_id=' . $this->orderId . '&method=nagad&amount=' . $this->amount,
+                'redirect_url' => '../customer/mobile_banking_payment.php?order_id=' . $this->orderId . '&method=nagad&amount=' . $this->amount,
+                'transaction_id' => $transactionId,
+                'message' => 'Redirecting to Nagad payment gateway'
+            ];
+        }
+        
+        // Real Nagad API integration would go here
+        return ['success' => false, 'message' => 'Nagad API not configured'];
+    }
+    
+    public function verifyPayment($paymentId) {
+        if (PAYMENT_ENVIRONMENT === 'sandbox') {
+            return ['success' => true, 'message' => 'Demo payment verified'];
+        }
+        return ['success' => false, 'message' => 'Nagad API not configured'];
+    }
+    
+    public function refundPayment($transactionId, $amount) {
+        if (PAYMENT_ENVIRONMENT === 'sandbox') {
+            return ['success' => true, 'message' => 'Demo refund processed'];
+        }
+        return ['success' => false, 'message' => 'Nagad API not configured'];
+    }
+}
+
+/**
+ * Rocket Payment Gateway
+ */
+class RocketGateway extends PaymentGateway {
+    public function initiatePayment() {
+        // Demo mode - redirect to mobile banking payment page
+        if (PAYMENT_ENVIRONMENT === 'sandbox' && (empty(SSLCOMMERZ_STORE_ID) || SSLCOMMERZ_STORE_ID === 'your_store_id')) {
+            $transactionId = 'ROCKET-DEMO-' . time();
+            
+            return [
+                'success' => true,
+                'payment_url' => '../customer/mobile_banking_payment.php?order_id=' . $this->orderId . '&method=rocket&amount=' . $this->amount,
+                'redirect_url' => '../customer/mobile_banking_payment.php?order_id=' . $this->orderId . '&method=rocket&amount=' . $this->amount,
+                'transaction_id' => $transactionId,
+                'message' => 'Redirecting to Rocket payment gateway'
+            ];
+        }
+        
+        // Real Rocket API integration (via SSL Commerz) would go here
+        return ['success' => false, 'message' => 'Rocket API not configured'];
+    }
+    
+    public function verifyPayment($paymentId) {
+        if (PAYMENT_ENVIRONMENT === 'sandbox') {
+            return ['success' => true, 'message' => 'Demo payment verified'];
+        }
+        return ['success' => false, 'message' => 'Rocket API not configured'];
+    }
+    
+    public function refundPayment($transactionId, $amount) {
+        if (PAYMENT_ENVIRONMENT === 'sandbox') {
+            return ['success' => true, 'message' => 'Demo refund processed'];
+        }
+        return ['success' => false, 'message' => 'Rocket API not configured'];
+    }
+}
+
+/**
+ * Upay Payment Gateway
+ */
+class UpayGateway extends PaymentGateway {
+    public function initiatePayment() {
+        // Demo mode - redirect to mobile banking payment page
+        if (PAYMENT_ENVIRONMENT === 'sandbox' && (empty(UPAY_MERCHANT_ID) || UPAY_MERCHANT_ID === 'your_upay_merchant_id')) {
+            $transactionId = 'UPAY-DEMO-' . time();
+            
+            return [
+                'success' => true,
+                'payment_url' => '../customer/mobile_banking_payment.php?order_id=' . $this->orderId . '&method=upay&amount=' . $this->amount,
+                'redirect_url' => '../customer/mobile_banking_payment.php?order_id=' . $this->orderId . '&method=upay&amount=' . $this->amount,
+                'transaction_id' => $transactionId,
+                'message' => 'Redirecting to Upay payment gateway'
+            ];
+        }
+        
+        // Real Upay API integration would go here
+        return ['success' => false, 'message' => 'Upay API not configured'];
+    }
+    
+    public function verifyPayment($paymentId) {
+        if (PAYMENT_ENVIRONMENT === 'sandbox') {
+            return ['success' => true, 'message' => 'Demo payment verified'];
+        }
+        return ['success' => false, 'message' => 'Upay API not configured'];
+    }
+    
+    public function refundPayment($transactionId, $amount) {
+        if (PAYMENT_ENVIRONMENT === 'sandbox') {
+            return ['success' => true, 'message' => 'Demo refund processed'];
+        }
+        return ['success' => false, 'message' => 'Upay API not configured'];
+    }
+}
+
+/**
+ * Card Payment Gateway (via SSL Commerz)
+ */
+class CardGateway extends PaymentGateway {
+    public function initiatePayment() {
+        // Demo mode - redirect to mobile banking payment page (simplified for demo)
+        if (PAYMENT_ENVIRONMENT === 'sandbox' && (empty(SSLCOMMERZ_STORE_ID) || SSLCOMMERZ_STORE_ID === 'your_store_id')) {
+            $transactionId = 'CARD-DEMO-' . time();
+            
+            return [
+                'success' => true,
+                'payment_url' => '../customer/mobile_banking_payment.php?order_id=' . $this->orderId . '&method=card&amount=' . $this->amount,
+                'redirect_url' => '../customer/mobile_banking_payment.php?order_id=' . $this->orderId . '&method=card&amount=' . $this->amount,
+                'transaction_id' => $transactionId,
+                'message' => 'Redirecting to card payment gateway'
+            ];
+        }
+        
+        // Real SSL Commerz API integration would go here
+        return ['success' => false, 'message' => 'Card payment API not configured'];
+    }
+    
+    public function verifyPayment($paymentId) {
+        if (PAYMENT_ENVIRONMENT === 'sandbox') {
+            return ['success' => true, 'message' => 'Demo payment verified'];
+        }
+        return ['success' => false, 'message' => 'Card payment API not configured'];
+    }
+    
+    public function refundPayment($transactionId, $amount) {
+        if (PAYMENT_ENVIRONMENT === 'sandbox') {
+            return ['success' => true, 'message' => 'Demo refund processed'];
+        }
+        return ['success' => false, 'message' => 'Card payment API not configured'];
+    }
+}
+
+/**
  * Payment Gateway Factory
  */
 class PaymentGatewayFactory {
@@ -350,14 +498,22 @@ class PaymentGatewayFactory {
         switch ($method) {
             case 'bkash':
                 return new BkashGateway($orderId, $amount, $customerInfo);
+            case 'nagad':
+                return new NagadGateway($orderId, $amount, $customerInfo);
+            case 'rocket':
+                return new RocketGateway($orderId, $amount, $customerInfo);
+            case 'upay':
+                return new UpayGateway($orderId, $amount, $customerInfo);
+            case 'card':
+                return new CardGateway($orderId, $amount, $customerInfo);
             case 'cash':
                 return new CashOnDeliveryGateway($orderId, $amount, $customerInfo);
             case 'wallet':
                 return new WalletGateway($orderId, $amount, $customerInfo);
-            // Add more gateways as needed
             default:
                 throw new Exception('Unsupported payment method');
         }
     }
 }
 ?>
+

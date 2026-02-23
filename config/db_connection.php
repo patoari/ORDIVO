@@ -231,15 +231,20 @@ define('APP_URL', 'http://localhost/ordivo/');
 define('UPLOAD_PATH', 'uploads/');
 define('MAX_FILE_SIZE', 5 * 1024 * 1024); // 5MB
 
-// Session Configuration
-ini_set('session.cookie_httponly', 1);
-ini_set('session.cookie_secure', 0); // Set to 1 for HTTPS
-ini_set('session.use_strict_mode', 1);
-ini_set('session.cookie_samesite', 'Strict');
+// Start output buffering to prevent session warnings
+if (!ob_get_level()) {
+    ob_start();
+}
 
-// Start session if not already started
+// Session Configuration - Must be set BEFORE session_start()
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.cookie_secure', 0); // Set to 1 for HTTPS
+    ini_set('session.use_strict_mode', 1);
+    ini_set('session.cookie_samesite', 'Strict');
+    
+    // Start session
+    @session_start(); // @ suppresses warnings
 }
 
 // Regenerate session ID periodically for security

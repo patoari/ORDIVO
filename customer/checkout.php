@@ -119,10 +119,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
                         }
                         
                         // Deduct from wallet
-                        $walletId = fetchRow("SELECT id FROM wallets WHERE user_id = ?", [$userId])['id'];
+                        $walletRecord = fetchRow("SELECT id, total_spent FROM wallets WHERE user_id = ?", [$userId]);
+                        $walletId = $walletRecord['id'];
+                        $currentTotalSpent = (float)($walletRecord['total_spent'] ?? 0);
                         $newBalance = $walletBalance - $totalAmount;
+                        $newTotalSpent = $currentTotalSpent + $totalAmount;
                         
-                        updateData('wallets', ['balance' => $newBalance, 'total_spent' => $walletBalance + $totalAmount], ['id' => $walletId]);
+                        updateData('wallets', [
+                            'balance' => $newBalance,
+                            'total_spent' => $newTotalSpent
+                        ], ['id' => $walletId]);
                         
                         // Record wallet transaction
                         insertData('wallet_transactions', [

@@ -36,10 +36,20 @@ if (!isPaymentMethodEnabled($paymentMethod)) {
 // Prepare customer info
 $customerInfo = [
     'user_id' => $_SESSION['user_id'] ?? 0,
-    'name' => $order['customer_name'],
-    'email' => $order['customer_email'],
-    'phone' => $order['customer_phone']
+    'name' => $order['customer_name'] ?? '',
+    'email' => $order['customer_email'] ?? '',
+    'phone' => $order['customer_phone'] ?? ''
 ];
+
+// Decode delivery address if it's JSON
+if (is_string($order['delivery_address'])) {
+    $deliveryData = json_decode($order['delivery_address'], true);
+    if ($deliveryData && is_array($deliveryData)) {
+        $customerInfo['name'] = $deliveryData['name'] ?? $customerInfo['name'];
+        $customerInfo['email'] = $deliveryData['email'] ?? $customerInfo['email'];
+        $customerInfo['phone'] = $deliveryData['phone'] ?? $customerInfo['phone'];
+    }
+}
 
 // Create payment gateway instance
 try {
@@ -113,10 +123,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         // Prepare customer info
         $customerInfo = [
             'user_id' => $_SESSION['user_id'] ?? 0,
-            'name' => $order['customer_name'],
-            'email' => $order['customer_email'],
-            'phone' => $order['customer_phone']
+            'name' => $order['customer_name'] ?? 'Customer',
+            'email' => $order['customer_email'] ?? '',
+            'phone' => $order['customer_phone'] ?? ''
         ];
+        
+        // Decode delivery address if it's JSON
+        if (isset($order['delivery_address']) && is_string($order['delivery_address'])) {
+            $deliveryData = json_decode($order['delivery_address'], true);
+            if ($deliveryData && is_array($deliveryData)) {
+                $customerInfo['name'] = $deliveryData['name'] ?? $customerInfo['name'];
+                $customerInfo['email'] = $deliveryData['email'] ?? $customerInfo['email'];
+                $customerInfo['phone'] = $deliveryData['phone'] ?? $customerInfo['phone'];
+            }
+        }
         
         // Create payment gateway instance
         $gateway = PaymentGatewayFactory::create($paymentMethod, $orderId, $amount, $customerInfo);
@@ -166,12 +186,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['verify'])) {
         
         // Create gateway instance
         $order = fetchRow("SELECT * FROM orders WHERE id = ?", [$transaction['order_id']]);
+        
         $customerInfo = [
             'user_id' => $transaction['user_id'],
-            'name' => $order['customer_name'],
-            'email' => $order['customer_email'],
-            'phone' => $order['customer_phone']
+            'name' => 'Customer',
+            'email' => '',
+            'phone' => ''
         ];
+        
+        // Decode delivery address if it's JSON
+        if (isset($order['delivery_address']) && is_string($order['delivery_address'])) {
+            $deliveryData = json_decode($order['delivery_address'], true);
+            if ($deliveryData && is_array($deliveryData)) {
+                $customerInfo['name'] = $deliveryData['name'] ?? $customerInfo['name'];
+                $customerInfo['email'] = $deliveryData['email'] ?? $customerInfo['email'];
+                $customerInfo['phone'] = $deliveryData['phone'] ?? $customerInfo['phone'];
+            }
+        }
         
         $gateway = PaymentGatewayFactory::create($method, $transaction['order_id'], $transaction['amount'], $customerInfo);
         

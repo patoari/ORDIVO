@@ -93,6 +93,19 @@ class BkashGateway extends PaymentGateway {
     private $token;
     
     public function initiatePayment() {
+        // Demo mode - simulate successful payment for testing
+        if (PAYMENT_ENVIRONMENT === 'sandbox' && (empty(BKASH_APP_KEY) || BKASH_APP_KEY === 'your_bkash_app_key')) {
+            $transactionId = 'BKASH-DEMO-' . time();
+            
+            return [
+                'success' => true,
+                'payment_url' => '../customer/payment_success.php?order_id=' . $this->orderId . '&method=bkash&demo=1',
+                'redirect_url' => '../customer/payment_success.php?order_id=' . $this->orderId . '&method=bkash&demo=1',
+                'transaction_id' => $transactionId,
+                'message' => 'Demo mode: Payment simulated successfully'
+            ];
+        }
+        
         try {
             // Get bKash token
             $this->token = $this->getToken();

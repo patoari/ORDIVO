@@ -16,19 +16,41 @@ $userId = $_SESSION['user_id'];
 
 // Get wallet data from database
 try {
-    $walletData = fetchRow("SELECT balance FROM wallets WHERE user_id = ?", [$userId]);
+    // Get or create wallet
+    $walletData = fetchRow("SELECT * FROM wallets WHERE user_id = ?", [$userId]);
+    
+    if (!$walletData) {
+        // Create wallet if doesn't exist
+        insertData('wallets', [
+            'user_id' => $userId,
+            'balance' => 0.00,
+            'currency' => 'BDT',
+            'is_active' => 1
+        ]);
+        $walletData = fetchRow("SELECT * FROM wallets WHERE user_id = ?", [$userId]);
+    }
+    
     $walletBalance = $walletData ? (float)$walletData['balance'] : 0.00;
+    $totalEarned = $walletData ? (float)$walletData['total_earned'] : 0.00;
+    $totalSpent = $walletData ? (float)$walletData['total_spent'] : 0.00;
+    $walletId = $walletData['id'];
     
     // Get wallet transactions
     $transactions = fetchAll("
-        SELECT * FROM wallet_transactions 
-        WHERE user_id = ? 
-        ORDER BY created_at DESC 
-        LIMIT 20
-    ", [$userId]);
+        SELECT 
+            wt.*,
+            wt.transaction_type as type,
+            wt.created_at as date
+        FROM wallet_transactions wt
+        WHERE wt.wallet_id = ?
+        ORDER BY wt.created_at DESC 
+        LIMIT 50
+    ", [$walletId]);
 } catch (Exception $e) {
     error_log("Wallet query failed: " . $e->getMessage());
     $walletBalance = 0.00;
+    $totalEarned = 0.00;
+    $totalSpent = 0.00;
     $transactions = [];
 }
 ?>
@@ -202,8 +224,14 @@ try {
             <div class="row align-items-center">
                 <div class="col-md-8">
                     <h3 class="mb-2">Current Balance</h3>
-                    <div class="balance-amount">৳<?= number_format($walletBalance, 0) ?></div>
+                    <div class="balance-amount">৳<?= number_format($walletBalance, 2) ?></div>
                     <p class="mb-0 opacity-75">Available for orders</p>
+                    <div class="mt-3">
+                        <small class="opacity-75">
+                            Total Earned: ৳<?= number_format($totalEarned, 2) ?> | 
+                            Total Spent: ৳<?= number_format($totalSpent, 2) ?>
+                        </small>
+                    </div>
                 </div>
                 <div class="col-md-4 text-end">
                     <div class="wallet-icon" style="font-size: 4rem; opacity: 0.3;">
@@ -216,11 +244,8 @@ try {
                 <button class="btn btn-wallet" onclick="addMoney()">
                     <i class="fas fa-plus me-2"></i>Add Money
                 </button>
-                <button class="btn btn-wallet" onclick="sendMoney()">
-                    <i class="fas fa-paper-plane me-2"></i>Send Money
-                </button>
-                <button class="btn btn-wallet" onclick="withdrawMoney()">
-                    <i class="fas fa-download me-2"></i>Withdraw
+                <button class="btn btn-wallet" onclick="viewHistory()">
+                    <i class="fas fa-history me-2"></i>Full History
                 </button>
             </div>
         </div>
@@ -272,15 +297,16 @@ try {
     
     <script>
         function addMoney() {
-            alert('Add money functionality - would integrate with payment gateway');
+            // Redirect to add money page or show modal
+            const amount = prompt('Enter amount to add to wallet (৳):');
+            if (amount && !isNaN(amount) && parseFloat(amount) > 0) {
+                window.location.href = 'process_payment.php?action=add_money&amount=' + amount;
+            }
         }
 
-        function sendMoney() {
-            alert('Send money functionality - would allow sending to other users');
-        }
-
-        function withdrawMoney() {
-            alert('Withdraw functionality - would allow withdrawal to bank account');
+        function viewHistory() {
+            // Show all transactions
+            alert('Full transaction history - would show paginated list of all transactions');
         }
     </script>
 </body>

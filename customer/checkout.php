@@ -5,6 +5,20 @@
  */
 
 require_once '../config/db_connection.php';
+require_once '../config/payment_config.php';
+
+// Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Check if user is logged in - if not, redirect to login
+if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
+    // Store current URL to redirect back after login
+    $_SESSION['redirect_after_login'] = 'checkout.php';
+    header('Location: ../auth/login.php?redirect=checkout');
+    exit;
+}
 
 // Get site settings
 $siteSettings = fetchRow("SELECT * FROM site_settings WHERE id = 1") ?? [];
@@ -19,6 +33,14 @@ if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️') {
     elseif (!preg_match('/^(https?:\/\/|\.\.\/|\/)/i', $siteLogo)) {
         $siteLogo = '../' . $siteLogo;
     }
+}
+
+// Get user wallet balance if logged in
+$walletBalance = 0;
+$userId = $_SESSION['user_id'] ?? null;
+if ($userId) {
+    $wallet = fetchRow("SELECT balance FROM wallets WHERE user_id = ? AND is_active = 1", [$userId]);
+    $walletBalance = $wallet['balance'] ?? 0;
 }
 
 // Handle order placement
@@ -45,111 +67,160 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
             $totalAmount = $subtotal + $deliveryFee;
             
             // Get vendor ID from first product
-            $vendorId = 1; // Default vendor, you might want to handle multiple vendors
+            $firstProduct = fetchRow("SELECT vendor_id FROM products WHERE id = ?", [$cartData[0]['id']]);
+            $vendorId = $firstProduct['vendor_id'] ?? 1;
             
-            // Insert order
-            $orderId = insertData('orders', [
-                'customer_name' => $customerName,
-                'customer_phone' => $customerPhone,
-                'customer_email' => $customerEmail,
-                'delivery_address' => $deliveryAddress,
-                'vendor_id' => $vendorId,
-                'total_amount' => $totalAmount,
-                'delivery_fee' => $deliveryFee,
-                'payment_method' => $paymentMethod,
-                'status' => 'pending',
-                'notes' => $notes
+            // Generate order number
+            $orderNumber = 'ORD-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
+            
+            // Prepare delivery address JSON
+            $deliveryAddressJson = json_encode([
+                'name' => $customerName,
+                'phone' => $customerPhone,
+                'email' => $customerEmail,
+                'address' => $deliveryAddress
             ]);
             
-            if ($orderId) {
-                // Insert order items
-                foreach ($cartData as $item) {
-                    insertData('order_items', [
-                        'order_id' => $orderId,
-                        'product_id' => $item['id'],
-                        'quantity' => $item['quantity'],
-                        'price' => $item['price'],
-                        'subtotal' => $item['price'] * $item['quantity']
+            // For wallet payment, check balance
+            if ($paymentMethod === 'wallet') {
+                if (!$userId) {
+                    $error = 'Please login to use wallet payment.';
+                } elseif ($walletBalance < $totalAmount) {
+                    $error = 'Insufficient wallet balance. Please recharge your wallet or choose another payment method.';
+                } else {
+                    // Process wallet payment
+                    // Insert order
+                    $orderId = insertData('orders', [
+                        'order_number' => $orderNumber,
+                        'customer_id' => $userId,
+                        'vendor_id' => $vendorId,
+                        'delivery_address' => $deliveryAddressJson,
+                        'subtotal' => $subtotal,
+                        'delivery_fee' => $deliveryFee,
+                        'total_amount' => $totalAmount,
+                        'payment_method' => $paymentMethod,
+                        'payment_status' => 'paid',
+                        'status' => 'pending',
+                        'special_instructions' => $notes
                     ]);
+                    
+                    if ($orderId) {
+                        // Insert order items
+                        foreach ($cartData as $item) {
+                            $product = fetchRow("SELECT name FROM products WHERE id = ?", [$item['id']]);
+                            insertData('order_items', [
+                                'order_id' => $orderId,
+                                'product_id' => $item['id'],
+                                'product_name' => $product['name'],
+                                'quantity' => $item['quantity'],
+                                'unit_price' => $item['price'],
+                                'total_price' => $item['price'] * $item['quantity']
+                            ]);
+                        }
+                        
+                        // Deduct from wallet
+                        $walletId = fetchRow("SELECT id FROM wallets WHERE user_id = ?", [$userId])['id'];
+                        $newBalance = $walletBalance - $totalAmount;
+                        
+                        updateData('wallets', ['balance' => $newBalance, 'total_spent' => $walletBalance + $totalAmount], ['id' => $walletId]);
+                        
+                        // Record wallet transaction
+                        insertData('wallet_transactions', [
+                            'wallet_id' => $walletId,
+                            'transaction_type' => 'debit',
+                            'amount' => $totalAmount,
+                            'balance_before' => $walletBalance,
+                            'balance_after' => $newBalance,
+                            'reference_type' => 'order',
+                            'reference_id' => $orderId,
+                            'description' => 'Order payment #' . $orderNumber,
+                            'payment_method' => 'wallet',
+                            'status' => 'completed',
+                            'processed_at' => date('Y-m-d H:i:s')
+                        ]);
+                        
+                        // Redirect to success page
+                        header("Location: order_success.php?order_id=$orderId");
+                        exit;
+                    }
                 }
+            } elseif ($paymentMethod === 'cash_on_delivery') {
+                // Insert order for COD
+                $orderId = insertData('orders', [
+                    'order_number' => $orderNumber,
+                    'customer_id' => $userId,
+                    'vendor_id' => $vendorId,
+                    'delivery_address' => $deliveryAddressJson,
+                    'subtotal' => $subtotal,
+                    'delivery_fee' => $deliveryFee,
+                    'total_amount' => $totalAmount,
+                    'payment_method' => 'cash',
+                    'payment_status' => 'pending',
+                    'status' => 'pending',
+                    'special_instructions' => $notes
+                ]);
                 
-                // Redirect to success page
-                header("Location: order_success.php?order_id=$orderId");
-                exit;
+                if ($orderId) {
+                    // Insert order items
+                    foreach ($cartData as $item) {
+                        $product = fetchRow("SELECT name FROM products WHERE id = ?", [$item['id']]);
+                        insertData('order_items', [
+                            'order_id' => $orderId,
+                            'product_id' => $item['id'],
+                            'product_name' => $product['name'],
+                            'quantity' => $item['quantity'],
+                            'unit_price' => $item['price'],
+                            'total_price' => $item['price'] * $item['quantity']
+                        ]);
+                    }
+                    
+                    // Redirect to success page
+                    header("Location: order_success.php?order_id=$orderId");
+                    exit;
+                }
             } else {
+                // For online payment methods (bKash, Nagad, Rocket, Upay, Card)
+                // Insert order first
+                $orderId = insertData('orders', [
+                    'order_number' => $orderNumber,
+                    'customer_id' => $userId,
+                    'vendor_id' => $vendorId,
+                    'delivery_address' => $deliveryAddressJson,
+                    'subtotal' => $subtotal,
+                    'delivery_fee' => $deliveryFee,
+                    'total_amount' => $totalAmount,
+                    'payment_method' => $paymentMethod,
+                    'payment_status' => 'pending',
+                    'status' => 'pending',
+                    'special_instructions' => $notes
+                ]);
+                
+                if ($orderId) {
+                    // Insert order items
+                    foreach ($cartData as $item) {
+                        $product = fetchRow("SELECT name FROM products WHERE id = ?", [$item['id']]);
+                        insertData('order_items', [
+                            'order_id' => $orderId,
+                            'product_id' => $item['id'],
+                            'product_name' => $product['name'],
+                            'quantity' => $item['quantity'],
+                            'unit_price' => $item['price'],
+                            'total_price' => $item['price'] * $item['quantity']
+                        ]);
+                    }
+                    
+                    // Redirect to payment processing page
+                    header("Location: process_payment.php?order_id=$orderId&method=$paymentMethod");
+                    exit;
+                }
+            }
+            
+            if (!isset($orderId) || !$orderId) {
                 $error = 'Failed to place order. Please try again.';
             }
         } catch (Exception $e) {
             $error = 'Error placing order: ' . $e->getMessage();
         }
-    }
-}
-        
-        $cartItems[] = [
-            'product' => $product,
-            'quantity' => $quantity,
-            'subtotal' => $subtotal
-        ];
-    }
-} catch (Exception $e) {
-    header('Location: cart.php?error=cart_error');
-    exit;
-}
-
-$deliveryFee = $totalAmount > 500 ? 0 : 50;
-$finalTotal = $totalAmount + $deliveryFee;
-
-// Handle order placement
-$success = $error = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
-    try {
-        global $pdo;
-        
-        // Validate required fields
-        $customerName = trim($_POST['customer_name'] ?? '');
-        $customerPhone = trim($_POST['customer_phone'] ?? '');
-        $deliveryAddress = trim($_POST['delivery_address'] ?? '');
-        $paymentMethod = $_POST['payment_method'] ?? '';
-        
-        if (empty($customerName) || empty($customerPhone) || empty($deliveryAddress) || empty($paymentMethod)) {
-            throw new Exception('Please fill in all required fields');
-        }
-        
-        // Create order
-        $orderId = insertData('orders', [
-            'customer_name' => $customerName,
-            'customer_phone' => $customerPhone,
-            'customer_email' => trim($_POST['customer_email'] ?? ''),
-            'delivery_address' => $deliveryAddress,
-            'vendor_id' => $vendorId,
-            'total_amount' => $finalTotal,
-            'delivery_fee' => $deliveryFee,
-            'payment_method' => $paymentMethod,
-            'status' => 'pending',
-            'notes' => trim($_POST['notes'] ?? ''),
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
-        
-        // Add order items
-        foreach ($cartItems as $item) {
-            insertData('order_items', [
-                'order_id' => $orderId,
-                'product_id' => $item['product']['id'],
-                'quantity' => $item['quantity'],
-                'price' => $item['product']['price'],
-                'subtotal' => $item['subtotal']
-            ]);
-        }
-        
-        // Clear cart
-        $_SESSION['cart'] = [];
-        
-        // Redirect to success page
-        header("Location: order_success.php?order_id=$orderId");
-        exit;
-        
-    } catch (Exception $e) {
-        $error = $e->getMessage();
     }
 }
 ?>
@@ -412,7 +483,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
                         
                         <div class="mb-3">
                             <label for="delivery_address" class="form-label">Delivery Address *</label>
+                            
+                            <!-- Use Current Location Button -->
+                            <button type="button" class="btn btn-outline-success w-100 mb-2" id="useLocationBtn" onclick="detectLocation()">
+                                <i class="fas fa-crosshairs me-2"></i>
+                                <span id="locationBtnText">Use Current Location</span>
+                            </button>
+                            
                             <textarea class="form-control" id="delivery_address" name="delivery_address" rows="3" required placeholder="Enter your complete delivery address"></textarea>
+                            <small class="text-muted">Click "Use Current Location" to auto-fill your address</small>
                         </div>
                         
                         <div class="mb-3">
@@ -428,38 +507,99 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
                         </h4>
                         
                         <div class="payment-options">
-                            <div class="payment-option" onclick="selectPayment('mobile_banking')">
-                                <div class="d-flex align-items-center">
-                                    <input type="radio" name="payment_method" value="mobile_banking" id="mobile_banking" class="me-3">
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-1">Mobile Banking</h6>
-                                        <small class="text-muted">bKash, Nagad, Rocket</small>
-                                    </div>
-                                    <i class="fas fa-mobile-alt ms-auto text-success fa-lg"></i>
-                                </div>
-                            </div>
-                            
-                            <div class="payment-option" onclick="selectPayment('bank_card')">
-                                <div class="d-flex align-items-center">
-                                    <input type="radio" name="payment_method" value="bank_card" id="bank_card" class="me-3">
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-1">Bank Card</h6>
-                                        <small class="text-muted">Visa, Mastercard, DBBL</small>
-                                    </div>
-                                    <i class="fas fa-credit-card ms-auto text-primary fa-lg"></i>
-                                </div>
-                            </div>
-                            
+                            <!-- Cash on Delivery -->
                             <div class="payment-option" onclick="selectPayment('cash_on_delivery')">
                                 <div class="d-flex align-items-center">
                                     <input type="radio" name="payment_method" value="cash_on_delivery" id="cash_on_delivery" class="me-3">
                                     <div class="flex-grow-1">
                                         <h6 class="mb-1">Cash on Delivery</h6>
-                                        <small class="text-muted">Pay when you receive</small>
+                                        <small class="text-muted">Pay when you receive your order</small>
                                     </div>
-                                    <i class="fas fa-money-bill-wave ms-auto text-warning fa-lg"></i>
+                                    <i class="fas fa-money-bill-wave ms-auto text-success fa-2x"></i>
                                 </div>
                             </div>
+                            
+                            <!-- bKash -->
+                            <div class="payment-option" onclick="selectPayment('bkash')">
+                                <div class="d-flex align-items-center">
+                                    <input type="radio" name="payment_method" value="bkash" id="bkash" class="me-3">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">bKash</h6>
+                                        <small class="text-muted">Pay securely with bKash</small>
+                                    </div>
+                                    <div class="payment-logo ms-auto">
+                                        <span class="badge bg-danger fs-6">bKash</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Nagad -->
+                            <div class="payment-option" onclick="selectPayment('nagad')">
+                                <div class="d-flex align-items-center">
+                                    <input type="radio" name="payment_method" value="nagad" id="nagad" class="me-3">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">Nagad</h6>
+                                        <small class="text-muted">Pay securely with Nagad</small>
+                                    </div>
+                                    <div class="payment-logo ms-auto">
+                                        <span class="badge bg-warning text-dark fs-6">Nagad</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Rocket -->
+                            <div class="payment-option" onclick="selectPayment('rocket')">
+                                <div class="d-flex align-items-center">
+                                    <input type="radio" name="payment_method" value="rocket" id="rocket" class="me-3">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">Rocket</h6>
+                                        <small class="text-muted">Pay securely with Rocket</small>
+                                    </div>
+                                    <div class="payment-logo ms-auto">
+                                        <span class="badge bg-info fs-6">Rocket</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Upay -->
+                            <div class="payment-option" onclick="selectPayment('upay')">
+                                <div class="d-flex align-items-center">
+                                    <input type="radio" name="payment_method" value="upay" id="upay" class="me-3">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">Upay</h6>
+                                        <small class="text-muted">Pay securely with Upay</small>
+                                    </div>
+                                    <div class="payment-logo ms-auto">
+                                        <span class="badge bg-primary fs-6">Upay</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Credit/Debit Card -->
+                            <div class="payment-option" onclick="selectPayment('card')">
+                                <div class="d-flex align-items-center">
+                                    <input type="radio" name="payment_method" value="card" id="card" class="me-3">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">Credit/Debit Card</h6>
+                                        <small class="text-muted">Visa, Mastercard, DBBL</small>
+                                    </div>
+                                    <i class="fas fa-credit-card ms-auto text-primary fa-2x"></i>
+                                </div>
+                            </div>
+                            
+                            <!-- ORDIVO Wallet -->
+                            <?php if ($userId): ?>
+                            <div class="payment-option" onclick="selectPayment('wallet')">
+                                <div class="d-flex align-items-center">
+                                    <input type="radio" name="payment_method" value="wallet" id="wallet" class="me-3">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">ORDIVO Wallet</h6>
+                                        <small class="text-muted">Balance: ৳<?= number_format($walletBalance, 2) ?></small>
+                                    </div>
+                                    <i class="fas fa-wallet ms-auto text-success fa-2x"></i>
+                                </div>
+                            </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -515,49 +655,153 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
             </div>
         </form>
     </div>
-                        </div>
-                        
-                        <hr>
-                        
-                        <div class="d-flex justify-content-between mb-3">
-                            <strong>Total:</strong>
-                            <strong class="text-primary">৳<?= number_format($finalTotal, 0) ?></strong>
-                        </div>
-                        
-                        <button type="submit" name="place_order" class="btn btn-primary w-100 btn-lg">
-                            <i class="fas fa-check me-2"></i>Place Order
-                        </button>
-                        
-                        <div class="mt-3 text-center">
-                            <small class="text-muted">
-                                <i class="fas fa-shield-alt me-1"></i>
-                                Your order is secure and encrypted
-                            </small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
+    <!-- Location Tracker -->
+    <?php include 'includes/modals.php'; ?>
+    <script src="../assets/js/location-tracker.js"></script>
+    
     <script>
         let checkoutData = null;
         let selectedPaymentMethod = null;
+        const walletBalance = <?= $walletBalance ?>;
+        const isLoggedIn = <?= $userId ? 'true' : 'false' ?>;
 
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('Checkout page loaded');
             loadCheckoutData();
+            loadSavedLocation();
         });
 
+        // Load saved location on page load
+        function loadSavedLocation() {
+            const savedLocation = localStorage.getItem('user_location');
+            if (savedLocation) {
+                try {
+                    const location = JSON.parse(savedLocation);
+                    const timestamp = location.timestamp;
+                    const now = Date.now();
+                    const hoursSinceUpdate = (now - timestamp) / (1000 * 60 * 60);
+                    
+                    // If location is less than 24 hours old, use it
+                    if (hoursSinceUpdate < 24 && location.address) {
+                        document.getElementById('delivery_address').value = location.address;
+                    }
+                } catch (e) {
+                    console.error('Error loading saved location:', e);
+                }
+            }
+        }
+
+        // Detect current location
+        function detectLocation() {
+            const btn = document.getElementById('useLocationBtn');
+            const btnText = document.getElementById('locationBtnText');
+            const originalText = btnText.innerHTML;
+            
+            // Show loading state
+            btn.disabled = true;
+            btnText.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Detecting location...';
+            
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                btn.disabled = false;
+                btnText.innerHTML = originalText;
+                return;
+            }
+            
+            navigator.geolocation.getCurrentPosition(
+                async function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    
+                    btnText.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Getting address...';
+                    
+                    try {
+                        // Reverse geocoding using OpenStreetMap Nominatim
+                        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
+                        const data = await response.json();
+                        
+                        if (data && data.display_name) {
+                            const address = data.display_name;
+                            
+                            // Update delivery address field
+                            document.getElementById('delivery_address').value = address;
+                            
+                            // Save to localStorage
+                            const locationData = {
+                                latitude: lat,
+                                longitude: lon,
+                                address: address,
+                                timestamp: Date.now()
+                            };
+                            localStorage.setItem('user_location', JSON.stringify(locationData));
+                            
+                            // Update button to show success
+                            btn.classList.remove('btn-outline-success');
+                            btn.classList.add('btn-success');
+                            btnText.innerHTML = '<i class="fas fa-check-circle me-2"></i>Location detected';
+                            
+                            setTimeout(() => {
+                                btn.classList.remove('btn-success');
+                                btn.classList.add('btn-outline-success');
+                                btnText.innerHTML = originalText;
+                                btn.disabled = false;
+                            }, 2000);
+                        } else {
+                            throw new Error('Could not get address');
+                        }
+                    } catch (error) {
+                        console.error('Geocoding error:', error);
+                        alert('Could not get your address. Please enter it manually.');
+                        btn.disabled = false;
+                        btnText.innerHTML = originalText;
+                    }
+                },
+                function(error) {
+                    console.error('Geolocation error:', error);
+                    let errorMessage = 'Could not get your location. ';
+                    
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage += 'Please allow location access.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage += 'Location information unavailable.';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage += 'Location request timed out.';
+                            break;
+                        default:
+                            errorMessage += 'An unknown error occurred.';
+                    }
+                    
+                    alert(errorMessage);
+                    btn.disabled = false;
+                    btnText.innerHTML = originalText;
+                }
+            );
+        }
+
         function loadCheckoutData() {
+            console.log('Loading checkout data...');
+            
             // Get cart data from localStorage
-            const cartData = JSON.parse(localStorage.getItem('checkout_cart_data') || 'null');
+            const cartDataStr = localStorage.getItem('checkout_cart_data');
+            console.log('Cart data from localStorage:', cartDataStr);
+            
+            const cartData = JSON.parse(cartDataStr || 'null');
             const paymentMethod = localStorage.getItem('checkout_payment_method');
+            
+            console.log('Parsed cart data:', cartData);
+            console.log('Payment method:', paymentMethod);
 
             if (!cartData || !cartData.items || cartData.items.length === 0) {
+                console.log('No cart data found, redirecting to cart');
                 // Redirect to cart if no data
+                alert('No checkout data found. Please add items to cart first.');
                 window.location.href = 'cart.php';
                 return;
             }
@@ -565,9 +809,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
             checkoutData = cartData;
             selectedPaymentMethod = paymentMethod;
 
+            console.log('Rendering order items...');
             // Render order items
             renderOrderItems(cartData.items);
             
+            console.log('Updating totals...');
             // Update totals
             updateTotals(cartData);
             
@@ -575,9 +821,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
             if (paymentMethod) {
                 selectPayment(paymentMethod);
             } else {
-                selectPayment('mobile_banking'); // Default
+                selectPayment('cash_on_delivery'); // Default
             }
 
+            console.log('Showing form...');
             // Show form, hide loading
             document.getElementById('loadingState').classList.add('d-none');
             document.getElementById('checkoutForm').classList.remove('d-none');
@@ -620,20 +867,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
         }
 
         function selectPayment(method) {
+            // Check wallet balance for wallet payment
+            if (method === 'wallet') {
+                if (!isLoggedIn) {
+                    alert('Please login to use wallet payment');
+                    return;
+                }
+                
+                const total = checkoutData.total;
+                if (walletBalance < total) {
+                    alert(`Insufficient wallet balance. Your balance: ৳${walletBalance.toFixed(2)}, Required: ৳${total.toFixed(2)}`);
+                    return;
+                }
+            }
+            
             // Remove selected class from all options
             document.querySelectorAll('.payment-option').forEach(option => {
                 option.classList.remove('selected');
             });
             
             // Add selected class to clicked option
-            const clickedOption = document.querySelector(`#${method}`).closest('.payment-option');
+            const clickedOption = document.querySelector(`#${method}`);
             if (clickedOption) {
-                clickedOption.classList.add('selected');
+                const paymentOption = clickedOption.closest('.payment-option');
+                if (paymentOption) {
+                    paymentOption.classList.add('selected');
+                }
             }
             
             // Check the radio button
-            document.getElementById(method).checked = true;
-            selectedPaymentMethod = method;
+            const radioButton = document.getElementById(method);
+            if (radioButton) {
+                radioButton.checked = true;
+                selectedPaymentMethod = method;
+            }
         }
 
         // Form submission handler
@@ -644,10 +911,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
                 return false;
             }
 
-            // Clear localStorage after successful submission
-            localStorage.removeItem('checkout_cart_data');
-            localStorage.removeItem('checkout_payment_method');
-            localStorage.removeItem('ordivo_cart'); // Clear cart
+            // For wallet payment, double-check balance
+            if (selectedPaymentMethod === 'wallet') {
+                const total = checkoutData.total;
+                if (walletBalance < total) {
+                    e.preventDefault();
+                    alert(`Insufficient wallet balance. Your balance: ৳${walletBalance.toFixed(2)}, Required: ৳${total.toFixed(2)}`);
+                    return false;
+                }
+            }
+
+            // Don't clear localStorage here - let the server-side redirect handle it
+            // The localStorage will be cleared after successful order placement
+            console.log('Form submitting with payment method:', selectedPaymentMethod);
         });
     </script>
 </body>

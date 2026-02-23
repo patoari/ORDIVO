@@ -842,7 +842,8 @@ $finalTotal = 50;
             localStorage.setItem('checkout_payment_method', selectedPayment.value);
             localStorage.setItem('checkout_cart_data', JSON.stringify(cartData));
             
-            // Redirect to checkout
+            // Check if user is logged in (check session via PHP or localStorage)
+            // For now, we'll redirect to checkout and let checkout page handle login check
             window.location.href = 'checkout.php';
         }
 

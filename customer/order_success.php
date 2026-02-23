@@ -32,9 +32,10 @@ if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️') {
 // Get order details
 try {
     $order = fetchRow("
-        SELECT o.*, u.name as vendor_name 
+        SELECT o.*, u.name as vendor_name, c.name as customer_name, c.email as customer_email, c.phone as customer_phone
         FROM orders o 
         LEFT JOIN users u ON o.vendor_id = u.id 
+        LEFT JOIN users c ON o.customer_id = c.id
         WHERE o.id = ?
     ", [$orderId]);
     
@@ -42,6 +43,13 @@ try {
         header('Location: index.php');
         exit;
     }
+    
+    // Decode delivery address JSON
+    $deliveryAddressData = json_decode($order['delivery_address'], true);
+    $order['delivery_name'] = $deliveryAddressData['name'] ?? $order['customer_name'];
+    $order['delivery_phone'] = $deliveryAddressData['phone'] ?? $order['customer_phone'];
+    $order['delivery_email'] = $deliveryAddressData['email'] ?? $order['customer_email'];
+    $order['delivery_address_text'] = $deliveryAddressData['address'] ?? '';
     
     // Get order items
     $orderItems = fetchAll("
@@ -328,9 +336,9 @@ $estimatedTime = date('H:i', strtotime('+45 minutes'));
                         <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
                             <div>
                                 <strong><?= htmlspecialchars($item['product_name']) ?></strong>
-                                <small class="text-muted d-block">Qty: <?= $item['quantity'] ?> × ৳<?= number_format($item['price'], 0) ?></small>
+                                <small class="text-muted d-block">Qty: <?= $item['quantity'] ?> × ৳<?= number_format($item['unit_price'], 0) ?></small>
                             </div>
-                            <strong>৳<?= number_format($item['subtotal'], 0) ?></strong>
+                            <strong>৳<?= number_format($item['total_price'], 0) ?></strong>
                         </div>
                     <?php endforeach; ?>
                     
@@ -352,16 +360,16 @@ $estimatedTime = date('H:i', strtotime('+45 minutes'));
                         
                         <div class="mb-3">
                             <strong>Customer:</strong><br>
-                            <?= htmlspecialchars($order['customer_name']) ?><br>
-                            <?= htmlspecialchars($order['customer_phone']) ?>
-                            <?php if ($order['customer_email']): ?>
-                                <br><?= htmlspecialchars($order['customer_email']) ?>
+                            <?= htmlspecialchars($order['delivery_name']) ?><br>
+                            <?= htmlspecialchars($order['delivery_phone']) ?>
+                            <?php if ($order['delivery_email']): ?>
+                                <br><?= htmlspecialchars($order['delivery_email']) ?>
                             <?php endif; ?>
                         </div>
                         
                         <div class="mb-3">
                             <strong>Delivery Address:</strong><br>
-                            <?= nl2br(htmlspecialchars($order['delivery_address'])) ?>
+                            <?= nl2br(htmlspecialchars($order['delivery_address_text'])) ?>
                         </div>
                         
                         <div class="mb-3">
@@ -369,10 +377,10 @@ $estimatedTime = date('H:i', strtotime('+45 minutes'));
                             <?= ucwords(str_replace('_', ' ', $order['payment_method'])) ?>
                         </div>
                         
-                        <?php if ($order['notes']): ?>
+                        <?php if ($order['special_instructions']): ?>
                             <div class="mb-3">
                                 <strong>Special Instructions:</strong><br>
-                                <?= nl2br(htmlspecialchars($order['notes'])) ?>
+                                <?= nl2br(htmlspecialchars($order['special_instructions'])) ?>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -395,6 +403,13 @@ $estimatedTime = date('H:i', strtotime('+45 minutes'));
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // Clear cart and checkout data from localStorage on success page
+        localStorage.removeItem('checkout_cart_data');
+        localStorage.removeItem('checkout_payment_method');
+        localStorage.removeItem('ordivo_cart');
+        
+        console.log('Order successful - cart cleared from localStorage');
+        
         // Auto-refresh page every 30 seconds to simulate order status updates
         setTimeout(function() {
             // In a real app, this would check for status updates via AJAX

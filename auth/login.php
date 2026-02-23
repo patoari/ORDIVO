@@ -46,7 +46,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_phone'] = $user['phone'] ?? '';
                 $_SESSION['user_address'] = $user['address'] ?? '';
                 
-                // Redirect based on role from database
+                // Check if there's a redirect parameter
+                $redirect = $_GET['redirect'] ?? '';
+                
+                // If redirect is checkout, go to checkout page
+                if ($redirect === 'checkout') {
+                    header('Location: ../customer/checkout.php');
+                    exit;
+                }
+                
+                // Otherwise, redirect based on role from database
                 switch ($user['role']) {
                     case 'super_admin':
                         header('Location: ../super_admin/dashboard.php');
@@ -474,7 +483,13 @@ $demoCredentials = [
                 <!-- Welcome Text -->
                 <div class="welcome-text">
                     <h2>Welcome Back!</h2>
-                    <p>Sign in to continue your food journey</p>
+                    <?php if (isset($_GET['redirect']) && $_GET['redirect'] === 'checkout'): ?>
+                        <div class="alert alert-info mb-3">
+                            <i class="fas fa-info-circle me-2"></i>Please login to complete your checkout
+                        </div>
+                    <?php else: ?>
+                        <p>Sign in to continue your food journey</p>
+                    <?php endif; ?>
                 </div>
                 
                 <!-- Alerts -->

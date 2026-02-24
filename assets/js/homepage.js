@@ -50,26 +50,44 @@ function loadFeaturedRestaurants() {
             }
             
             container.innerHTML = data.map(restaurant => `
-                <div class="restaurant-card" onclick="window.location.href='vendor_profile.php?id=${restaurant.id}'" style="cursor: pointer;" title="Click to view ${restaurant.name}">
-                    <div class="restaurant-image" style="background-image: url('${restaurant.image}')">
-                        <div class="restaurant-badge">${restaurant.badge}</div>
-                    </div>
-                    <div class="restaurant-info">
-                        <div class="restaurant-name">${restaurant.name}</div>
-                        <div class="restaurant-details">
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <span>${restaurant.rating}</span>
-                                <span class="text-muted">(${restaurant.reviews})</span>
-                            </div>
-                            <div class="text-muted">${restaurant.category}</div>
+                <div class="swiper-slide">
+                    <div class="product-card" onclick="window.location.href='vendor_profile.php?id=${restaurant.id}'" style="cursor: pointer;" title="Click to view ${restaurant.name}">
+                        <div class="product-image" style="background-image: url('${restaurant.image}')">
+                            <div class="product-badge">${restaurant.badge}</div>
                         </div>
-                        <div class="delivery-time">
-                            <i class="fas fa-clock"></i> ${restaurant.time}
+                        <div class="product-info">
+                            <div class="product-name">${restaurant.name}</div>
+                            <div class="product-vendor">${restaurant.category}</div>
+                            <div class="product-footer">
+                                <div class="product-rating">
+                                    <i class="fas fa-star"></i> ${restaurant.rating}
+                                    <span class="text-muted">(${restaurant.reviews})</span>
+                                </div>
+                                <div class="delivery-time">
+                                    <i class="fas fa-clock"></i> ${restaurant.time}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             `).join('');
+            
+            // Initialize Swiper after content is loaded
+            setTimeout(() => {
+                new Swiper('.featuredRestaurantsSwiper', {
+                    slidesPerView: 'auto',
+                    spaceBetween: 15,
+                    freeMode: true,
+                    navigation: {
+                        nextEl: '.featuredRestaurantsSwiper .swiper-button-next',
+                        prevEl: '.featuredRestaurantsSwiper .swiper-button-prev',
+                    },
+                    breakpoints: {
+                        320: { slidesPerView: 2 },
+                        769: { slidesPerView: 'auto' }
+                    }
+                });
+            }, 100);
         })
         .catch(error => {
             console.error('Error loading featured restaurants:', error);
@@ -83,10 +101,31 @@ function loadFeaturedRestaurants() {
 // Load Cuisines
 function loadCuisines() {
     fetch('index.php?ajax=categories')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.text().then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Invalid JSON response:', text);
+                    throw new Error('Invalid JSON: ' + text.substring(0, 100));
+                }
+            });
+        })
         .then(data => {
+            console.log('Cuisines data:', data);
             const container = document.getElementById('cuisinesContainer');
-            if (data.error || data.length === 0) {
+            
+            if (data.error) {
+                console.error('Cuisines error:', data.error);
+                if (data.trace) console.error('Trace:', data.trace);
+                container.innerHTML = '<p class="text-center text-danger">Error: ' + data.error + '</p>';
+                return;
+            }
+            
+            if (data.length === 0) {
                 container.innerHTML = '<p class="text-center text-muted">No cuisines available</p>';
                 return;
             }
@@ -136,18 +175,44 @@ function loadCuisines() {
                 });
             }, 100);
         })
-        .catch(error => console.error('Error loading cuisines:', error));
+        .catch(error => {
+            console.error('Error loading cuisines:', error);
+            const container = document.getElementById('cuisinesContainer');
+            if (container) {
+                container.innerHTML = '<p class="text-center text-danger">Failed to load cuisines: ' + error.message + '</p>';
+            }
+        });
 }
 
 // Load Featured Products
 function loadFeaturedProducts() {
     // Load Featured Products
     fetch('index.php?ajax=featured_products')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.text().then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Invalid JSON response:', text);
+                    throw new Error('Invalid JSON: ' + text.substring(0, 100));
+                }
+            });
+        })
         .then(data => {
+            console.log('Featured products data:', data);
             const container = document.getElementById('featuredProductsContainer');
             
-            if (data.error || data.length === 0) {
+            if (data.error) {
+                console.error('Featured products error:', data.error);
+                if (data.trace) console.error('Trace:', data.trace);
+                container.innerHTML = '<p class="text-center text-danger">Error: ' + data.error + '</p>';
+                return;
+            }
+            
+            if (data.length === 0) {
                 container.innerHTML = '<p class="text-center text-muted">No featured products available</p>';
                 return;
             }
@@ -172,15 +237,41 @@ function loadFeaturedProducts() {
             
             container.innerHTML = productHTML;
         })
-        .catch(error => console.error('Error loading featured products:', error));
+        .catch(error => {
+            console.error('Error loading featured products:', error);
+            const container = document.getElementById('featuredProductsContainer');
+            if (container) {
+                container.innerHTML = '<p class="text-center text-danger">Failed to load products: ' + error.message + '</p>';
+            }
+        });
     
     // Load Top Choice Products
     fetch('index.php?ajax=top_choice_products')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.text().then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Invalid JSON response:', text);
+                    throw new Error('Invalid JSON: ' + text.substring(0, 100));
+                }
+            });
+        })
         .then(data => {
+            console.log('Top choice products data:', data);
             const topChoiceContainer = document.getElementById('topChoiceProductsContainer');
             
-            if (data.error || data.length === 0) {
+            if (data.error) {
+                console.error('Top choice products error:', data.error);
+                if (data.trace) console.error('Trace:', data.trace);
+                topChoiceContainer.innerHTML = '<p class="text-center text-danger">Error: ' + data.error + '</p>';
+                return;
+            }
+            
+            if (data.length === 0) {
                 topChoiceContainer.innerHTML = '<p class="text-center text-muted">No top choice products available</p>';
                 return;
             }
@@ -205,7 +296,13 @@ function loadFeaturedProducts() {
             
             topChoiceContainer.innerHTML = productHTML;
         })
-        .catch(error => console.error('Error loading top choice products:', error));
+        .catch(error => {
+            console.error('Error loading top choice products:', error);
+            const topChoiceContainer = document.getElementById('topChoiceProductsContainer');
+            if (topChoiceContainer) {
+                topChoiceContainer.innerHTML = '<p class="text-center text-danger">Failed to load products: ' + error.message + '</p>';
+            }
+        });
 }
 
 // Load All Restaurants
@@ -247,39 +344,82 @@ function loadAllRestaurants() {
     if (dietary.length > 0) params.append('dietary', dietary.join(','));
     
     fetch(`index.php?${params}`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.text().then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Invalid JSON response:', text);
+                    throw new Error('Invalid JSON: ' + text.substring(0, 100));
+                }
+            });
+        })
         .then(data => {
+            console.log('All restaurants data:', data);
             const container = document.getElementById('restaurantsGrid');
-            if (data.error || data.length === 0) {
-                container.innerHTML = '<div class="col-12"><p class="text-center text-muted">No restaurants found matching your filters</p></div>';
+            
+            if (data.error) {
+                console.error('All restaurants error:', data.error);
+                if (data.trace) console.error('Trace:', data.trace);
+                container.innerHTML = '<p class="text-center text-danger">Error: ' + data.error + '</p>';
+                return;
+            }
+            
+            if (data.length === 0) {
+                container.innerHTML = '<p class="text-center text-muted">No restaurants found matching your filters</p>';
                 return;
             }
             
             container.innerHTML = data.map(restaurant => `
-                <div class="col-lg-4 col-md-6 col-6 mb-4">
-                    <div class="restaurant-card" onclick="window.location.href='vendor_profile.php?id=${restaurant.id}'">
-                        <div class="restaurant-image" style="background-image: url('${restaurant.image}')">
-                            <div class="restaurant-badge">${restaurant.badge}</div>
+                <div class="swiper-slide">
+                    <div class="product-card" onclick="window.location.href='vendor_profile.php?id=${restaurant.id}'" style="cursor: pointer;">
+                        <div class="product-image" style="background-image: url('${restaurant.image}')">
+                            <div class="product-badge">${restaurant.badge}</div>
                         </div>
-                        <div class="restaurant-info">
-                            <div class="restaurant-name">${restaurant.name}</div>
-                            <div class="restaurant-details">
-                                <div class="rating">
-                                    <i class="fas fa-star"></i>
-                                    <span>${restaurant.rating}</span>
+                        <div class="product-info">
+                            <div class="product-name">${restaurant.name}</div>
+                            <div class="product-vendor">${restaurant.category}</div>
+                            <div class="product-footer">
+                                <div class="product-rating">
+                                    <i class="fas fa-star"></i> ${restaurant.rating}
                                     <span class="text-muted">(${restaurant.reviews})</span>
                                 </div>
-                                <div class="text-muted">${restaurant.category}</div>
-                            </div>
-                            <div class="delivery-time">
-                                <i class="fas fa-clock"></i> ${restaurant.time}
+                                <div class="delivery-time">
+                                    <i class="fas fa-clock"></i> ${restaurant.time}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             `).join('');
+            
+            // Initialize Swiper after content is loaded
+            setTimeout(() => {
+                new Swiper('.allRestaurantsSwiper', {
+                    slidesPerView: 'auto',
+                    spaceBetween: 15,
+                    freeMode: true,
+                    navigation: {
+                        nextEl: '.allRestaurantsSwiper .swiper-button-next',
+                        prevEl: '.allRestaurantsSwiper .swiper-button-prev',
+                    },
+                    breakpoints: {
+                        320: { slidesPerView: 2 },
+                        769: { slidesPerView: 'auto' }
+                    }
+                });
+            }, 100);
         })
-        .catch(error => console.error('Error loading restaurants:', error));
+        .catch(error => {
+            console.error('Error loading restaurants:', error);
+            const container = document.getElementById('restaurantsGrid');
+            if (container) {
+                container.innerHTML = '<p class="text-center text-danger">Failed to load restaurants: ' + error.message + '</p>';
+            }
+        });
 }
 
 // Initialize Search
@@ -402,24 +542,6 @@ function initializeSwipers() {
     
     new Swiper('.featuredProductsSwiper', productSwiperConfig);
     new Swiper('.topChoiceProductsSwiper', productSwiperConfig);
-}
-
-// Restaurant Carousel Navigation
-window.scrollCarousel = function(direction) {
-    const container = document.querySelector('.restaurant-cards');
-    if (!container) {
-        console.error('Restaurant cards container not found');
-        return;
-    }
-    
-    const scrollAmount = 300;
-    console.log('Scrolling', direction, 'by', scrollAmount);
-    
-    if (direction === 'prev') {
-        container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-    } else {
-        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
 }
 
 // Filter by Cuisine - Navigate to products page with category filter

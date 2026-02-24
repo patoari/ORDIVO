@@ -115,6 +115,9 @@ $stats = [
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="../assets/logo-animations.css" rel="stylesheet">
+    <link href="../assets/css/homepage.css" rel="stylesheet">
     
     <style>
         :root {
@@ -130,193 +133,8 @@ $stats = [
             padding-top: 160px; /* Header (100px) + Nav tabs (60px) */
         }
 
-        /* Header */
-        .header {
-            background: white;
-            padding: 0;
-            box-shadow: 0 2px 4px #e5e7eb;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            height: 100px;
-        }
-
-        .header .navbar {
-            height: 100px;
-            padding: 0 1rem;
-        }
-
-        .header .container-fluid {
-            height: 100%;
-        }
-
-        .header .navbar-expand-lg {
-            height: 100%;
-            align-items: center;
-        }
-
-        .navbar-brand {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--ordivo-primary) !important;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            height: fit-content;
-            margin-right: 2rem;
-        }
-
-        .navbar-brand:hover {
-            color: var(--ordivo-primary) !important;
-            text-decoration: none;
-        }
-
-        .navbar-brand img {
-            height: 80px;
-            width: auto;
-            margin-right: 12px;
-            object-fit: contain;
-            animation: logoFloat 3s ease-in-out infinite, logoColorShift 6s ease-in-out infinite;
-            transition: all 0.3s ease;
-            
-        }
-
-        .navbar-brand img:hover {
-            transform: scale(1.15) rotate(5deg);
-            
-        }
-
-        @keyframes logoFloat {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            25% { transform: translateY(-4px) rotate(1deg); }
-            50% { transform: translateY(-6px) rotate(0deg); }
-            75% { transform: translateY(-4px) rotate(-1deg); }
-        }
-
-        @keyframes logoColorShift {
-            0%, 100% {  }
-            25% {  }
-            50% {  }
-            75% {  }
-        }
-
-        .navbar-brand i.fa-user {
-            animation: logoPulse 2s ease-in-out infinite, logoColorShift 6s ease-in-out infinite;
-            font-size: 2.5rem !important;
-            color: var(--ordivo-primary);
-        }
-
-        @keyframes logoPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-        }
-
-        .location-display {
-            display: flex;
-            align-items: center;
-            color: #6c757d;
-            font-size: 0.9rem;
-            cursor: pointer;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            height: fit-content;
-        }
-
-        .location-display:hover {
-            background: #f8f9fa;
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            height: fit-content;
-        }
-
-        .btn-user {
-            background: white;
-            border: 1px solid #e9ecef;
-            color: var(--ordivo-dark);
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            height: fit-content;
-        }
-
-        .btn-user:hover {
-            background: #f8f9fa;
-            color: var(--ordivo-dark);
-        }
-
-        /* Navigation Tabs */
-        .nav-tabs-container {
-            background: white;
-            border-bottom: 1px solid #e9ecef;
-            padding: 0 1rem;
-            height: 60px;
-            position: fixed;
-            top: 100px;
-            left: 0;
-            right: 0;
-            z-index: 999;
-            box-shadow: 0 2px 4px #e5e7eb;
-            border-top: 2px solid transparent;
-            border-bottom: 2px solid transparent;
-            background: #10b981;
-            background-origin: border-box;
-            background-clip: padding-box, border-box;
-            animation: navbarBorderPulse 3s ease-in-out infinite;
-        }
-
-        @keyframes navbarBorderPulse {
-            0%, 100% {
-                background: #10b981;
-                background-size: 100% 100%, 200% 200%;
-                background-position: 0 0, 0 0;
-            }
-            50% {
-                background: #10b981;
-                background-size: 100% 100%, 200% 200%;
-                background-position: 0 0, -100% -100%;
-            }
-        }
-
-        .nav-tabs {
-            border-bottom: none;
-        }
-
-        .nav-tabs .nav-link {
-            border: none;
-            color: #6c757d;
-            font-weight: 500;
-            padding: 1rem 0;
-            margin-right: 2rem;
-            border-bottom: 3px solid transparent;
-            background: none;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .nav-tabs .nav-link.active {
-            color: var(--ordivo-primary);
-            border-bottom: none;
-            background: none;
-        }
-
-        .nav-tabs .nav-link:hover {
-            color: var(--ordivo-primary);
-            border-bottom-color: #f97316;
-        }
-
         .profile-header {
-            background: #10b981;);
+            background: #10b981;
             color: white;
             padding: 3rem 0;
             position: relative;
@@ -392,110 +210,12 @@ $stats = [
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container-fluid">
-            <nav class="navbar navbar-expand-lg d-flex justify-content-between align-items-center">
-                <a class="navbar-brand" href="index.php">
-                    <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
-                        <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                        <i class="fas fa-user" style="display: none;"></i>
-                    <?php else: ?>
-                        <i class="fas fa-user"></i>
-                    <?php endif; ?>
-                    My Profile
-                </a>
-                
-                <div class="location-display">
-                    <i class="fas fa-map-marker-alt me-2"></i>
-                    <span>Dhaka, Bangladesh</span>
-                    <i class="fas fa-chevron-down ms-2"></i>
-                </div>
-                
-                <div class="user-menu">
-                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
-                        <div class="dropdown">
-                            <button class="btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user me-1"></i><?= htmlspecialchars($_SESSION['user_name'] ?? 'User') ?>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="profile.php">My Profile</a></li>
-                                <li><a class="dropdown-item" href="orders.php">My Orders</a></li>
-                                <li><a class="dropdown-item" href="favorites.php">Favorites</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="../auth/logout.php">Logout</a></li>
-                            </ul>
-                        </div>
-                    <?php else: ?>
-                        <a href="../auth/login.php" class="btn-user">
-                            <i class="fas fa-user me-1"></i>Account
-                        </a>
-                    <?php endif; ?>
-                    
-                    <div class="dropdown">
-                        <button class="btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-globe me-1"></i>EN
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">English</a></li>
-                            <li><a class="dropdown-item" href="#">বাংলা</a></li>
-                        </ul>
-                    </div>
-                    
-                    <a href="favorites.php" class="btn-user">
-                        <i class="fas fa-heart"></i>
-                    </a>
-                    <a href="cart.php" class="btn-user">
-                        <i class="fas fa-shopping-cart me-1"></i>Cart
-                    </a>
-                </div>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Navigation Tabs -->
-    <div class="nav-tabs-container">
-        <div class="container-fluid">
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php">
-                        <i class="fas fa-home me-2"></i>Home
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="delivery.php">
-                        <i class="fas fa-motorcycle me-2"></i>Delivery
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="pickup.php">
-                        <i class="fas fa-walking me-2"></i>Pick-up
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="ordivomart.php">
-                        <i class="fas fa-store me-2"></i>ordivomart
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="shops.php">
-                        <i class="fas fa-shopping-bag me-2"></i>Shops
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="products.php">
-                        <i class="fas fa-utensils me-2"></i>All Products
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="profile.php">
-                        <i class="fas fa-user me-2"></i>Profile
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
+    <?php 
+    // Set user location for header
+    $userLocation = $_SESSION['user_location'] ?? 'Dhaka, Bangladesh';
+    include 'includes/header.php'; 
+    ?>
+    <?php include 'includes/navigation.php'; ?>
 
     <!-- Profile Header -->
     <div class="profile-header">
@@ -836,7 +556,26 @@ $stats = [
         </div>
     </div>
 
+    <?php include 'includes/modals.php'; ?>
+
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../assets/js/location-tracker.js"></script>
+    
+    <script>
+        // Set active navigation tab
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop();
+            const navLinks = document.querySelectorAll('#mainNavTabs .nav-link');
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

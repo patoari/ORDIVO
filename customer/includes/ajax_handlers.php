@@ -4,12 +4,30 @@
  * Handles all AJAX requests for the homepage
  */
 
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 0); // Don't display errors directly
+ini_set('log_errors', 1);
+
+// Set JSON header
+header('Content-Type: application/json');
+
 if (!isset($_GET['ajax'])) {
-    exit('Direct access not allowed');
+    echo json_encode(['error' => 'Direct access not allowed']);
+    exit;
 }
 
-switch ($_GET['ajax']) {
-    case 'featured_restaurants':
+// Catch any fatal errors
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        echo json_encode(['error' => 'PHP Error: ' . $error['message'] . ' in ' . $error['file'] . ' on line ' . $error['line']]);
+    }
+});
+
+try {
+    switch ($_GET['ajax']) {
+        case 'featured_restaurants':
         try {
             // Get unique vendors with their products
             $vendors = fetchAll("
@@ -308,5 +326,9 @@ switch ($_GET['ajax']) {
     default:
         echo json_encode(['error' => 'Invalid AJAX action']);
         break;
+    }
+} catch (Exception $e) {
+    error_log("AJAX Handler Error: " . $e->getMessage());
+    echo json_encode(['error' => 'Server error: ' . $e->getMessage(), 'trace' => $e->getTraceAsString()]);
 }
 ?>

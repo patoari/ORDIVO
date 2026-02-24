@@ -35,6 +35,14 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- Logo Animations CSS -->
+    <link href="../assets/logo-animations.css" rel="stylesheet">
+    <!-- Homepage CSS (includes footer styles) -->
+    <link href="../assets/css/homepage.css" rel="stylesheet">
     
     <style>
         :root {
@@ -72,32 +80,6 @@ try {
             margin: 0;
             padding-top: 160px; /* Header (100px) + Nav tabs (60px) */
         }
-
-        /* Header */
-        .header {
-            background: white;
-            padding: 0;
-            box-shadow: 0 2px 4px #e5e7eb;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            height: 100px;
-        }
-
-        .header .navbar {
-            height: 100px;
-            padding: 0 1rem;
-        }
-
-        .header .container-fluid {
-            height: 100%;
-        }
-
-        .header .navbar-expand-lg {
-            height: 100%;
-            align-items: center;
         }
 
         .navbar-brand {
@@ -814,13 +796,12 @@ try {
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <!-- Desktop Header -->
-        <div class="container-fluid desktop-only">
-            <nav class="navbar navbar-expand-lg d-flex justify-content-between align-items-center">
-                <a class="navbar-brand" href="index.php">
-                    <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
+    <?php 
+    $userLocation = $_SESSION['user_location'] ?? 'Dhaka, Bangladesh';
+    include 'includes/header_with_nav.php'; 
+    ?>
+
+    <!-- Page Header -->
                         <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" 
                              onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
                         <i class="fas fa-shopping-bag" style="display: none;"></i>
@@ -1053,6 +1034,8 @@ try {
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../assets/js/location-tracker.js"></script>
     
     <script>
@@ -1171,6 +1154,19 @@ try {
                 }
             }, 100);
         });
+        
+        // Set Shops tab as active
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('#mainNavTabs .nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.href.includes('shops.php')) {
+                    link.classList.add('active');
+                }
+            });
+        });
     </script>
+
+    <?php include 'includes/footer.php'; ?>
 </body>
 </html>

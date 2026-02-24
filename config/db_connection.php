@@ -1,11 +1,4 @@
 <?php
-/**
- * ORDIVO - Database Connection Configuration
- * Multi-vendor Food & Grocery Delivery Platform
- * 
- * This file handles the database connection for the ORDIVO platform
- * Supports MySQL 8.0+ with PDO for secure database operations
- */
 
 // Database Configuration
 $host = 'localhost';

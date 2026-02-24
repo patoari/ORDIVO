@@ -1,9 +1,4 @@
 <?php
-/**
- * ORDIVO Payment Configuration
- * Centralized payment gateway settings
- */
-
 // Payment Gateway Credentials
 define('PAYMENT_ENVIRONMENT', 'sandbox'); // 'sandbox' or 'production'
 

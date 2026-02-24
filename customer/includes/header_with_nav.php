@@ -541,13 +541,29 @@
             background: #10b981 !important;
             flex-direction: column !important;
             padding: 1.5rem 1rem !important;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.3) !important;
             overflow-y: auto !important;
             z-index: 10000 !important;
             transition: left 0.3s ease-in-out !important;
             margin: 0 !important;
             list-style: none !important;
             pointer-events: auto !important;
+            box-shadow: none !important;
+            border: none !important;
+            filter: none !important;
+            -webkit-box-shadow: none !important;
+            -moz-box-shadow: none !important;
+        }
+        
+        /* Add a pseudo-element to cover any shadow artifacts */
+        #mainNavTabs::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -5px;
+            width: 5px;
+            height: 100%;
+            background: #10b981;
+            z-index: 1;
         }
 
         #mainNavTabs.show {
@@ -980,8 +996,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (mobileNavToggle && mainNavTabs && mobileMenuBackdrop) {
         console.log('Hamburger menu initialized');
         
-        let isMenuOpen = false;
-        
         // Toggle navigation menu
         mobileNavToggle.addEventListener('click', function(e) {
             e.preventDefault();
@@ -1034,7 +1048,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }, 100);
-        });
     } else {
         console.error('Hamburger menu elements not found!', {
             toggle: !!mobileNavToggle,
@@ -1042,6 +1055,9 @@ document.addEventListener('DOMContentLoaded', function() {
             backdrop: !!mobileMenuBackdrop
         });
     }
+    
+    // Define menu control functions (accessible throughout the script)
+    let isMenuOpen = false;
     
     function openNavMenu() {
         console.log('=== OPENING NAV MENU ===');
@@ -1063,9 +1079,13 @@ document.addEventListener('DOMContentLoaded', function() {
             display: flex !important;
             flex-direction: column !important;
             padding: 1.5rem 1rem !important;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.3) !important;
             overflow-y: auto !important;
             transition: left 0.3s ease-in-out !important;
+            box-shadow: none !important;
+            border: none !important;
+            filter: none !important;
+            -webkit-box-shadow: none !important;
+            -moz-box-shadow: none !important;
         `;
         
         console.log('=== NAV MENU OPENED ===');
@@ -1191,7 +1211,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ========== PREVENT BODY SCROLL WHEN MENUS OPEN ==========
     // Ensure body scroll is restored when page loads
     document.body.style.overflow = '';
-});
+}); // End of DOMContentLoaded
 
 // Language change function
 function changeLanguage(lang) {

@@ -85,6 +85,14 @@ if (isset($_GET['ajax'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- Logo Animations CSS -->
+    <link href="../assets/logo-animations.css" rel="stylesheet">
+    <!-- Homepage CSS (includes footer styles) -->
+    <link href="../assets/css/homepage.css" rel="stylesheet">
     
     <style>
         :root {
@@ -568,7 +576,6 @@ if (isset($_GET['ajax'])) {
                 margin: 0;
                 padding: 0;
                 flex: 0 0 auto;
-                order: 1;
             }
 
             .mobile-header-middle .navbar-brand img {
@@ -586,7 +593,6 @@ if (isset($_GET['ajax'])) {
                 border: 2px solid #10b981;
                 color: #10b981;
                 flex-shrink: 0;
-                order: 2;
             }
 
             .mobile-header-middle .mobile-nav-toggle:hover {
@@ -642,98 +648,7 @@ if (isset($_GET['ajax'])) {
                 border: 2px solid white;
             }
 
-            /* Hide the green navigation bar on mobile but keep it in DOM */
-            .nav-tabs-container {
-                display: block !important;
-                position: fixed;
-                top: 114px;
-                left: 0;
-                right: 0;
-                height: 0;
-                overflow: visible;
-                background: transparent;
-                border: none;
-                box-shadow: none;
-                padding: 0;
-                z-index: 9999;
-            }
-
-            .nav-tabs-container .container-fluid {
-                width: 100%;
-                display: block !important;
-                height: 0;
-                overflow: visible;
-            }
-
-            /* Sliding Sidebar Menu */
-            .nav-tabs {
-                display: flex !important;
-                position: fixed;
-                top: 114px;
-                left: -280px;
-                width: 280px;
-                height: calc(100vh - 114px);
-                background: #10b981;
-                flex-direction: column;
-                padding: 1.5rem 1rem;
-                box-shadow: 2px 0 10px rgba(0,0,0,0.3);
-                overflow-y: auto;
-                z-index: 10000;
-                transition: left 0.3s ease-in-out;
-                border: none;
-            }
-
-            .nav-tabs.show {
-                left: 0 !important;
-            }
-
-            /* Overlay backdrop */
-            .nav-tabs::before {
-                content: '';
-                position: fixed;
-                top: 114px;
-                left: 280px;
-                width: 0;
-                height: calc(100vh - 114px);
-                background: rgba(0, 0, 0, 0);
-                transition: all 0.3s ease-in-out;
-                pointer-events: none;
-                z-index: -1;
-            }
-
-            .nav-tabs.show::before {
-                width: calc(100vw - 280px);
-                background: rgba(0, 0, 0, 0.5);
-                pointer-events: auto;
-            }
-
-            .nav-tabs .nav-item:first-child {
-                margin-top: 0;
-            }
-
-            .nav-tabs .nav-item {
-                width: 100%;
-                margin-bottom: 0.5rem;
-            }
-
-            .nav-tabs .nav-link {
-                width: 100%;
-                margin-right: 0;
-                text-align: left;
-                padding: 1rem;
-                border-radius: 8px;
-                font-size: 1rem;
-                transition: all 0.3s ease;
-            }
-
-            .nav-tabs .nav-link:hover {
-                background: rgba(255, 255, 255, 0.2);
-                transform: translateX(5px);
-            }
-
-            .nav-tabs .nav-link.active {
-                background: rgba(255, 255, 255, 0.3);
-            }
+            /* Mobile navigation handled by header_with_nav.php */
 
             /* Restaurant Cards - 2 per line on mobile */
             .restaurant-card {
@@ -784,174 +699,10 @@ if (isset($_GET['ajax'])) {
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <!-- Desktop Header -->
-        <div class="container-fluid desktop-only">
-            <nav class="navbar navbar-expand-lg d-flex justify-content-between align-items-center">
-                <a class="navbar-brand" href="index.php">
-                    <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
-                        <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                        <i class="fas fa-walking" style="display: none;"></i>
-                    <?php else: ?>
-                        <i class="fas fa-walking"></i>
-                    <?php endif; ?>
-                </a>
-                
-                <div class="location-display" data-bs-toggle="modal" data-bs-target="#locationModal">
-                    <i class="fas fa-map-marker-alt me-2"></i>
-                    <span id="currentLocation">Dhaka, Bangladesh</span>
-                    <i class="fas fa-chevron-down ms-2"></i>
-                </div>
-                
-                <div class="user-menu">
-                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
-                        <div class="dropdown">
-                            <button class="btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user me-1"></i><?= htmlspecialchars($_SESSION['user_name'] ?? 'User') ?>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="profile.php">My Profile</a></li>
-                                <li><a class="dropdown-item" href="orders.php">My Orders</a></li>
-                                <li><a class="dropdown-item" href="favorites.php">Favorites</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="../auth/logout.php">Logout</a></li>
-                            </ul>
-                        </div>
-                    <?php else: ?>
-                        <a href="../auth/login.php" class="btn-user">
-                            <i class="fas fa-user me-1"></i>Account
-                        </a>
-                    <?php endif; ?>
-                    
-                    <div class="dropdown">
-                        <button class="btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-globe me-1"></i>EN
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">English</a></li>
-                            <li><a class="dropdown-item" href="#">বাংলা</a></li>
-                        </ul>
-                    </div>
-                    
-                    <a href="favorites.php" class="btn-user">
-                        <i class="fas fa-heart"></i>
-                    </a>
-                    <a href="cart.php" class="btn-user">
-                        <i class="fas fa-shopping-cart me-1"></i>Cart
-                    </a>
-                </div>
-            </nav>
-        </div>
-
-        <!-- Mobile Header -->
-        <div class="mobile-only">
-            <!-- Row 1: Top Utility Bar - Address + Login -->
-            <div class="mobile-header-top">
-                <div class="location-display" data-bs-toggle="modal" data-bs-target="#locationModal">
-                    <i class="fas fa-map-marker-alt me-1"></i>
-                    <span id="currentLocationMobile">Dhaka, Bangladesh</span>
-                </div>
-                <div class="mobile-login-btn">
-                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
-                        <a href="profile.php" class="btn-user" title="Profile">
-                            <i class="fas fa-user"></i>
-                        </a>
-                    <?php else: ?>
-                        <a href="../auth/login.php" class="btn-user" title="Login">
-                            <i class="fas fa-user"></i>
-                        </a>
-                    <?php endif; ?>
-                </div>
-            </div>
-
-            <!-- Row 2: Logo + Hamburger + Filters + Action Icons -->
-            <div class="mobile-header-middle">
-                <!-- Left Side: Logo + Hamburger + Filters -->
-                <div class="mobile-header-left">
-                    <a class="navbar-brand" href="index.php">
-                        <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
-                            <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" 
-                                 class="logo-img logo-sparkle"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                            <i class="fas fa-walking logo-icon" style="display: none; color: var(--ordivo-pink);"></i>
-                        <?php else: ?>
-                            <i class="fas fa-walking logo-icon" style="color: var(--ordivo-pink);"></i>
-                        <?php endif; ?>
-                    </a>
-                    
-                    <!-- Hamburger Icon -->
-                    <button class="mobile-nav-toggle" id="navHamburgerMobile">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    
-                    <!-- Filters Button -->
-                    <button class="mobile-nav-toggle" id="navFiltersMobile">
-                        <i class="fas fa-filter"></i>
-                    </button>
-                </div>
-
-                <!-- Right Side: Action Icons -->
-                <div class="mobile-header-right">
-                    <div class="dropdown">
-                        <button class="btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown" title="Language">
-                            <i class="fas fa-globe"></i>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-check me-2 text-success"></i>English</a></li>
-                            <li><a class="dropdown-item" href="#">বাংলা</a></li>
-                        </ul>
-                    </div>
-                    <a href="favorites.php" class="btn-user" title="Favorites">
-                        <i class="fas fa-heart"></i>
-                    </a>
-                    <a href="cart.php" class="btn-user" title="Cart">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-badge" id="cartBadgeMobile" style="display: none;">0</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Navigation Tabs -->
-    <div class="nav-tabs-container">
-        <div class="container-fluid">
-            <ul class="nav nav-tabs" id="navTabs">
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php">
-                        <i class="fas fa-home me-2"></i>Home
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="delivery.php">
-                        <i class="fas fa-motorcycle me-2"></i>Delivery
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="pickup.php">
-                        <i class="fas fa-walking me-2"></i>Pick-up
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="ordivomart.php">
-                        <i class="fas fa-store me-2"></i>ordivomart
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="shops.php">
-                        <i class="fas fa-shopping-bag me-2"></i>Shops
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="products.php">
-                        <i class="fas fa-utensils me-2"></i>All Products
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
+    <?php 
+    $userLocation = $_SESSION['user_location'] ?? 'Dhaka, Bangladesh';
+    include 'includes/header_with_nav.php'; 
+    ?>
 
     <!-- Page Header -->
     <section class="page-header">
@@ -984,6 +735,8 @@ if (isset($_GET['ajax'])) {
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../assets/js/location-tracker.js"></script>
     
     <script>
@@ -1120,6 +873,19 @@ if (isset($_GET['ajax'])) {
                 }
             }, 100);
         });
+        
+        // Set Pickup tab as active
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('#mainNavTabs .nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.href.includes('pickup.php')) {
+                    link.classList.add('active');
+                }
+            });
+        });
     </script>
+
+    <?php include 'includes/footer.php'; ?>
 </body>
 </html>

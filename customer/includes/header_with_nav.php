@@ -520,8 +520,9 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: transparent;
-            z-index: 9999;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+            pointer-events: auto;
         }
 
         .mobile-menu-backdrop.show {
@@ -542,10 +543,11 @@
             padding: 1.5rem 1rem !important;
             box-shadow: 2px 0 10px rgba(0,0,0,0.3) !important;
             overflow-y: auto !important;
-            z-index: 9999 !important;
+            z-index: 10000 !important;
             transition: left 0.3s ease-in-out !important;
             margin: 0 !important;
             list-style: none !important;
+            pointer-events: auto !important;
         }
 
         #mainNavTabs.show {
@@ -978,24 +980,19 @@ document.addEventListener('DOMContentLoaded', function() {
     if (mobileNavToggle && mainNavTabs && mobileMenuBackdrop) {
         console.log('Hamburger menu initialized');
         
+        let isMenuOpen = false;
+        
         // Toggle navigation menu
         mobileNavToggle.addEventListener('click', function(e) {
-            e.stopPropagation();
             e.preventDefault();
-            console.log('Hamburger clicked');
-            const isOpen = mainNavTabs.classList.contains('show');
+            e.stopPropagation();
+            console.log('Hamburger clicked, current state:', isMenuOpen);
             
-            if (isOpen) {
+            if (isMenuOpen) {
                 closeNavMenu();
             } else {
                 openNavMenu();
             }
-        });
-        
-        // Close menu when clicking on backdrop
-        mobileMenuBackdrop.addEventListener('click', function() {
-            console.log('Backdrop clicked - closing menu');
-            closeNavMenu();
         });
         
         // Close menu when clicking on a nav link
@@ -1003,20 +1000,40 @@ document.addEventListener('DOMContentLoaded', function() {
         navLinks.forEach(link => {
             link.addEventListener('click', function(e) {
                 console.log('Nav link clicked:', this.href);
-                // Don't prevent default - allow navigation
-                // Just close the menu
-                setTimeout(() => {
-                    closeNavMenu();
-                }, 100);
+                // Allow navigation
+                closeNavMenu();
             });
         });
         
         // Close menu on escape key
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && mainNavTabs.classList.contains('show')) {
+            if (e.key === 'Escape' && isMenuOpen) {
                 console.log('Escape key pressed');
                 closeNavMenu();
             }
+        });
+        
+        // Close menu when clicking outside - use setTimeout to avoid conflicts
+        setTimeout(() => {
+            document.addEventListener('click', function(e) {
+                if (!isMenuOpen) return;
+                
+                const clickedInsideMenu = mainNavTabs.contains(e.target);
+                const clickedToggle = mobileNavToggle.contains(e.target);
+                
+                console.log('Document clicked:', {
+                    isMenuOpen,
+                    clickedInsideMenu,
+                    clickedToggle,
+                    target: e.target
+                });
+                
+                if (!clickedInsideMenu && !clickedToggle) {
+                    console.log('Closing menu - clicked outside');
+                    closeNavMenu();
+                }
+            });
+        }, 100);
         });
     } else {
         console.error('Hamburger menu elements not found!', {
@@ -1028,15 +1045,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function openNavMenu() {
         console.log('=== OPENING NAV MENU ===');
-        console.log('mainNavTabs element:', mainNavTabs);
-        console.log('Before - classes:', mainNavTabs.className);
-        console.log('Before - computed left:', window.getComputedStyle(mainNavTabs).left);
+        isMenuOpen = true;
         
         // Add show class
         mainNavTabs.classList.add('show');
-        mobileMenuBackdrop.classList.add('show');
         mobileNavToggle.classList.add('active');
-        document.body.style.overflow = 'hidden';
         
         // Force styles directly - z-index 10000 to be above everything
         mainNavTabs.style.cssText = `
@@ -1055,18 +1068,15 @@ document.addEventListener('DOMContentLoaded', function() {
             transition: left 0.3s ease-in-out !important;
         `;
         
-        console.log('After - classes:', mainNavTabs.className);
-        console.log('After - computed left:', window.getComputedStyle(mainNavTabs).left);
-        console.log('After - computed z-index:', window.getComputedStyle(mainNavTabs).zIndex);
         console.log('=== NAV MENU OPENED ===');
     }
     
     function closeNavMenu() {
         console.log('=== CLOSING NAV MENU ===');
+        isMenuOpen = false;
+        
         mainNavTabs.classList.remove('show');
-        mobileMenuBackdrop.classList.remove('show');
         mobileNavToggle.classList.remove('active');
-        document.body.style.overflow = '';
         
         // Reset to hidden position
         mainNavTabs.style.left = '-280px';

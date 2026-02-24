@@ -210,6 +210,14 @@ if ($vendorId) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- Logo Animations CSS -->
+    <link href="../assets/logo-animations.css" rel="stylesheet">
+    <!-- Homepage CSS (includes footer styles) -->
+    <link href="../assets/css/homepage.css" rel="stylesheet">
     
     <style>
         :root {
@@ -226,197 +234,7 @@ if ($vendorId) {
             background: #ffffff;
             line-height: 1.6;
             margin: 0;
-            padding-top: 180px; /* Header (100px) + Search/Filters (80px) */
-        }
-
-        /* Header */
-        .header {
-            background: white;
-            padding: 0;
-            box-shadow: 0 2px 4px #e5e7eb;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            height: 100px;
-        }
-
-        .header .navbar {
-            height: 100px;
-            padding: 0 1rem;
-        }
-
-        .header .container-fluid {
-            height: 100%;
-            padding: 0 2rem; /* Add horizontal padding for better spacing */
-        }
-
-        .header .navbar-expand-lg {
-            height: 100%;
-            align-items: center;
-        }
-
-        .navbar-brand {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--ordivo-primary) !important;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            height: fit-content;
-            margin-right: 2rem;
-        }
-
-        .navbar-brand:hover {
-            color: var(--ordivo-primary) !important;
-            text-decoration: none;
-        }
-
-        /* Logo styling */
-        .navbar-brand img {
-            height: 80px;
-            width: auto;
-            margin-right: 12px;
-            object-fit: contain;
-            animation: logoFloat 3s ease-in-out infinite, logoColorShift 6s ease-in-out infinite;
-            transition: all 0.3s ease;
-            
-        }
-
-        .navbar-brand img:hover {
-            transform: scale(1.15) rotate(5deg);
-            
-        }
-
-        @keyframes logoFloat {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            25% { transform: translateY(-4px) rotate(1deg); }
-            50% { transform: translateY(-6px) rotate(0deg); }
-            75% { transform: translateY(-4px) rotate(-1deg); }
-        }
-
-        @keyframes logoColorShift {
-            0%, 100% {  }
-            25% {  }
-            50% {  }
-            75% {  }
-        }
-
-        .navbar-brand i.fa-utensils {
-            font-size: 2.5rem !important;
-            color: var(--ordivo-primary);
-            animation: logoPulse 2s ease-in-out infinite, logoColorShift 6s ease-in-out infinite;
-        }
-
-        @keyframes logoPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-        }
-
-        .location-display {
-            display: flex;
-            align-items: center;
-            color: var(--ordivo-dark);
-            font-size: 0.9rem;
-            cursor: pointer;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            height: fit-content;
-            border: 2px solid #10b981;
-            background: white;
-        }
-
-        .location-display:hover {
-            background: #10b981;
-            color: white;
-            border-color: #059669;
-        }
-
-        .location-display:hover i {
-            color: white;
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            height: fit-content;
-        }
-
-        .btn-user {
-            background: white;
-            border: 2px solid #10b981;
-            color: var(--ordivo-dark);
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            height: fit-content;
-        }
-
-        .btn-user:hover {
-            background: #10b981;
-            color: white;
-            border-color: #059669;
-        }
-
-        .btn-user:hover i {
-            color: white;
-        }
-
-
-
-        /* Header buttons styling */
-        .header .btn-outline-light {
-            border-color: #e9ecef;
-            color: var(--ordivo-dark);
-            background: white;
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .header .btn-outline-light:hover {
-            background: #f8f9fa;
-            color: var(--ordivo-dark);
-            border-color: #e9ecef;
-        }
-
-        .header .btn-light {
-            background: white;
-            color: var(--ordivo-dark);
-            border: 1px solid #e9ecef;
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .header .btn-light:hover {
-            background: #f8f9fa;
-            color: var(--ordivo-dark);
-            border-color: #e9ecef;
-        }
-
-        .header .badge {
-            background: var(--ordivo-primary) !important;
-            color: white !important;
-        }
-
-        .header .ms-auto {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+            padding-top: 240px; /* Header (100px) + Nav tabs (60px) + Search/Filters (80px) */
         }
 
         /* Vendor Header */
@@ -482,7 +300,7 @@ if ($vendorId) {
             padding: 1.25rem 0;
             border-bottom: 1px solid #e9ecef;
             position: fixed;
-            top: 100px; /* Right below header (100px) */
+            top: 160px; /* Header (100px) + Nav tabs (60px) */
             left: 0;
             right: 0;
             z-index: 999;
@@ -683,7 +501,7 @@ if ($vendorId) {
             padding: 1.5rem;
             height: fit-content;
             position: sticky;
-            top: 190px; /* Header (100px) + Search/Filters (80px) + margin (10px) */
+            top: 250px; /* Header (100px) + Nav tabs (60px) + Search/Filters (80px) + margin (10px) */
         }
 
         .sidebar h5 {

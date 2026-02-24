@@ -167,10 +167,13 @@ if (isset($_GET['ajax'])) {
         /* Main Content */
         .main-content {
             padding: 2rem 0;
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
         }
 
         .hero-section {
-            background: #10b981;);
+            background: #10b981;
             color: white;
             padding: 3rem 0;
             margin-bottom: 3rem;
@@ -518,90 +521,88 @@ if (isset($_GET['ajax'])) {
     <?php include 'includes/header_with_nav.php'; ?>
 
     <!-- Main Content -->
-    <div class="container-fluid">
-        <div class="main-content">
-            <!-- Hero Section -->
-            <div class="hero-section">
-                <div class="container">
-                    <div class="hero-content text-center">
-                        <h1 class="display-4 mb-3">Fast Food Delivery</h1>
-                        <p class="lead mb-4">Get your favorite meals delivered hot and fresh to your doorstep in minutes!</p>
-                        <div class="row justify-content-center">
-                            <div class="col-md-3 col-6 text-center mb-3">
-                                <i class="fas fa-clock fa-2x mb-2"></i>
-                                <div>Fast Delivery</div>
-                                <small>15-45 mins</small>
-                            </div>
-                            <div class="col-md-3 col-6 text-center mb-3">
-                                <i class="fas fa-shield-alt fa-2x mb-2"></i>
-                                <div>Safe & Secure</div>
-                                <small>Contactless delivery</small>
-                            </div>
-                            <div class="col-md-3 col-6 text-center mb-3">
-                                <i class="fas fa-utensils fa-2x mb-2"></i>
-                                <div>Quality Food</div>
-                                <small>Fresh & hot</small>
-                            </div>
-                            <div class="col-md-3 col-6 text-center mb-3">
-                                <i class="fas fa-star fa-2x mb-2"></i>
-                                <div>Top Rated</div>
-                                <small>Best restaurants</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Search Section -->
-            <div class="search-section">
-                <div class="container">
-                    <h3 class="text-center mb-4">Find Your Favorite Restaurant</h3>
-                    <div class="row justify-content-center">
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <input type="text" class="form-control search-input" placeholder="Search for restaurants, cuisines, or dishes..." id="searchInput">
-                                <button class="btn btn-search" type="button" onclick="searchRestaurants()">
-                                    <i class="fas fa-search me-2"></i>Search
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Featured Delivery Items -->
+    <div class="main-content">
+        <!-- Hero Section -->
+        <div class="hero-section">
             <div class="container">
-                <div class="featured-section">
-                    <h2 class="section-title">
-                        <i class="fas fa-fire text-danger me-2"></i>Featured for Delivery
-                    </h2>
-                    <div class="featured-grid" id="featuredGrid">
+                <div class="hero-content text-center">
+                    <h1 class="display-4 mb-3">Fast Food Delivery</h1>
+                    <p class="lead mb-4">Get your favorite meals delivered hot and fresh to your doorstep in minutes!</p>
+                    <div class="row justify-content-center">
+                        <div class="col-md-3 col-6 text-center mb-3">
+                            <i class="fas fa-clock fa-2x mb-2"></i>
+                            <div>Fast Delivery</div>
+                            <small>15-45 mins</small>
+                        </div>
+                        <div class="col-md-3 col-6 text-center mb-3">
+                            <i class="fas fa-shield-alt fa-2x mb-2"></i>
+                            <div>Safe & Secure</div>
+                            <small>Contactless delivery</small>
+                        </div>
+                        <div class="col-md-3 col-6 text-center mb-3">
+                            <i class="fas fa-utensils fa-2x mb-2"></i>
+                            <div>Quality Food</div>
+                            <small>Fresh & hot</small>
+                        </div>
+                        <div class="col-md-3 col-6 text-center mb-3">
+                            <i class="fas fa-star fa-2x mb-2"></i>
+                            <div>Top Rated</div>
+                            <small>Best restaurants</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="container">
+                <h3 class="text-center mb-4">Find Your Favorite Restaurant</h3>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control search-input" placeholder="Search for restaurants, cuisines, or dishes..." id="searchInput">
+                            <button class="btn btn-search" type="button" onclick="searchRestaurants()">
+                                <i class="fas fa-search me-2"></i>Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Delivery Items -->
+        <div class="container">
+            <div class="featured-section">
+                <h2 class="section-title">
+                    <i class="fas fa-fire text-danger me-2"></i>Featured for Delivery
+                </h2>
+                <div class="featured-grid" id="featuredGrid">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading featured items...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery Restaurants -->
+            <div class="restaurants-section">
+                <h2 class="section-title">
+                    <i class="fas fa-motorcycle text-primary me-2"></i>Restaurants Near You
+                </h2>
+                <div class="row" id="restaurantsGrid">
+                    <div class="col-12">
                         <div class="loading">
                             <div class="spinner"></div>
-                            <p>Loading featured items...</p>
+                            <p>Loading restaurants...</p>
                         </div>
                     </div>
                 </div>
-
-                <!-- Delivery Restaurants -->
-                <div class="restaurants-section">
-                    <h2 class="section-title">
-                        <i class="fas fa-motorcycle text-primary me-2"></i>Restaurants Near You
-                    </h2>
-                    <div class="row" id="restaurantsGrid">
-                        <div class="col-12">
-                            <div class="loading">
-                                <div class="spinner"></div>
-                                <p>Loading restaurants...</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center mt-4" id="restaurantsPagination" style="display: none !important;">
-                        <nav>
-                            <ul class="pagination" id="paginationList"></ul>
-                        </nav>
-                    </div>
+                <!-- Pagination -->
+                <div class="d-flex justify-content-center mt-4" id="restaurantsPagination" style="display: none !important;">
+                    <nav>
+                        <ul class="pagination" id="paginationList"></ul>
+                    </nav>
                 </div>
             </div>
         </div>

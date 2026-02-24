@@ -234,7 +234,12 @@ if ($vendorId) {
             background: #ffffff;
             line-height: 1.6;
             margin: 0;
-            padding-top: 240px; /* Header (100px) + Nav tabs (60px) + Search/Filters (80px) */
+            padding-top: 180px; /* Header (100px) + Search/Filters (80px) */
+        }
+
+        /* Hide navigation tabs on products page */
+        .nav-tabs-container {
+            display: none !important;
         }
 
         /* Vendor Header */
@@ -300,10 +305,10 @@ if ($vendorId) {
             padding: 1.25rem 0;
             border-bottom: 1px solid #e9ecef;
             position: fixed;
-            top: 160px; /* Header (100px) + Nav tabs (60px) */
+            top: 100px; /* Right below header (100px) */
             left: 0;
             right: 0;
-            z-index: 999;
+            z-index: 998;
             box-shadow: 0 2px 4px #e5e7eb;
             height: 80px;
             border-top: 2px solid transparent;
@@ -501,7 +506,7 @@ if ($vendorId) {
             padding: 1.5rem;
             height: fit-content;
             position: sticky;
-            top: 250px; /* Header (100px) + Nav tabs (60px) + Search/Filters (80px) + margin (10px) */
+            top: 190px; /* Header (100px) + Search/Filters (80px) + margin (10px) */
         }
 
         .sidebar h5 {
@@ -628,70 +633,13 @@ if ($vendorId) {
             font-size: 2rem;
         }
 
-        /* Location Modal Styles */
-        .location-option {
-            padding: 0.75rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-        }
-
-        .location-option:hover {
-            background: var(--ordivo-light);
-            border-color: var(--ordivo-primary);
-        }
-
-        .location-option.selected {
-            background: var(--ordivo-primary);
-            color: white;
-            border-color: var(--ordivo-primary);
-        }
-
-        .location-option.selected i {
-            color: white;
-        }
-
-        .location-option i {
-            width: 20px;
-        }
-
-        #locationSearch {
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            padding: 0.75rem;
-            transition: all 0.3s ease;
-        }
-
-        #locationSearch:focus {
-            border-color: var(--ordivo-primary);
-            box-shadow: 0 0 0 0.2rem #f97316;
-        }
-
-        .modal-header {
-            border-bottom: 2px solid var(--ordivo-light);
-        }
-
-        .modal-footer {
-            border-top: 2px solid var(--ordivo-light);
-        }
-
-        /* Mobile Header Styles */
-        .mobile-only {
-            display: none;
-        }
-
-        .desktop-only {
-            display: block;
-        }
-
         /* Hide mobile sort panel on desktop */
         .mobile-sort-panel {
             display: none;
         }
 
-        /* Mobile Menu Toggle Button */
-        .mobile-nav-toggle {
+        /* Mobile filter buttons */
+        .mobile-filter-btn {
             background: white;
             border: 2px solid #10b981;
             border-radius: 8px;
@@ -705,202 +653,96 @@ if ($vendorId) {
             display: none;
         }
 
-        .mobile-nav-toggle:hover {
+        .mobile-filter-btn:hover {
             background: #10b981;
             color: white;
             transform: scale(1.05);
         }
 
         @media (max-width: 768px) {
-            .mobile-only {
-                display: block;
+            body {
+                padding-top: 194px; /* Header (114px) + Search(80px) */
+                overflow-x: hidden;
             }
 
-            .desktop-only {
+            .mobile-filter-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Hide sidebar column on mobile */
+            .col-lg-3 {
                 display: none !important;
             }
 
-            body {
-                padding-top: 184px; /* Row1(44px) + Row2(70px) + Search(70px) */
-            }
-            
-            .header {
-                height: auto;
-                min-height: auto;
-                padding: 0;
+            /* Make products grid full width on mobile */
+            .col-lg-9 {
+                flex: 0 0 100%;
+                max-width: 100%;
+                padding-left: 15px;
+                padding-right: 15px;
             }
 
-            .mobile-header-top {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
+            /* Ensure container takes full width */
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
+                max-width: 100%;
                 width: 100%;
-                height: 44px;
-                padding: 0 0.75rem;
-                background: #f8f9fa;
-                border-bottom: 1px solid #e5e7eb;
             }
 
-            .mobile-header-top .location-display {
-                flex: 1;
-                font-size: 0.75rem;
-                padding: 0.4rem 0.75rem;
-                border-radius: 20px;
-                background: white;
-                border: 1px solid #e5e7eb;
-                max-width: calc(100% - 60px);
-                height: 32px;
-                display: flex;
-                align-items: center;
+            /* Ensure rows don't have negative margins */
+            .row {
+                margin-left: 0;
+                margin-right: 0;
             }
 
-            .mobile-header-top .location-display i {
-                font-size: 0.7rem;
-                flex-shrink: 0;
+            /* Make product cards full width */
+            .col-lg-4, .col-md-6, .col-6 {
+                padding-left: 7.5px;
+                padding-right: 7.5px;
             }
 
-            .mobile-header-top .location-display span {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                flex: 1;
-                font-size: 0.7rem;
-            }
-
-            .mobile-header-top .location-display:hover {
-                background: #f8f9fa;
-                border-color: #10b981;
-            }
-
-            .mobile-login-btn {
-                flex-shrink: 0;
-                margin-left: 0.5rem;
-            }
-
-            .mobile-login-btn .btn-user {
-                padding: 0.4rem 0.75rem;
-                height: 32px;
-                min-width: 40px;
-                border-radius: 20px;
-                font-size: 0.75rem;
-            }
-
-            .mobile-header-middle {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
+            /* Fix any sections that might be causing white space */
+            section, .py-4, .py-5 {
                 width: 100%;
-                height: 70px;
-                padding: 0 0.75rem;
-                background: white;
-                border-bottom: 2px solid #10b981;
-            }
-
-            .mobile-header-left {
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-                flex: 1;
-                min-width: 0;
-            }
-
-            .mobile-header-middle .navbar-brand {
-                margin: 0;
-                padding: 0;
-                flex: 0 0 auto;
-                order: 1;
-            }
-
-            .mobile-header-middle .navbar-brand img {
-                height: 100px;
-            }
-
-            .mobile-header-middle .navbar-brand i.fa-utensils {
-                font-size: 3rem !important;
-            }
-
-            .mobile-header-middle .mobile-nav-toggle {
-                display: block;
-                margin: 0;
-                background: white;
-                border: 2px solid #10b981;
-                color: #10b981;
-                flex-shrink: 0;
-                order: 2;
-            }
-
-            .mobile-header-middle .mobile-nav-toggle:hover {
-                background: #10b981;
-                color: white;
-            }
-
-            .mobile-header-right {
-                display: flex !important;
-                align-items: center;
-                gap: 0.5rem;
-                flex-shrink: 0;
-            }
-
-            .mobile-header-right .btn-user,
-            .mobile-header-right .dropdown button {
-                width: 40px;
-                height: 40px;
-                padding: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 8px;
-                flex-shrink: 0;
-                position: relative;
-            }
-
-            .mobile-header-right .btn-user i,
-            .mobile-header-right .dropdown button i {
-                font-size: 1.1rem;
-                margin: 0;
-            }
-
-            .mobile-header-right .dropdown-toggle::after {
-                display: none;
-            }
-
-            .cart-badge,
-            #cartCount {
-                position: absolute;
-                top: -4px;
-                right: -4px;
-                background: #dc3545;
-                color: white;
-                font-size: 0.65rem;
-                font-weight: 700;
-                padding: 0.15rem 0.35rem;
-                border-radius: 10px;
-                min-width: 18px;
-                height: 18px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border: 2px solid white;
+                overflow-x: hidden;
             }
             
             .search-filters {
-                height: 70px;
-                top: 114px;
+                height: 80px;
+                top: 114px; /* Header (114px) */
                 padding: 1rem 0;
                 background: white !important;
                 border-top: none;
                 border-bottom: 1px solid #e9ecef;
                 animation: none;
+                width: 100%;
+            }
+
+            .search-filters .container {
+                padding-left: 15px;
+                padding-right: 15px;
+                width: 100%;
             }
 
             /* Hide sort buttons on mobile - they're in the sort panel now */
             .search-filters .col-md-6:last-child {
                 display: none !important;
             }
+
+            /* Ensure search input area takes proper width */
+            .search-filters .col-md-6 {
+                flex: 0 0 100%;
+                max-width: 100%;
+                padding-left: 0;
+                padding-right: 0;
+            }
             
             .sidebar {
                 position: fixed;
-                top: 114px;
+                top: 114px; /* Header (114px) */
                 left: -280px;
                 width: 280px;
                 height: calc(100vh - 114px);
@@ -908,10 +750,11 @@ if ($vendorId) {
                 padding: 1.5rem 1rem;
                 box-shadow: 2px 0 10px rgba(0,0,0,0.3);
                 overflow-y: auto;
-                z-index: 10000;
+                z-index: 9999;
                 transition: left 0.3s ease-in-out;
                 border-radius: 0;
                 margin-bottom: 0;
+                display: block !important;
             }
 
             .sidebar.show {
@@ -948,7 +791,7 @@ if ($vendorId) {
                 height: calc(100vh - 114px);
                 background: white;
                 box-shadow: -2px 0 10px rgba(0,0,0,0.3);
-                z-index: 10001;
+                z-index: 9999;
                 transition: right 0.3s ease-in-out;
                 overflow-y: auto;
             }
@@ -1098,143 +941,10 @@ if ($vendorId) {
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <!-- Desktop Header -->
-        <div class="container-fluid desktop-only">
-            <nav class="navbar navbar-expand-lg d-flex justify-content-between align-items-center">
-                <a class="navbar-brand" href="index.php">
-                    <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
-                        <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                        <i class="fas fa-utensils" style="display: none;"></i>
-                    <?php else: ?>
-                        <i class="fas fa-utensils"></i>
-                    <?php endif; ?>
-                </a>
-                
-                <div class="location-display" data-bs-toggle="modal" data-bs-target="#locationModal">
-                    <i class="fas fa-map-marker-alt me-2"></i>
-                    <span id="currentLocation">Dhaka, Bangladesh</span>
-                    <i class="fas fa-chevron-down ms-2"></i>
-                </div>
-                
-                <div class="user-menu">
-                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
-                        <div class="dropdown">
-                            <button class="btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user me-1"></i><?= htmlspecialchars($_SESSION['user_name'] ?? 'User') ?>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="profile.php">My Profile</a></li>
-                                <li><a class="dropdown-item" href="orders.php">My Orders</a></li>
-                                <li><a class="dropdown-item" href="favorites.php">Favorites</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="../auth/logout.php">Logout</a></li>
-                            </ul>
-                        </div>
-                    <?php else: ?>
-                        <a href="../auth/login.php" class="btn-user">
-                            <i class="fas fa-user me-1"></i>Account
-                        </a>
-                    <?php endif; ?>
-                    
-                    <div class="dropdown">
-                        <button class="btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-globe me-1"></i>EN
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">English</a></li>
-                            <li><a class="dropdown-item" href="#">বাংলা</a></li>
-                        </ul>
-                    </div>
-                    
-                    <a href="favorites.php" class="btn-user">
-                        <i class="fas fa-heart"></i>
-                    </a>
-                    <a href="cart.php" class="btn-user">
-                        <i class="fas fa-shopping-cart me-1"></i>Cart <span class="badge bg-primary text-white ms-2" id="cartCount">0</span>
-                    </a>
-                </div>
-            </nav>
-        </div>
-
-        <!-- Mobile Header -->
-        <div class="mobile-only">
-            <!-- Row 1: Top Utility Bar - Address + Login -->
-            <div class="mobile-header-top">
-                <div class="location-display" data-bs-toggle="modal" data-bs-target="#locationModal">
-                    <i class="fas fa-map-marker-alt me-1"></i>
-                    <span id="currentLocationMobile">Dhaka, Bangladesh</span>
-                </div>
-                <div class="mobile-login-btn">
-                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
-                        <a href="profile.php" class="btn-user" title="Profile">
-                            <i class="fas fa-user"></i>
-                        </a>
-                    <?php else: ?>
-                        <a href="../auth/login.php" class="btn-user" title="Login">
-                            <i class="fas fa-user"></i>
-                        </a>
-                    <?php endif; ?>
-                </div>
-            </div>
-
-            <!-- Row 2: Logo + Hamburger + Filters + Action Icons -->
-            <div class="mobile-header-middle">
-                <!-- Left Side: Logo + Hamburger + Filters -->
-                <div class="mobile-header-left">
-                    <a class="navbar-brand" href="index.php">
-                        <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
-                            <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" 
-                                 class="logo-img logo-sparkle"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                            <i class="fas fa-utensils logo-icon" style="display: none; color: var(--ordivo-primary);"></i>
-                        <?php else: ?>
-                            <i class="fas fa-utensils logo-icon" style="color: var(--ordivo-primary);"></i>
-                        <?php endif; ?>
-                    </a>
-                    
-                    <!-- Hamburger Icon -->
-                    <button class="mobile-nav-toggle" id="navHamburgerMobile">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    
-                    <!-- Categories Button -->
-                    <button class="mobile-nav-toggle" id="navCategoriesMobile">
-                        <i class="fas fa-th-large"></i>
-                    </button>
-                    
-                    <!-- Sort Button -->
-                    <button class="mobile-nav-toggle" id="navSortMobile">
-                        <i class="fas fa-sort-amount-down"></i>
-                    </button>
-                </div>
-
-                <!-- Right Side: Action Icons -->
-                <div class="mobile-header-right">
-                    <div class="dropdown">
-                        <button class="btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown" title="Language">
-                            <i class="fas fa-globe"></i>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-check me-2 text-success"></i>English</a></li>
-                            <li><a class="dropdown-item" href="#">বাংলা</a></li>
-                        </ul>
-                    </div>
-                    <a href="favorites.php" class="btn-user" title="Favorites">
-                        <i class="fas fa-heart"></i>
-                    </a>
-                    <a href="cart.php" class="btn-user" title="Cart">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-badge" id="cartBadgeMobile" style="display: none;">0</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
-
-   
+    <?php 
+    $userLocation = $_SESSION['user_location'] ?? 'Dhaka, Bangladesh';
+    include 'includes/header_with_nav.php'; 
+    ?>
 
     <?php if ($vendor): ?>
     <!-- Vendor Header -->
@@ -1281,10 +991,23 @@ if ($vendorId) {
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <div class="search-box">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" class="form-control search-input" id="searchInput" 
-                               placeholder="Search products..." value="<?= htmlspecialchars($searchQuery) ?>">
+                    <div class="d-flex align-items-center gap-2">
+                        <!-- Mobile Categories Button -->
+                        <button class="mobile-filter-btn" id="mobileCategoriesBtn" title="Categories">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                        
+                        <!-- Mobile Sort Button -->
+                        <button class="mobile-filter-btn" id="mobileSortBtn" title="Sort">
+                            <i class="fas fa-sort-amount-down"></i>
+                        </button>
+                        
+                        <!-- Search Box -->
+                        <div class="search-box flex-grow-1">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" class="form-control search-input" id="searchInput" 
+                                   placeholder="Search products..." value="<?= htmlspecialchars($searchQuery) ?>">
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -1404,6 +1127,8 @@ if ($vendorId) {
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../assets/js/location-tracker.js"></script>
     
     <script>
@@ -1740,118 +1465,92 @@ if ($vendorId) {
 
         // Mobile navigation toggle - Hamburger menu
         document.addEventListener('DOMContentLoaded', function() {
+            // Load categories first
+            loadCategories();
+            
             setTimeout(function() {
-                const navHamburgerMobile = document.getElementById('navHamburgerMobile');
+                // Mobile Categories button functionality
+                const mobileCategoriesBtn = document.getElementById('mobileCategoriesBtn');
+                const sidebar = document.querySelector('.sidebar');
                 
-                if (navHamburgerMobile) {
-                    // Toggle sidebar when hamburger is clicked
-                    navHamburgerMobile.addEventListener('click', function(e) {
+                console.log('Categories button:', mobileCategoriesBtn);
+                console.log('Sidebar:', sidebar);
+                
+                if (mobileCategoriesBtn && sidebar) {
+                    mobileCategoriesBtn.addEventListener('click', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
                         
-                        const sidebar = document.querySelector('.sidebar');
-                        if (sidebar) {
-                            sidebar.classList.toggle('show');
-                            
-                            // Lock/unlock body scroll
+                        console.log('Categories button clicked');
+                        sidebar.classList.toggle('show');
+                        
+                        // Lock/unlock body scroll
+                        if (sidebar.classList.contains('show')) {
+                            document.body.style.overflow = 'hidden';
+                        } else {
+                            document.body.style.overflow = '';
+                        }
+                        
+                        // Change icon
+                        const icon = this.querySelector('i');
+                        if (icon) {
                             if (sidebar.classList.contains('show')) {
-                                document.body.style.overflow = 'hidden';
+                                icon.classList.remove('fa-th-large');
+                                icon.classList.add('fa-times');
                             } else {
-                                document.body.style.overflow = '';
-                            }
-                            
-                            // Change icon
-                            const icon = this.querySelector('i');
-                            if (icon) {
-                                if (sidebar.classList.contains('show')) {
-                                    icon.classList.remove('fa-bars');
-                                    icon.classList.add('fa-times');
-                                } else {
-                                    icon.classList.remove('fa-times');
-                                    icon.classList.add('fa-bars');
-                                }
+                                icon.classList.remove('fa-times');
+                                icon.classList.add('fa-th-large');
                             }
                         }
                     });
-                }
 
-                // Categories button functionality
-                const navCategoriesMobile = document.getElementById('navCategoriesMobile');
-                if (navCategoriesMobile) {
-                    navCategoriesMobile.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        
-                        const sidebar = document.querySelector('.sidebar');
-                        if (sidebar) {
-                            sidebar.classList.toggle('show');
-                            
-                            // Lock/unlock body scroll
-                            if (sidebar.classList.contains('show')) {
-                                document.body.style.overflow = 'hidden';
-                            } else {
+                    // Close sidebar when clicking on a category
+                    const categoryItems = sidebar.querySelectorAll('.category-item');
+                    categoryItems.forEach(item => {
+                        item.addEventListener('click', function() {
+                            if (window.innerWidth <= 768 && sidebar.classList.contains('show')) {
+                                sidebar.classList.remove('show');
                                 document.body.style.overflow = '';
+                                const icon = mobileCategoriesBtn.querySelector('i');
+                                if (icon) {
+                                    icon.classList.remove('fa-times');
+                                    icon.classList.add('fa-th-large');
+                                }
                             }
-                            
-                            // Change icon
-                            const icon = this.querySelector('i');
-                            if (icon) {
-                                if (sidebar.classList.contains('show')) {
-                                    icon.classList.remove('fa-th-large');
-                                    icon.classList.add('fa-times');
-                                } else {
+                        });
+                    });
+
+                    // Close sidebar when clicking on backdrop
+                    document.addEventListener('click', function(e) {
+                        if (sidebar.classList.contains('show') && window.innerWidth <= 768) {
+                            const rect = sidebar.getBoundingClientRect();
+                            const btnRect = mobileCategoriesBtn.getBoundingClientRect();
+                            // Check if click is outside the sidebar and not on the button
+                            if ((e.clientX > rect.right || e.clientX < rect.left) && 
+                                !(e.clientX >= btnRect.left && e.clientX <= btnRect.right && 
+                                  e.clientY >= btnRect.top && e.clientY <= btnRect.bottom)) {
+                                sidebar.classList.remove('show');
+                                document.body.style.overflow = '';
+                                const icon = mobileCategoriesBtn.querySelector('i');
+                                if (icon) {
                                     icon.classList.remove('fa-times');
                                     icon.classList.add('fa-th-large');
                                 }
                             }
                         }
                     });
-
-                    // Close sidebar when clicking on a category
-                    const sidebar = document.querySelector('.sidebar');
-                    if (sidebar) {
-                        const categoryItems = sidebar.querySelectorAll('.category-item');
-                        categoryItems.forEach(item => {
-                            item.addEventListener('click', function() {
-                                if (window.innerWidth <= 768 && sidebar.classList.contains('show')) {
-                                    sidebar.classList.remove('show');
-                                    document.body.style.overflow = '';
-                                    const icon = navCategoriesMobile.querySelector('i');
-                                    if (icon) {
-                                        icon.classList.remove('fa-times');
-                                        icon.classList.add('fa-th-large');
-                                    }
-                                }
-                            });
-                        });
-
-                        // Close sidebar when clicking on backdrop
-                        document.addEventListener('click', function(e) {
-                            if (sidebar.classList.contains('show') && window.innerWidth <= 768) {
-                                const rect = sidebar.getBoundingClientRect();
-                                // Check if click is outside the sidebar
-                                if (e.clientX > rect.right || e.clientX < rect.left) {
-                                    sidebar.classList.remove('show');
-                                    document.body.style.overflow = '';
-                                    const icon = navCategoriesMobile.querySelector('i');
-                                    if (icon) {
-                                        icon.classList.remove('fa-times');
-                                        icon.classList.add('fa-th-large');
-                                    }
-                                }
-                            }
-                        });
-                    }
+                } else {
+                    console.error('Categories button or sidebar not found!');
                 }
 
-                // Sort button functionality
-                const navSortMobile = document.getElementById('navSortMobile');
+                // Mobile Sort button functionality
+                const mobileSortBtn = document.getElementById('mobileSortBtn');
                 const mobileSortPanel = document.getElementById('mobileSortPanel');
                 const closeSortPanel = document.getElementById('closeSortPanel');
                 
-                if (navSortMobile && mobileSortPanel) {
+                if (mobileSortBtn && mobileSortPanel) {
                     // Open sort panel
-                    navSortMobile.addEventListener('click', function(e) {
+                    mobileSortBtn.addEventListener('click', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
                         
@@ -1882,7 +1581,7 @@ if ($vendorId) {
                         closeSortPanel.addEventListener('click', function() {
                             mobileSortPanel.classList.remove('show');
                             document.body.style.overflow = '';
-                            const icon = navSortMobile.querySelector('i');
+                            const icon = mobileSortBtn.querySelector('i');
                             if (icon) {
                                 icon.classList.remove('fa-times');
                                 icon.classList.add('fa-sort-amount-down');
@@ -1917,7 +1616,7 @@ if ($vendorId) {
                             // Close panel
                             mobileSortPanel.classList.remove('show');
                             document.body.style.overflow = '';
-                            const icon = navSortMobile.querySelector('i');
+                            const icon = mobileSortBtn.querySelector('i');
                             if (icon) {
                                 icon.classList.remove('fa-times');
                                 icon.classList.add('fa-sort-amount-down');
@@ -1929,11 +1628,14 @@ if ($vendorId) {
                     document.addEventListener('click', function(e) {
                         if (mobileSortPanel.classList.contains('show') && window.innerWidth <= 768) {
                             const rect = mobileSortPanel.getBoundingClientRect();
-                            // Check if click is outside the panel
-                            if (e.clientX < rect.left || e.clientX > rect.right) {
+                            const btnRect = mobileSortBtn.getBoundingClientRect();
+                            // Check if click is outside the panel and not on the button
+                            if ((e.clientX < rect.left || e.clientX > rect.right) && 
+                                !(e.clientX >= btnRect.left && e.clientX <= btnRect.right && 
+                                  e.clientY >= btnRect.top && e.clientY <= btnRect.bottom)) {
                                 mobileSortPanel.classList.remove('show');
                                 document.body.style.overflow = '';
-                                const icon = navSortMobile.querySelector('i');
+                                const icon = mobileSortBtn.querySelector('i');
                                 if (icon) {
                                     icon.classList.remove('fa-times');
                                     icon.classList.add('fa-sort-amount-down');
@@ -1945,5 +1647,7 @@ if ($vendorId) {
             }, 100);
         });
     </script>
+
+    <?php include 'includes/footer.php'; ?>
 </body>
 </html>

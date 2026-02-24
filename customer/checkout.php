@@ -241,11 +241,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- Logo Animations CSS -->
+    <link href="../assets/logo-animations.css" rel="stylesheet">
+    <!-- Homepage CSS (includes footer styles) -->
+    <link href="../assets/css/homepage.css" rel="stylesheet">
     
     <style>
         :root {
             --ordivo-primary: #10b981;
             --ordivo-secondary: #059669;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            padding-top: 160px; /* Header (100px) + Nav tabs (60px) */
+        }
+
+        /* Hide navigation tabs on checkout page */
+        .nav-tabs-container {
+            display: none !important;
         }
 
         body {
@@ -365,7 +382,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
         }
 
         .checkout-header {
-            background: #10b981;);
+            background: #10b981;
             color: white;
             padding: 2rem 0;
         }
@@ -412,7 +429,153 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
 
         .payment-option.selected {
             border-color: var(--ordivo-primary);
-            background: #f97316;
+            background: #f0fdf4;
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 114px; /* Header only (114px) - no nav tabs */
+            }
+
+            .checkout-header {
+                padding: 1.5rem 0;
+            }
+
+            .checkout-header h1,
+            .checkout-header .display-5 {
+                font-size: 1.5rem !important;
+            }
+
+            .checkout-section {
+                padding: 1rem;
+                margin-bottom: 1rem;
+                border-radius: 8px;
+            }
+
+            .checkout-section h4 {
+                font-size: 1.1rem;
+                margin-bottom: 1rem;
+            }
+
+            .checkout-section h5 {
+                font-size: 1rem;
+            }
+
+            .form-label {
+                font-size: 0.9rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .form-control,
+            .form-select {
+                font-size: 0.9rem;
+                padding: 0.5rem 0.75rem;
+            }
+
+            textarea.form-control {
+                min-height: 80px;
+            }
+
+            .order-item {
+                padding: 0.75rem 0;
+            }
+
+            .order-item h6 {
+                font-size: 0.9rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .order-item .text-muted {
+                font-size: 0.8rem;
+            }
+
+            .order-item .fw-bold {
+                font-size: 0.95rem;
+            }
+
+            .payment-option {
+                padding: 0.75rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .payment-option h6 {
+                font-size: 0.9rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .payment-option small,
+            .payment-option .text-muted {
+                font-size: 0.75rem;
+            }
+
+            .payment-option i {
+                font-size: 1.2rem;
+            }
+
+            .btn-primary,
+            .btn-success {
+                padding: 0.75rem 1rem;
+                font-size: 0.95rem;
+            }
+
+            .btn-lg {
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            /* Order summary on mobile */
+            .order-summary {
+                position: relative;
+                margin-top: 1rem;
+            }
+
+            .order-summary .h5 {
+                font-size: 1rem;
+            }
+
+            .order-summary .h4 {
+                font-size: 1.2rem;
+            }
+
+            /* Stack form columns on mobile */
+            .row .col-md-6 {
+                margin-bottom: 0.75rem;
+            }
+
+            /* Alert messages */
+            .alert {
+                font-size: 0.9rem;
+                padding: 0.75rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .checkout-header h1,
+            .checkout-header .display-5 {
+                font-size: 1.3rem !important;
+            }
+
+            .checkout-section {
+                padding: 0.75rem;
+            }
+
+            .checkout-section h4 {
+                font-size: 1rem;
+            }
+
+            .order-item h6 {
+                font-size: 0.85rem;
+            }
+
+            .payment-option {
+                padding: 0.6rem;
+            }
+
+            .btn-lg {
+                padding: 0.65rem 1.25rem;
+                font-size: 0.95rem;
+            }
         }
         
         /* Hide any injected filter elements */
@@ -431,24 +594,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <a href="index.php" class="text-decoration-none">
-                    <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
-                        <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" class="logo-img">
-                    <?php else: ?>
-                        <i class="fas fa-utensils logo-icon"></i>
-                    <?php endif; ?>
-                </a>
-                
-                <a href="cart.php" class="btn btn-outline-primary">
-                    <i class="fas fa-arrow-left me-2"></i>Back to Cart
-                </a>
-            </div>
-        </div>
-    </header>
+    <?php 
+    $userLocation = $_SESSION['user_location'] ?? 'Dhaka, Bangladesh';
+    include 'includes/header_with_nav.php'; 
+    ?>
 
     <!-- Checkout Header -->
     <div class="checkout-header">
@@ -678,6 +827,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <!-- Location Tracker -->
     <?php include 'includes/modals.php'; ?>
@@ -946,5 +1097,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
             console.log('Form submitting with payment method:', selectedPaymentMethod);
         });
     </script>
+
+    <?php include 'includes/modals.php'; ?>
+    <?php include 'includes/footer.php'; ?>
 </body>
 </html>

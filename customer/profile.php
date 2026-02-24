@@ -205,7 +205,224 @@ $stats = [
 
         .form-control:focus {
             border-color: var(--ordivo-primary);
-            box-shadow: 0 0 0 0.2rem #f97316;
+            box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.25);
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 160px; /* Keep same as desktop since we're using includes */
+            }
+
+            .profile-header {
+                padding: 2rem 0;
+            }
+
+            .profile-header h1,
+            .profile-header .display-5 {
+                font-size: 1.5rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+
+            .profile-header .lead {
+                font-size: 0.9rem;
+            }
+
+            .profile-header p {
+                font-size: 0.85rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .profile-avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+                margin: 0 auto 1rem;
+            }
+
+            .btn-light {
+                font-size: 0.85rem;
+                padding: 0.4rem 0.75rem;
+            }
+
+            /* Statistics Cards */
+            .stats-card {
+                padding: 1rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .stats-number {
+                font-size: 1.5rem;
+            }
+
+            .stats-card .text-muted {
+                font-size: 0.85rem;
+            }
+
+            /* Make stats 2 per row on mobile */
+            .col-md-3 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+
+            /* Profile Navigation */
+            .profile-card {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .profile-card h4,
+            .profile-card h5 {
+                font-size: 1.1rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .nav-pills {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .nav-pills .nav-item {
+                flex: 0 0 100%;
+                max-width: 100%;
+                margin-bottom: 0;
+            }
+
+            .nav-pills .nav-link {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+                text-align: left;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+                min-height: auto;
+            }
+
+            .nav-pills .nav-link i {
+                display: inline-block;
+                margin-bottom: 0;
+                margin-right: 0.75rem !important;
+                font-size: 1.2rem;
+            }
+
+            /* Form Elements */
+            .form-label {
+                font-size: 0.9rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .form-control,
+            .form-select {
+                font-size: 0.9rem;
+                padding: 0.5rem 0.75rem;
+            }
+
+            textarea.form-control {
+                min-height: 80px;
+            }
+
+            .btn {
+                font-size: 0.9rem;
+                padding: 0.6rem 1rem;
+            }
+
+            .btn-lg {
+                font-size: 1rem;
+                padding: 0.75rem 1.25rem;
+            }
+
+            /* Address Cards */
+            .address-card {
+                padding: 1rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .address-card h6 {
+                font-size: 0.95rem;
+            }
+
+            .address-card p {
+                font-size: 0.85rem;
+            }
+
+            /* Payment Method Cards */
+            .payment-card {
+                padding: 1rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .payment-card h6 {
+                font-size: 0.95rem;
+            }
+
+            /* Alerts */
+            .alert {
+                font-size: 0.9rem;
+                padding: 0.75rem;
+            }
+
+            /* Tab Content */
+            .tab-content {
+                margin-top: 1rem;
+            }
+
+            /* Stack columns on mobile */
+            .row .col-md-6,
+            .row .col-md-9,
+            .row .col-md-3 {
+                margin-bottom: 0.75rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .profile-header h1,
+            .profile-header .display-5 {
+                font-size: 1.3rem !important;
+            }
+
+            .profile-header .lead {
+                font-size: 0.85rem;
+            }
+
+            .profile-header p {
+                font-size: 0.8rem;
+            }
+
+            .profile-avatar {
+                width: 70px;
+                height: 70px;
+                font-size: 1.8rem;
+            }
+
+            .stats-number {
+                font-size: 1.3rem;
+            }
+
+            .profile-card h4,
+            .profile-card h5 {
+                font-size: 1rem;
+            }
+
+            .nav-pills .nav-link {
+                padding: 0.65rem 0.85rem;
+                font-size: 0.85rem;
+            }
+
+            .nav-pills .nav-link i {
+                font-size: 1.1rem;
+                margin-right: 0.6rem !important;
+            }
+
+            .form-control,
+            .form-select {
+                font-size: 0.85rem;
+            }
+
+            .btn {
+                font-size: 0.85rem;
+                padding: 0.5rem 0.85rem;
+            }
         }
     </style>
 </head>
@@ -213,9 +430,8 @@ $stats = [
     <?php 
     // Set user location for header
     $userLocation = $_SESSION['user_location'] ?? 'Dhaka, Bangladesh';
-    include 'includes/header.php'; 
+    include 'includes/header_with_nav.php'; 
     ?>
-    <?php include 'includes/navigation.php'; ?>
 
     <!-- Profile Header -->
     <div class="profile-header">
@@ -577,5 +793,8 @@ $stats = [
             });
         });
     </script>
+
+    <?php include 'includes/modals.php'; ?>
+    <?php include 'includes/footer.php'; ?>
 </body>
 </html>

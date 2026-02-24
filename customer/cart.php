@@ -92,6 +92,12 @@ $finalTotal = 50;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- Logo Animations CSS -->
+    <link href="../assets/logo-animations.css" rel="stylesheet">
+    <!-- Homepage CSS (includes footer styles) -->
+    <link href="../assets/css/homepage.css" rel="stylesheet">
     
     <style>
         :root {
@@ -102,52 +108,16 @@ $finalTotal = 50;
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #ffffff;
+            background: #f8f9fa;
             line-height: 1.6;
             margin: 0;
             padding-top: 160px; /* Header (100px) + Nav tabs (60px) */
         }
 
-        /* Header */
-        .header {
-            background: white;
-            padding: 0;
-            box-shadow: 0 2px 4px #e5e7eb;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            height: 100px;
+        /* Hide navigation tabs on cart page */
+        .nav-tabs-container {
+            display: none !important;
         }
-
-        .header .navbar {
-            height: 100px;
-            padding: 0 1rem;
-        }
-
-        .header .container-fluid {
-            height: 100%;
-        }
-
-        .header .navbar-expand-lg {
-            height: 100%;
-            align-items: center;
-        }
-
-        .navbar-brand {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--ordivo-primary) !important;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            height: fit-content;
-            margin-right: 2rem;
-        }
-
-        .navbar-brand:hover {
-            color: var(--ordivo-primary) !important;
             text-decoration: none;
         }
 
@@ -419,113 +389,176 @@ $finalTotal = 50;
             z-index: 9999;
             min-width: 300px;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 114px; /* Header only (114px) - no nav tabs */
+                background: #ffffff;
+            }
+
+            .cart-header {
+                padding: 1rem 0;
+            }
+
+            .cart-header h1,
+            .cart-header .display-5 {
+                font-size: 1.5rem !important;
+            }
+
+            .cart-item {
+                padding: 1rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .cart-item-image {
+                width: 60px;
+                height: 60px;
+            }
+
+            .cart-item h5 {
+                font-size: 0.95rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .cart-item .text-muted {
+                font-size: 0.8rem;
+            }
+
+            .cart-item .h5 {
+                font-size: 1rem;
+            }
+
+            .quantity-controls {
+                gap: 0.25rem;
+            }
+
+            .quantity-controls button {
+                width: 28px;
+                height: 28px;
+                font-size: 0.85rem;
+                padding: 0;
+            }
+
+            .quantity-controls input {
+                width: 40px;
+                height: 28px;
+                font-size: 0.85rem;
+                padding: 0.25rem;
+            }
+
+            .btn-remove {
+                padding: 0.4rem 0.75rem;
+                font-size: 0.85rem;
+            }
+
+            .cart-summary {
+                padding: 1rem;
+                margin-top: 1rem;
+            }
+
+            .cart-summary h4 {
+                font-size: 1.1rem;
+            }
+
+            .cart-summary .h5 {
+                font-size: 1rem;
+            }
+
+            .cart-summary .h4 {
+                font-size: 1.2rem;
+            }
+
+            .btn-checkout {
+                padding: 0.75rem;
+                font-size: 0.95rem;
+            }
+
+            .empty-cart {
+                padding: 2rem 1rem;
+            }
+
+            .empty-cart i {
+                font-size: 3rem !important;
+            }
+
+            .empty-cart h3 {
+                font-size: 1.3rem;
+            }
+
+            .empty-cart p {
+                font-size: 0.9rem;
+            }
+
+            /* Stack cart items vertically on mobile */
+            .cart-item .row {
+                flex-direction: column;
+            }
+
+            .cart-item .col-md-6,
+            .cart-item .col-md-3,
+            .cart-item .col-md-2 {
+                max-width: 100%;
+                flex: 0 0 100%;
+                margin-bottom: 0.5rem;
+            }
+
+            .cart-item .d-flex {
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            /* Payment options on mobile */
+            .payment-options .payment-option {
+                padding: 0.75rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .payment-options .payment-option i {
+                font-size: 1.2rem;
+            }
+
+            .payment-options .payment-option h6 {
+                font-size: 0.9rem;
+            }
+
+            .payment-options .payment-option small {
+                font-size: 0.75rem;
+            }
+
+            .notification {
+                right: 10px;
+                left: 10px;
+                min-width: auto;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .cart-header h1,
+            .cart-header .display-5 {
+                font-size: 1.3rem !important;
+            }
+
+            .cart-item-image {
+                width: 50px;
+                height: 50px;
+            }
+
+            .cart-item h5 {
+                font-size: 0.9rem;
+            }
+
+            .cart-summary {
+                padding: 0.75rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container-fluid">
-            <nav class="navbar navbar-expand-lg d-flex justify-content-between align-items-center">
-                <a class="navbar-brand" href="index.php">
-                    <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
-                        <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                        <i class="fas fa-shopping-cart" style="display: none;"></i>
-                    <?php else: ?>
-                        <i class="fas fa-shopping-cart"></i>
-                    <?php endif; ?>
-                    Shopping Cart
-                </a>
-                
-                <div class="location-display">
-                    <i class="fas fa-map-marker-alt me-2"></i>
-                    <span>Dhaka, Bangladesh</span>
-                    <i class="fas fa-chevron-down ms-2"></i>
-                </div>
-                
-                <div class="user-menu">
-                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
-                        <div class="dropdown">
-                            <button class="btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user me-1"></i><?= htmlspecialchars($_SESSION['user_name'] ?? 'User') ?>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="profile.php">My Profile</a></li>
-                                <li><a class="dropdown-item" href="orders.php">My Orders</a></li>
-                                <li><a class="dropdown-item" href="favorites.php">Favorites</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="../auth/logout.php">Logout</a></li>
-                            </ul>
-                        </div>
-                    <?php else: ?>
-                        <a href="../auth/login.php" class="btn-user">
-                            <i class="fas fa-user me-1"></i>Account
-                        </a>
-                    <?php endif; ?>
-                    
-                    <div class="dropdown">
-                        <button class="btn-user dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-globe me-1"></i>EN
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">English</a></li>
-                            <li><a class="dropdown-item" href="#">বাংলা</a></li>
-                        </ul>
-                    </div>
-                    
-                    <a href="favorites.php" class="btn-user">
-                        <i class="fas fa-heart"></i>
-                    </a>
-                    <a href="index.php" class="btn-user">
-                        <i class="fas fa-arrow-left me-1"></i>Continue Shopping
-                    </a>
-                </div>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Navigation Tabs -->
-    <div class="nav-tabs-container">
-        <div class="container-fluid">
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php">
-                        <i class="fas fa-home me-2"></i>Home
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="delivery.php">
-                        <i class="fas fa-motorcycle me-2"></i>Delivery
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="pickup.php">
-                        <i class="fas fa-walking me-2"></i>Pick-up
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="ordivomart.php">
-                        <i class="fas fa-store me-2"></i>ordivomart
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="shops.php">
-                        <i class="fas fa-shopping-bag me-2"></i>Shops
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="products.php">
-                        <i class="fas fa-utensils me-2"></i>All Products
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="cart.php">
-                        <i class="fas fa-shopping-cart me-2"></i>Cart
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
+    <?php 
+    $userLocation = $_SESSION['user_location'] ?? 'Dhaka, Bangladesh';
+    include 'includes/header_with_nav.php'; 
+    ?>
 
     <!-- Cart Header -->
     <div class="cart-header">
@@ -660,6 +693,9 @@ $finalTotal = 50;
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../assets/js/location-tracker.js"></script>
     
     <script>
         let cart = JSON.parse(localStorage.getItem('ordivo_cart') || '[]');
@@ -867,5 +903,8 @@ $finalTotal = 50;
             }, 3000);
         }
     </script>
+
+    <?php include 'includes/modals.php'; ?>
+    <?php include 'includes/footer.php'; ?>
 </body>
 </html>

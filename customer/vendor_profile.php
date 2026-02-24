@@ -130,6 +130,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- Logo Animations CSS -->
+    <link href="../assets/logo-animations.css" rel="stylesheet">
+    <!-- Homepage CSS (includes footer styles) -->
+    <link href="../assets/css/homepage.css" rel="stylesheet">
     
     <style>
         :root {
@@ -144,61 +150,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f8f9fa;
+            padding-top: 160px; /* Header (100px) + Nav tabs (60px) */
         }
 
-        .header {
-            background: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 4px #e5e7eb;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        /* Logo Animations */
-        .logo-img {
-            height: 100px;
-            width: auto;
-            margin-right: 12px;
-            object-fit: contain;
-            animation: logoFloat 3s ease-in-out infinite;
-            transition: all 0.3s ease;
-        }
-
-        .logo-img:hover {
-            transform: scale(1.15) rotate(5deg);
-        }
-
-        @keyframes logoFloat {
-            0%, 100% {
-                transform: translateY(0px) rotate(0deg);
-            }
-            25% {
-                transform: translateY(-3px) rotate(1deg);
-            }
-            50% {
-                transform: translateY(-5px) rotate(0deg);
-            }
-            75% {
-                transform: translateY(-3px) rotate(-1deg);
-            }
-        }
-
-        .logo-icon {
-            color: var(--ordivo-primary);
-            font-size: 2rem !important;
-            animation: logoPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes logoPulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.1);
-                opacity: 0.8;
-            }
+        /* Hide navigation tabs on vendor profile page */
+        .nav-tabs-container {
+            display: none !important;
         }
 
         .brand-text {
@@ -446,43 +403,203 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             padding: 15px 20px;
             box-shadow: 0 2px 8px #e5e7eb;
             z-index: 1000;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
         }
 
         .cart-btn:hover {
             background: var(--ordivo-secondary);
             color: white;
         }
+
+        /* Pagination Styles */
+        .pagination {
+            margin-bottom: 0;
+        }
+
+        .pagination .page-link {
+            color: var(--ordivo-primary);
+            border: 1px solid #dee2e6;
+            padding: 0.5rem 0.75rem;
+            margin: 0 0.125rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .pagination .page-link:hover {
+            color: white;
+            background-color: var(--ordivo-primary);
+            border-color: var(--ordivo-primary);
+            transform: translateY(-1px);
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: var(--ordivo-primary);
+            border-color: var(--ordivo-primary);
+            color: white;
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: #6c757d;
+            background-color: #fff;
+            border-color: #dee2e6;
+            cursor: not-allowed;
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 114px; /* Header only (114px) - no nav tabs */
+            }
+
+            .vendor-hero {
+                padding: 2rem 0;
+                min-height: auto;
+            }
+
+            .vendor-profile-image,
+            .vendor-profile-placeholder {
+                width: 80px;
+                height: 80px;
+                font-size: 1.8rem;
+            }
+
+            .vendor-hero h1,
+            .vendor-hero .display-4 {
+                font-size: 1.5rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .vendor-hero .d-flex {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 0.5rem !important;
+            }
+
+            .vendor-hero .d-flex > div {
+                font-size: 0.85rem;
+            }
+
+            .vendor-info {
+                padding: 1rem;
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .vendor-info h3 {
+                font-size: 1.2rem;
+            }
+
+            .vendor-info p {
+                font-size: 0.9rem;
+            }
+
+            .category-title {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+            }
+
+            .product-card {
+                margin-bottom: 1rem;
+            }
+
+            .product-image {
+                height: 150px;
+            }
+
+            .product-badge {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.5rem;
+                top: 8px;
+                left: 8px;
+            }
+
+            .product-info {
+                padding: 0.75rem;
+            }
+
+            .product-name {
+                font-size: 0.95rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .product-description {
+                font-size: 0.8rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .product-meta {
+                font-size: 0.85rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .product-price {
+                font-size: 1rem;
+            }
+
+            .product-rating {
+                font-size: 0.75rem;
+            }
+
+            .add-to-cart-btn {
+                font-size: 0.85rem;
+                padding: 0.6rem;
+            }
+
+            .cart-btn {
+                bottom: 15px;
+                right: 15px;
+                padding: 12px 16px;
+                font-size: 0.9rem;
+            }
+
+            /* Make product cards 2 per row on mobile */
+            .col-lg-4 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+
+            /* Pagination on mobile */
+            .pagination {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .pagination .page-link {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.85rem;
+                margin: 0.1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .vendor-hero h1,
+            .vendor-hero .display-4 {
+                font-size: 1.3rem !important;
+            }
+
+            .product-image {
+                height: 130px;
+            }
+
+            .product-name {
+                font-size: 0.9rem;
+            }
+
+            .product-description {
+                font-size: 0.75rem;
+                -webkit-line-clamp: 1;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <a href="index.php" class="text-decoration-none">
-                    <div class="d-flex align-items-center">
-                        <?php if (!empty($siteLogo) && $siteLogo !== '🍔' && $siteLogo !== '🍽️'): ?>
-                            <img src="<?= htmlspecialchars($siteLogo) ?>" alt="<?= htmlspecialchars($siteName) ?>" class="logo-img">
-                        <?php else: ?>
-                            <i class="fas fa-utensils logo-icon"></i>
-                        <?php endif; ?>
-                    </div>
-                </a>
-                
-                <div class="d-flex align-items-center gap-3">
-                    <a href="index.php" class="btn btn-outline-primary">
-                        <i class="fas fa-arrow-left me-2"></i>Back to Home
-                    </a>
-                    <a href="cart.php" class="btn btn-primary">
-                        <i class="fas fa-shopping-cart me-2"></i>Cart
-                        <?php if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])): ?>
-                            <span class="badge bg-light text-dark"><?= array_sum($_SESSION['cart']) ?></span>
-                        <?php endif; ?>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
+    <?php 
+    $userLocation = $_SESSION['user_location'] ?? 'Dhaka, Bangladesh';
+    include 'includes/header_with_nav.php'; 
+    ?>
 
     <!-- Vendor Hero -->
     <div class="vendor-hero">
@@ -568,7 +685,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <p class="text-muted">This restaurant is currently updating their menu.</p>
             </div>
         <?php else: ?>
-            <?php foreach ($productsByCategory as $categoryName => $categoryProducts): ?>
+            <?php 
+            // Pagination settings
+            $productsPerPage = 12;
+            $currentPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+            $totalProducts = count($products);
+            $totalPages = ceil($totalProducts / $productsPerPage);
+            $offset = ($currentPage - 1) * $productsPerPage;
+            
+            // Slice products for current page
+            $paginatedProducts = array_slice($products, $offset, $productsPerPage);
+            
+            // Group paginated products by category
+            $paginatedProductsByCategory = [];
+            foreach ($paginatedProducts as $product) {
+                $categoryName = $product['category_name'] ?? 'Other';
+                $paginatedProductsByCategory[$categoryName][] = $product;
+            }
+            ?>
+            
+            <?php foreach ($paginatedProductsByCategory as $categoryName => $categoryProducts): ?>
                 <div class="category-section">
                     <h2 class="category-title"><?= htmlspecialchars($categoryName) ?></h2>
                     <div class="row">
@@ -624,6 +760,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     </div>
                 </div>
             <?php endforeach; ?>
+            
+            <!-- Pagination -->
+            <?php if ($totalPages > 1): ?>
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <nav aria-label="Products pagination">
+                            <ul class="pagination justify-content-center">
+                                <!-- Previous Button -->
+                                <li class="page-item <?= $currentPage <= 1 ? 'disabled' : '' ?>">
+                                    <a class="page-link" href="?id=<?= $vendorId ?>&page=<?= $currentPage - 1 ?>" aria-label="Previous">
+                                        <i class="fas fa-chevron-left"></i> Previous
+                                    </a>
+                                </li>
+                                
+                                <?php
+                                $maxVisiblePages = 5;
+                                $startPage = max(1, $currentPage - floor($maxVisiblePages / 2));
+                                $endPage = min($totalPages, $startPage + $maxVisiblePages - 1);
+                                
+                                if ($endPage - $startPage + 1 < $maxVisiblePages) {
+                                    $startPage = max(1, $endPage - $maxVisiblePages + 1);
+                                }
+                                
+                                // First page
+                                if ($startPage > 1): ?>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?id=<?= $vendorId ?>&page=1">1</a>
+                                    </li>
+                                    <?php if ($startPage > 2): ?>
+                                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                                
+                                <!-- Page Numbers -->
+                                <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
+                                    <li class="page-item <?= $i === $currentPage ? 'active' : '' ?>">
+                                        <a class="page-link" href="?id=<?= $vendorId ?>&page=<?= $i ?>"><?= $i ?></a>
+                                    </li>
+                                <?php endfor; ?>
+                                
+                                <!-- Last page -->
+                                <?php if ($endPage < $totalPages): ?>
+                                    <?php if ($endPage < $totalPages - 1): ?>
+                                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                                    <?php endif; ?>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?id=<?= $vendorId ?>&page=<?= $totalPages ?>"><?= $totalPages ?></a>
+                                    </li>
+                                <?php endif; ?>
+                                
+                                <!-- Next Button -->
+                                <li class="page-item <?= $currentPage >= $totalPages ? 'disabled' : '' ?>">
+                                    <a class="page-link" href="?id=<?= $vendorId ?>&page=<?= $currentPage + 1 ?>" aria-label="Next">
+                                        Next <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div class="text-center mt-2">
+                            <small class="text-muted">
+                                Showing <?= $offset + 1 ?>-<?= min($offset + $productsPerPage, $totalProducts) ?> of <?= $totalProducts ?> products
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 
@@ -636,7 +838,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <?php endif; ?>
     </a>
 
+    <?php include 'includes/modals.php'; ?>
+
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../assets/js/location-tracker.js"></script>
+    
+    <script>
+        // Smooth scroll to top on page change
+        if (window.location.search.includes('page=')) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+
+    <?php include 'includes/footer.php'; ?>
 </body>
 </html>
